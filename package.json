@@ -1,7 +1,8 @@
 {
 	"private": true,
 	"scripts": {
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"web": "pnpm --filter @sh/web -- "
 	},
 	"devDependencies": {
 		"prettier": "^3.2.5",
