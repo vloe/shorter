@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+members = [
+    "apps/server",
+]
+
+[workspace.package]
+license = "MIT"
+edition = "2021"
+repository = "https://github.com/vloe/shorter"
+
+[workspace.dependencies]
