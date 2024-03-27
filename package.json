@@ -4,6 +4,7 @@
 		"build": "turbo run build",
 		"format": "prettier --write .",
 		"web": "pnpm --filter @sh/web -- ",
+		"core": "pnpm --filter @sh/server -- ",
 		"config": "pnpm --filter @sh/config -- "
 	},
 	"devDependencies": {
