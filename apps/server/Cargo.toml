@@ -9,7 +9,12 @@ edition = { workspace = true }
 crate-type = ["cdylib"]
 
 [dependencies]
-worker = "0.0.18"
+worker = { version="0.0.21", features=['http'] }
+worker-macros = { version="0.0.15", features=['http'] }
+axum  = { version = "0.7", default-features = false }
+tower-service = "0.3.2"
+console_error_panic_hook = { version = "0.1.1" }
+wasm-bindgen-futures = "0.4"
 
 [profile.release]
 opt-level = "s" # optimize for size in release builds

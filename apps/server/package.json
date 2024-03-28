@@ -3,6 +3,6 @@
 	"version": "1.0.0",
 	"license": "MIT",
 	"scripts": {
-		"dev": "wrangler dev --env dev"
+		"dev": "wrangler dev --local"
 	}
 }
