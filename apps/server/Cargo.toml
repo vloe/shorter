@@ -6,7 +6,4 @@ repository = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
-lambda_http = "0.10.0"
-
-tokio = { version = "1", features = ["macros"] }
 
