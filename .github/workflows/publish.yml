@@ -22,6 +22,7 @@ jobs:
               with:
                   apiToken: ${{ secrets.CF_API_TOKEN }}
                   accountId: ${{ secrets.CF_ACCOUNT_ID }}
+                  workingDirectory: ./apps/server
                   packageManager: pnpm
 
             - name: Publish to Cloudflare Pages
