@@ -1,5 +1,8 @@
 {
 	"name": "@sh/server",
 	"version": "1.0.0",
-	"license": "MIT"
+	"license": "MIT",
+	"scripts": {
+		"dev": "wrangler dev --env dev"
+	}
 }
