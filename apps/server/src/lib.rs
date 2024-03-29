@@ -16,7 +16,8 @@ async fn fetch(req: HttpRequest, _env: Env, _ctx: Context) -> Result<Response<Bo
     let cors = CorsLayer::new()
         .allow_origin("https://shorter.dev".parse::<HeaderValue>().unwrap())
         .allow_headers(vec![CONTENT_TYPE])
-        .allow_methods([Method::GET, Method::POST, Method::OPTIONS, Method::HEAD]);
+        .allow_methods([Method::GET, Method::POST, Method::OPTIONS, Method::HEAD])
+        .allow_credentials(true);
 
     let app = Router::new()
         .route("/", get(|| async { "shorter.dev server!" }))
