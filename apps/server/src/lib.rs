@@ -21,8 +21,8 @@ async fn fetch(req: HttpRequest, _env: Env, _ctx: Context) -> Result<Response<Bo
 
     let app = Router::new()
         .route("/", get(|| async { "shorter.dev server!" }))
-        .layer(cors)
         .merge(mount())
+        .layer(cors)
         .call(req)
         .await
         .unwrap();
