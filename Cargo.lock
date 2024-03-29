@@ -607,11 +607,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "sh-core"
+version = "0.1.0"
+dependencies = [
+ "axum",
+]
+
+[[package]]
 name = "sh-server"
 version = "0.1.0"
 dependencies = [
  "axum",
  "console_error_panic_hook",
+ "sh-core",
  "tower-service",
  "wasm-bindgen-futures",
  "worker",
