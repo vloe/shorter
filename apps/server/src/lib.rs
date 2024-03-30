@@ -13,7 +13,6 @@ use worker::{event, Context, Env, HttpRequest, Result};
 async fn fetch(req: HttpRequest, _env: Env, _ctx: Context) -> Result<Response<Body>> {
     console_error_panic_hook::set_once();
 
-    // TODO: make this shit work
     let cors = CorsLayer::new()
         .allow_origin("https://shorter.dev".parse::<HeaderValue>().unwrap())
         .allow_headers([CONTENT_TYPE])
