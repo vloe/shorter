@@ -13,19 +13,18 @@ use worker::{event, Context, Env, HttpRequest, Result};
 async fn fetch(req: HttpRequest, _env: Env, _ctx: Context) -> Result<Response<Body>> {
     console_error_panic_hook::set_once();
 
+    // TODO: make this shit work
     let cors = CorsLayer::new()
         .allow_origin("https://shorter.dev".parse::<HeaderValue>().unwrap())
-        .allow_headers(vec![CONTENT_TYPE])
-        .allow_methods([Method::GET, Method::POST, Method::OPTIONS, Method::HEAD])
-        .allow_credentials(true);
+        .allow_headers([CONTENT_TYPE])
+        .allow_methods([Method::GET, Method::POST, Method::HEAD, Method::OPTIONS]);
 
     let app = Router::new()
         .route("/", get(|| async { "shorter.dev server!" }))
         .merge(mount())
         .layer(cors)
         .call(req)
-        .await
-        .unwrap();
+        .await?;
 
     Ok(app)
 }
