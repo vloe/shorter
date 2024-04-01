@@ -1,6 +1,7 @@
 use axum::{routing::get, Router};
 
 mod domain;
+pub mod utils;
 
 pub fn mount() -> Router {
     Router::new()

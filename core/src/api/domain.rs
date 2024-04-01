@@ -9,7 +9,9 @@ struct Params {
 pub fn mount() -> Router {
     Router::new().route(
         "/:domain",
-        get(|Path(Params { domain }): Path<Params>| async move {
+        get(|Path(params): Path<Params>| async move {
+            let domain = params.domain.trim();
+
             format!("Domain extracted: {}", domain)
         }),
     )
