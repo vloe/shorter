@@ -1,18 +1,28 @@
-use axum::{extract::Path, routing::get, Router};
-use serde::Deserialize;
+use axum::{routing::post, Json, Router};
+use serde::{Deserialize, Serialize};
+use typeshare::typeshare;
 
+#[typeshare]
 #[derive(Deserialize)]
-struct Params {
+struct DomainArgs {
     domain: String,
 }
 
-pub fn mount() -> Router {
-    Router::new().route(
-        "/:domain",
-        get(|Path(params): Path<Params>| async move {
-            let domain = params.domain.trim();
+#[typeshare]
+#[derive(Serialize)]
+struct DomainRes {
+    domain_list: String,
+}
 
-            format!("Domain extracted: {}", domain)
+pub(crate) fn mount() -> Router {
+    Router::new().route(
+        "/domain",
+        post(|args: Json<DomainArgs>| async move {
+            let domain = args.domain.trim();
+
+            return Json(DomainRes {
+                domain_list: domain.to_string(),
+            });
         }),
     )
 }

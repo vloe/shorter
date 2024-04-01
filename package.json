@@ -3,6 +3,7 @@
 	"scripts": {
 		"build": "turbo run build",
 		"format": "prettier --write .",
+		"gen:types": "typeshare ./core --lang=typescript --output-file=./apps/web/src/lib/types.ts",
 		"web": "pnpm --filter @sh/web -- ",
 		"core": "pnpm --filter @sh/server -- ",
 		"config": "pnpm --filter @sh/config -- "
