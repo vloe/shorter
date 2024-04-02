@@ -14,7 +14,10 @@ async fn fetch(req: HttpRequest, _env: Env, _ctx: Context) -> Result<Response<Bo
     console_error_panic_hook::set_once();
 
     let cors = CorsLayer::new()
-        .allow_origin("https://shorter.dev".parse::<HeaderValue>().unwrap())
+        .allow_origin([
+            "https://shorter.dev".parse::<HeaderValue>().unwrap(),
+            "http://localhost:5173".parse::<HeaderValue>().unwrap(),
+        ])
         .allow_headers([CONTENT_TYPE])
         .allow_methods([Method::GET, Method::POST, Method::HEAD, Method::OPTIONS]);
 
