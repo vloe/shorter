@@ -4,23 +4,23 @@ use typeshare::typeshare;
 
 #[typeshare]
 #[derive(Deserialize)]
-struct DomainArgs {
+struct ShortenArgs {
     domain: String,
 }
 
 #[typeshare]
 #[derive(Serialize)]
-struct DomainRes {
+struct ShortenRes {
     domain_list: String,
 }
 
 pub(crate) fn mount() -> Router {
     Router::new().route(
-        "/domain",
-        post(|args: Json<DomainArgs>| async move {
+        "/shorten",
+        post(|args: Json<ShortenArgs>| async move {
             let domain = args.domain.trim();
 
-            return Json(DomainRes {
+            return Json(ShortenRes {
                 domain_list: domain.to_string(),
             });
         }),

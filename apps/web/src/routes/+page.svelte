@@ -1,31 +1,29 @@
 <script lang="ts">
-	import type { DomainArgs, DomainRes } from "$lib/types"
+	import type { ShortenArgs, ShortenRes } from "$lib/types"
 	import { createMutation } from "@tanstack/svelte-query"
 	import { API_URL } from "$lib/constants"
 
-	let domainArgs = $state<DomainArgs>({
-		domain: "",
-	})
+	let shortenArgs = $state<ShortenArgs>({ domain: "" })
 
-	const domainMutation = createMutation({
+	const shortenMutation = createMutation({
 		mutationFn: async () => {
-			const res = await fetch(`${API_URL}/domain`, {
+			const res = await fetch(`${API_URL}/shorten`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify(domainArgs),
+				body: JSON.stringify(shortenArgs),
 			})
-			const data: DomainRes = await res.json()
+			const data: ShortenRes = await res.json()
 			return data
 		},
 	})
 </script>
 
 <div class="flex w-min flex-col">
-	<input bind:value={domainArgs.domain} />
-	<button on:click={() => $domainMutation.mutate()}>click to send</button>
-	{#if $domainMutation.data}
-		{$domainMutation.data.domain_list}
+	<input bind:value={shortenArgs.domain} />
+	<button on:click={() => $shortenMutation.mutate()}>click to send</button>
+	{#if $shortenMutation.data}
+		{$shortenMutation.data.domain_list}
 	{/if}
 </div>
