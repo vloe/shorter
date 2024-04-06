@@ -15,6 +15,7 @@
 				body: JSON.stringify(shortenArgs),
 			})
 			const data: ShortenRes = await res.json()
+			console.log(data)
 			return data
 		},
 	})
@@ -24,6 +25,8 @@
 	<input bind:value={shortenArgs.domain} />
 	<button on:click={() => $shortenMutation.mutate()}>click to send</button>
 	{#if $shortenMutation.data}
-		{$shortenMutation.data.domain_list}
+		{#each Object.entries($shortenMutation.data.domain_list[0]) as [key, value]}
+			<p>{key}: {value}</p>
+		{/each}
 	{/if}
 </div>
