@@ -1,5 +1,5 @@
-use crate::constants::tlds::{Scores, Tld, TLDS};
-use axum::{routing::post, Json, Router};
+use crate::constants::tlds::{Tld, TLDS};
+use axum::{http::StatusCode, routing::post, Json, Router};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
@@ -12,28 +12,21 @@ struct ShortenArgs {
 #[typeshare]
 #[derive(Serialize)]
 struct ShortenRes {
-    domain_list: Vec<Tld>,
+    message: &'static str,
 }
 
 pub(crate) fn mount() -> Router {
     Router::new().route(
         "/shorten",
         post(|args: Json<ShortenArgs>| async move {
-            let domain = args.domain.trim();
+            let domain = args.domain.trim().to_lowercase();
 
-            Json(ShortenRes {
-                domain_list: vec![Tld {
-                    domain: "test.com",
-                    category: "generic",
-                    manager: "Able Inc.",
-                    scores: Scores {
-                        length: 0,
-                        popularity: 0,
-                        similarity: 0,
-                        total: 0,
-                    },
-                }],
-            })
+            // validate
+            if domain.len() < 3 {
+                return Err((StatusCode::BAD_REQUEST, "Domain is too short"));
+            }
+
+            Ok(Json(ShortenRes { message: "works!" }))
         }),
     )
 }

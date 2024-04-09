@@ -14,10 +14,14 @@
 				},
 				body: JSON.stringify(shortenArgs),
 			})
+			if (!res.ok) throw new Error(await res.text())
 			const data: ShortenRes = await res.json()
-			console.log(data)
 			return data
 		},
+	})
+
+	$effect(() => {
+		console.log("shortenMutation", $shortenMutation)
 	})
 </script>
 
@@ -25,6 +29,9 @@
 	<input bind:value={shortenArgs.domain} />
 	<button on:click={() => $shortenMutation.mutate()}>click to send</button>
 	{#if $shortenMutation.data}
-		{JSON.stringify($shortenMutation.data)}
+		<p class="text-green-400">{JSON.stringify($shortenMutation.data)}</p>
+	{/if}
+	{#if $shortenMutation.error}
+		<p class="text-red-400">{$shortenMutation.error.message}</p>
 	{/if}
 </div>

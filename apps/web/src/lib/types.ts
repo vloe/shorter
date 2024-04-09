@@ -6,13 +6,14 @@ export interface ShortenArgs {
 	domain: string;
 }
 
-export interface Tld {
-	domain: string;
-	category: string;
-	manager: string;
+export interface ShortenRes {
+	domain_list?: Domain[];
+	error_message?: string;
 }
 
-export interface ShortenRes {
-	domain_list: Tld[];
+export interface Tld {
+	name: string;
+	category: string;
+	manager: string;
 }
 
