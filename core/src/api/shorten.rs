@@ -3,7 +3,6 @@ use axum::{http::StatusCode, routing::post, Json, Router};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
-use url::Url;
 
 #[typeshare]
 #[derive(Deserialize)]
@@ -24,10 +23,6 @@ pub(crate) fn mount() -> Router {
             let domain = args.domain.trim().to_lowercase();
 
             // validate
-            if domain.is_empty() {
-                return Err((StatusCode::BAD_REQUEST, "Domain cannot be empty"));
-            }
-
             if domain.len() < 3 {
                 return Err((
                     StatusCode::BAD_REQUEST,
@@ -42,13 +37,12 @@ pub(crate) fn mount() -> Router {
                 ));
             }
 
-            let domain_regex = Regex::new(r"^[\w\-.~:/?#\[\]@!$&'()*+,;=%]+$").unwrap();
+            let domain_regex = Regex::new(r"^[a-z-]+(?:\.[a-z]+)?$").unwrap();
             if !domain_regex.is_match(&domain) {
-                return Err((
-                    StatusCode::BAD_REQUEST,
-                    "Domain contains invalid characters",
-                ));
+                return Err((StatusCode::BAD_REQUEST, "Domain must be valid"));
             }
+
+            // extract sld and tld
 
             Ok(Json(ShortenRes { message: "works!" }))
         }),

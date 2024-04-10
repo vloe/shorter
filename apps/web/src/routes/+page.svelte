@@ -26,7 +26,7 @@
 </script>
 
 <div class="flex w-min flex-col">
-	<input bind:value={shortenArgs.domain} />
+	<input bind:value={shortenArgs.domain} placeholder="example.com" />
 	<button on:click={() => $shortenMutation.mutate()}>click to send</button>
 	{#if $shortenMutation.data}
 		<p class="text-green-400">{JSON.stringify($shortenMutation.data)}</p>
