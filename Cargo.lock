@@ -676,8 +676,10 @@ name = "sh-core"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "regex",
  "serde",
  "typeshare",
+ "url",
 ]
 
 [[package]]

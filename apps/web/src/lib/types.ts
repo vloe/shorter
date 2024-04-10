@@ -3,17 +3,15 @@
 */
 
 export interface ShortenArgs {
-	domain: string;
+	domain: string
 }
 
 export interface ShortenRes {
-	domain_list?: Domain[];
-	error_message?: string;
+	message: string
 }
 
 export interface Tld {
-	name: string;
-	category: string;
-	manager: string;
+	name: string
+	category: string
+	manager: string
 }
-
