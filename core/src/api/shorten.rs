@@ -29,10 +29,10 @@ pub(crate) fn mount() -> Router {
                 l if l.len() < 3 => "Domain must be at least 3 characters",
                 l if l.len() > 64 => "Domain must be at most 64 characters",
                 r if r.matches('.').count() > 1 => "Domain cannot contain more than one dot",
-                r if !Regex::new(r"^[a-z\-\.]+$").unwrap().is_match(&r) => {
+                r if !Regex::new(r"^[a-z\-\.]+$").unwrap().is_match(r) => {
                     "Domain cannot contain special characters or numbers"
                 }
-                r if !Regex::new(r"^[a-z-]+(?:\.[a-z]+)*$").unwrap().is_match(&r) => {
+                r if !Regex::new(r"^[a-z-]+(?:\.[a-z]+)*$").unwrap().is_match(r) => {
                     "Domain must use 'example' or 'example.com' format"
                 }
                 _ => "",
