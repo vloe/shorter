@@ -13,6 +13,8 @@ struct ShortenArgs {
 #[derive(Serialize)]
 struct ShortenRes {
     message: &'static str,
+    sld: String,
+    tld: String,
 }
 
 pub(crate) fn mount() -> Router {
@@ -22,7 +24,7 @@ pub(crate) fn mount() -> Router {
             let domain = args.domain.trim().to_lowercase();
 
             // validate
-            let err_msg = match domain {
+            let err_msg = match &domain {
                 l if l.is_empty() => "Domain cannot be empty",
                 l if l.len() < 3 => "Domain must be at least 3 characters",
                 l if l.len() > 64 => "Domain must be at most 64 characters",
@@ -40,7 +42,16 @@ pub(crate) fn mount() -> Router {
                 return Err((StatusCode::BAD_REQUEST, err_msg));
             }
 
-            Ok(Json(ShortenRes { message: "works!" }))
+            // extract sld and tld
+            let parts: Vec<&str> = domain.split('.').collect();
+            let sld = parts[0].to_string();
+            let tld = parts.get(1).map(|s| format!(".{}", s)).unwrap_or_default();
+
+            Ok(Json(ShortenRes {
+                message: "works!",
+                sld,
+                tld,
+            }))
         }),
     )
 }
