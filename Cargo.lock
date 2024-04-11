@@ -679,6 +679,7 @@ dependencies = [
  "regex",
  "serde",
  "typeshare",
+ "url",
 ]
 
 [[package]]

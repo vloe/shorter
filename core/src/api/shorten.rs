@@ -1,4 +1,3 @@
-use crate::constants::tlds::{Tld, TLDS};
 use axum::{http::StatusCode, routing::post, Json, Router};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
@@ -23,26 +22,23 @@ pub(crate) fn mount() -> Router {
             let domain = args.domain.trim().to_lowercase();
 
             // validate
-            if domain.len() < 3 {
-                return Err((
-                    StatusCode::BAD_REQUEST,
-                    "Domain must be at least 3 characters",
-                ));
-            }
+            let err_msg = match domain {
+                l if l.is_empty() => "Domain cannot be empty",
+                l if l.len() < 3 => "Domain must be at least 3 characters",
+                l if l.len() > 64 => "Domain must be at most 64 characters",
+                r if r.matches('.').count() > 1 => "Domain cannot contain more than one dot",
+                r if !Regex::new(r"^[a-z\-\.]+$").unwrap().is_match(&r) => {
+                    "Domain cannot contain special characters or numbers"
+                }
+                r if !Regex::new(r"^[a-z-]+(?:\.[a-z]+)*$").unwrap().is_match(&r) => {
+                    "Domain must use 'example' or 'example.com' format"
+                }
+                _ => "",
+            };
 
-            if domain.len() > 64 {
-                return Err((
-                    StatusCode::BAD_REQUEST,
-                    "Domain must be at most 64 characters",
-                ));
+            if !err_msg.is_empty() {
+                return Err((StatusCode::BAD_REQUEST, err_msg));
             }
-
-            let domain_regex = Regex::new(r"^[a-z-]+(?:\.[a-z]+)?$").unwrap();
-            if !domain_regex.is_match(&domain) {
-                return Err((StatusCode::BAD_REQUEST, "Domain must be valid"));
-            }
-
-            // extract sld and tld
 
             Ok(Json(ShortenRes { message: "works!" }))
         }),
