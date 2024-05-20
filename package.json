@@ -6,7 +6,8 @@
 		"gen:types": "typeshare ./core --lang=typescript --output-file=./apps/web/src/lib/types/core.ts",
 		"web": "pnpm --filter @sh/web -- ",
 		"core": "pnpm --filter @sh/server -- ",
-		"config": "pnpm --filter @sh/config -- "
+		"config": "pnpm --filter @sh/config -- ",
+		"ui": "pnpm --filter @sh/ui -- "
 	},
 	"devDependencies": {
 		"prettier": "^3.2.5",
