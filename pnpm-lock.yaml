@@ -20,9 +20,6 @@ importers:
       turbo:
         specifier: ^1.13.0
         version: 1.13.0
-      wrangler:
-        specifier: ^3.39.0
-        version: 3.39.0
 
   apps/server: {}
 
