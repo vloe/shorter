@@ -6,7 +6,3 @@ repository = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
-axum  = { workspace = true, features = ["json"] }
-typeshare = "1.0.2"
-serde = { version = "1.0", features = ["derive"] }
-regex = "1.10.4"
