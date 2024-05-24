@@ -6,13 +6,10 @@ jobs:
         permissions:
             contents: read
             deployments: write
-        name: Publish to Cloudflare
+        name: Publish
         steps:
             - name: Checkout
               uses: actions/checkout@v3
-
-            - name: Setup Node.js, pnpm and dependencies
-              uses: ./.github/actions/setup-pnpm
 
             - name: Build
               run: pnpm build
@@ -23,11 +20,3 @@ jobs:
                   apiToken: ${{ secrets.CF_API_TOKEN }}
                   accountId: ${{ secrets.CF_ACCOUNT_ID }}
                   workingDirectory: ./apps/server
-
-            - name: Publish to Cloudflare Pages
-              uses: cloudflare/pages-action@v1
-              with:
-                  apiToken: ${{ secrets.CF_API_TOKEN }}
-                  accountId: ${{ secrets.CF_ACCOUNT_ID }}
-                  projectName: ${{ secrets.CF_PROJECT_NAME }}
-                  directory: ./apps/web/build
