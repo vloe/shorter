@@ -1,9 +1,9 @@
 <script>
-	import "@sh/config/tailwind/app.css"
-	import Navbar from "$lib/components/Navbar.svelte"
+	import "../app.css"
+
+	let { children } = $props()
 </script>
 
 <div class="container max-w-screen-xl px-8">
-	<Navbar />
-	<slot />
+	{@render children()}
 </div>
