@@ -4,7 +4,8 @@
 		"build": "turbo run build",
 		"format": "prettier --write .",
 		"landing": "pnpm --filter @sh/landing -- ",
-		"web": "pnpm --filter @sh/web -- "
+		"web": "pnpm --filter @sh/web -- ",
+		"ui": "pnpm --filter @sh/ui -- "
 	},
 	"devDependencies": {
 		"prettier": "^3.2.5",
