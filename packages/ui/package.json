@@ -4,11 +4,16 @@
 	"scripts": {
 		"dev": "vite dev"
 	},
+	"exports": {
+		"./components/*": "./src/lib/components/*",
+		"./icons/*": "./src/lib/icons/*"
+	},
 	"peerDependencies": {
 		"svelte": "^5.0.0-next.1"
 	},
 	"devDependencies": {
 		"@sh/config": "workspace:^",
+		"@sh/utils": "workspace:^",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/package": "^2.0.0",

@@ -11,6 +11,8 @@
 	},
 	"devDependencies": {
 		"@sh/config": "workspace:^",
+		"@sh/ui": "workspace:^",
+		"@sh/utils": "workspace:^",
 		"@sveltejs/adapter-cloudflare": "^4.4.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",

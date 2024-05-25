@@ -26,6 +26,12 @@ importers:
       '@sh/config':
         specifier: workspace:^
         version: link:../../packages/config
+      '@sh/ui':
+        specifier: workspace:^
+        version: link:../../packages/ui
+      '@sh/utils':
+        specifier: workspace:^
+        version: link:../../packages/utils
       '@sveltejs/adapter-static':
         specifier: ^3.0.1
         version: 3.0.1(@sveltejs/kit@2.5.4(@sveltejs/vite-plugin-svelte@3.0.2(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.12.12)))(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.12.12)))
@@ -56,6 +62,12 @@ importers:
       '@sh/config':
         specifier: workspace:^
         version: link:../../packages/config
+      '@sh/ui':
+        specifier: workspace:^
+        version: link:../../packages/ui
+      '@sh/utils':
+        specifier: workspace:^
+        version: link:../../packages/utils
       '@sveltejs/adapter-cloudflare':
         specifier: ^4.4.0
         version: 4.4.0(@sveltejs/kit@2.5.4(@sveltejs/vite-plugin-svelte@3.0.2(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.12.12)))(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.12.12)))(wrangler@3.57.1(@cloudflare/workers-types@4.20240512.0))
@@ -101,6 +113,9 @@ importers:
       '@sh/config':
         specifier: workspace:^
         version: link:../config
+      '@sh/utils':
+        specifier: workspace:^
+        version: link:../utils
       '@sveltejs/adapter-auto':
         specifier: ^3.0.0
         version: 3.2.1(@sveltejs/kit@2.5.4(@sveltejs/vite-plugin-svelte@3.0.2(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.12.12)))(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.12.12)))
@@ -135,6 +150,15 @@ importers:
         specifier: ^5.0.11
         version: 5.2.6(@types/node@20.12.12)
 
+  packages/utils:
+    devDependencies:
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      tailwind-merge:
+        specifier: ^2.3.0
+        version: 2.3.0
+
 packages:
 
   '@alloc/quick-lru@5.2.0':
@@ -144,6 +168,10 @@ packages:
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
+
+  '@babel/runtime@7.24.6':
+    resolution: {integrity: sha512-Ja18XcETdEl5mzzACGd+DKgaGJzPTCow7EglgwTmHdwokzDFYh/MHua6lU6DV/hjF2IaOJ4oX2nqnjG7RElKOw==}
+    engines: {node: '>=6.9.0'}
 
   '@cloudflare/kv-asset-handler@0.3.2':
     resolution: {integrity: sha512-EeEjMobfuJrwoctj7FA1y1KEbM0+Q1xSjobIEyie9k4haVEBB7vkDvsasw1pM3rO39mL2akxIAzLMUAtrMHZhA==}
@@ -750,6 +778,10 @@ packages:
     resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}
     engines: {node: '>=6'}
 
+  clsx@2.1.1:
+    resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
+    engines: {node: '>=6'}
+
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
     engines: {node: '>=7.0.0'}
@@ -1292,6 +1324,9 @@ packages:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==}
     engines: {node: '>=8.10.0'}
 
+  regenerator-runtime@0.14.1:
+    resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
+
   regexparam@3.0.0:
     resolution: {integrity: sha512-RSYAtP31mvYLkAHrOlh25pCNQ5hWnT106VukGaaFfuJrZFkGRX5GhUAdPqpSDXxOhA2c4akmRuplv1mRqnBn6Q==}
     engines: {node: '>=8'}
@@ -1479,6 +1514,9 @@ packages:
   svelte@5.0.0-next.141:
     resolution: {integrity: sha512-zT74TUo0vOOrbxRfdlWXu+ac4O9lqPFG0YoZB3uOfrOewT1GKxKm0qwG/jo9bGvgZ++TSHjR7AtV091LY2FhBA==}
     engines: {node: '>=18'}
+
+  tailwind-merge@2.3.0:
+    resolution: {integrity: sha512-vkYrLpIP+lgR0tQCG6AP7zZXCTLc1Lnv/CCRT3BqJ9CZ3ui2++GPaGb1x/ILsINIMSYqqvrpqjUFsMNLlW99EA==}
 
   tailwindcss@3.4.3:
     resolution: {integrity: sha512-U7sxQk/n397Bmx4JHbJx/iSOOv5G+II3f1kpLpY2QeUv5DcPdcTsYLlusZfq1NthHS1c1cZoyFmmkex1rzke0A==}
@@ -1672,6 +1710,10 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
+
+  '@babel/runtime@7.24.6':
+    dependencies:
+      regenerator-runtime: 0.14.1
 
   '@cloudflare/kv-asset-handler@0.3.2':
     dependencies:
@@ -2122,6 +2164,8 @@ snapshots:
       clsx: 2.0.0
 
   clsx@2.0.0: {}
+
+  clsx@2.1.1: {}
 
   color-convert@2.0.1:
     dependencies:
@@ -2595,6 +2639,8 @@ snapshots:
     dependencies:
       picomatch: 2.3.1
 
+  regenerator-runtime@0.14.1: {}
+
   regexparam@3.0.0: {}
 
   resolve-from@4.0.0: {}
@@ -2801,6 +2847,10 @@ snapshots:
       locate-character: 3.0.0
       magic-string: 0.30.8
       zimmerframe: 1.1.2
+
+  tailwind-merge@2.3.0:
+    dependencies:
+      '@babel/runtime': 7.24.6
 
   tailwindcss@3.4.3:
     dependencies:
