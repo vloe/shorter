@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn } from "@sh/utils/cn.ts"
+	import { cn } from "../utils/cn"
 	import type { Snippet } from 'svelte';
 	import type { HTMLButtonAttributes } from "svelte/elements"
 	import { cva, type VariantProps } from "cva"

@@ -29,9 +29,6 @@ importers:
       '@sh/ui':
         specifier: workspace:^
         version: link:../../packages/ui
-      '@sh/utils':
-        specifier: workspace:^
-        version: link:../../packages/utils
       '@sveltejs/adapter-static':
         specifier: ^3.0.1
         version: 3.0.1(@sveltejs/kit@2.5.4(@sveltejs/vite-plugin-svelte@3.0.2(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.12.12)))(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.12.12)))
@@ -65,9 +62,6 @@ importers:
       '@sh/ui':
         specifier: workspace:^
         version: link:../../packages/ui
-      '@sh/utils':
-        specifier: workspace:^
-        version: link:../../packages/utils
       '@sveltejs/adapter-cloudflare':
         specifier: ^4.4.0
         version: 4.4.0(@sveltejs/kit@2.5.4(@sveltejs/vite-plugin-svelte@3.0.2(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.12.12)))(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.12.12)))(wrangler@3.57.1(@cloudflare/workers-types@4.20240512.0))
@@ -113,9 +107,6 @@ importers:
       '@sh/config':
         specifier: workspace:^
         version: link:../config
-      '@sh/utils':
-        specifier: workspace:^
-        version: link:../utils
       '@sveltejs/adapter-auto':
         specifier: ^3.0.0
         version: 3.2.1(@sveltejs/kit@2.5.4(@sveltejs/vite-plugin-svelte@3.0.2(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.12.12)))(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.12.12)))
@@ -128,6 +119,9 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.0
         version: 3.0.2(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.12.12))
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       cva:
         specifier: npm:class-variance-authority@^0.7.0
         version: class-variance-authority@0.7.0
@@ -140,6 +134,9 @@ importers:
       svelte-check:
         specifier: ^3.6.0
         version: 3.6.8(postcss-load-config@4.0.2(postcss@8.4.38))(postcss@8.4.38)(svelte@5.0.0-next.141)
+      tailwind-merge:
+        specifier: ^2.3.0
+        version: 2.3.0
       tslib:
         specifier: ^2.4.1
         version: 2.6.2
