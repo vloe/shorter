@@ -5,6 +5,6 @@
 	"semi": false,
 	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
 	"overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
-	"tailwindConfig": "./apps/web/tailwind.config.js",
+	"tailwindConfig": "./packages/config/tailwind/tailwind.config.cjs",
 	"tailwindFunctions": ["cn", "cva"]
 }
