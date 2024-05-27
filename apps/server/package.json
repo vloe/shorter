@@ -1,0 +1,10 @@
+{
+	"name": "@sh/server",
+	"private": true,
+	"scripts": {
+		"dev": "wrangler dev --local"
+	},
+	"devDependencies": {
+		"wrangler": "^3.57.1"
+	}
+}

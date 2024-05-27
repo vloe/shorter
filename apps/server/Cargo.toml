@@ -5,4 +5,13 @@ license = { workspace = true }
 repository = { workspace = true }
 edition = { workspace = true }
 
+[lib]
+crate-type = ["cdylib"]
+
 [dependencies]
+worker = { verison = "0.0.21", features = ["http"] }
+axum = { workspace = true }
+tower-service = "0.3.2"
+console_error_panic_hook = { version = "0.1.1" }
+wasm-bindgen-futures = "0.4"
+sh-core = { path = "../../core" }

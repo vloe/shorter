@@ -5,6 +5,7 @@
 		"format": "prettier --write .",
 		"landing": "pnpm --filter @sh/landing -- ",
 		"web": "pnpm --filter @sh/web -- ",
+		"core": "pnpm --filter @sh/server -- ",
 		"ui": "pnpm --filter @sh/ui -- "
 	},
 	"devDependencies": {

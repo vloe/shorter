@@ -60,6 +60,12 @@ importers:
         specifier: ^5.0.3
         version: 5.2.6(@types/node@20.12.12)
 
+  apps/server:
+    devDependencies:
+      wrangler:
+        specifier: ^3.57.1
+        version: 3.57.1(@cloudflare/workers-types@4.20240512.0)
+
   apps/web:
     devDependencies:
       '@sh/config':
