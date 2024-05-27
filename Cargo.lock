@@ -55,6 +55,7 @@ dependencies = [
  "pin-project-lite",
  "rustversion",
  "serde",
+ "serde_urlencoded",
  "sync_wrapper 1.0.1",
  "tower",
  "tower-layer",
@@ -489,6 +490,7 @@ name = "sh-core"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "serde",
 ]
 
 [[package]]

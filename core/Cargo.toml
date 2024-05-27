@@ -6,4 +6,5 @@ repository = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
-axum = { workspace = true }
+axum = { workspace = true, features = ["query"] }
+serde = { version = "1.0", features = ["derive"] }
