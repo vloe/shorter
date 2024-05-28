@@ -33,7 +33,7 @@ jobs:
                   projectName: sh-web
                   directory: ./apps/web/.svelte-kit/cloudflare
 
-            - name: Publish server to cloudflare pages
+            - name: Publish server to cloudflare workers
               uses: cloudflare/wrangler-action@v3
               with:
                   apiToken: ${{ secrets.CF_API_TOKEN }}
