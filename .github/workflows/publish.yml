@@ -32,3 +32,9 @@ jobs:
                   accountId: ${{ secrets.CF_ACCOUNT_ID }}
                   projectName: sh-web
                   directory: ./apps/web/.svelte-kit/cloudflare
+
+            - name: Publish server to cloudflare pages
+              uses: cloudflare/wrangler-action@v3
+              with:
+                  apiToken: ${{ secrets.CF_API_TOKEN }}
+                  workingDirectory: ./apps/server
