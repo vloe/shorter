@@ -38,6 +38,9 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.0
         version: 3.0.2(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.13.0))
+      '@tanstack/svelte-query':
+        specifier: ^5.44.0
+        version: 5.44.0(svelte@5.0.0-next.141)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -686,6 +689,14 @@ packages:
     peerDependencies:
       svelte: ^4.0.0 || ^5.0.0-next.0
       vite: ^5.0.0
+
+  '@tanstack/query-core@5.44.0':
+    resolution: {integrity: sha512-Fa1J7iEEyJnjXG1N4+Fz4OXNH/INve3XSn0Htms3X4wgRsXHxMDwqBE2XtDCts7swkwSIs4izEtaFqWVFr/eLQ==}
+
+  '@tanstack/svelte-query@5.44.0':
+    resolution: {integrity: sha512-RkTutmlAaAo/Gh56aMrivhgxrZ9UE0YEqL4vJkerWECXVf6MvGCQCL40QSPWJd3OElGQEGv0paeMSnzufrj2zA==}
+    peerDependencies:
+      svelte: ^3.54.0 || ^4.0.0 || ^5.0.0-next.0
 
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
@@ -2131,6 +2142,13 @@ snapshots:
       vitefu: 0.2.5(vite@5.2.6(@types/node@20.13.0))
     transitivePeerDependencies:
       - supports-color
+
+  '@tanstack/query-core@5.44.0': {}
+
+  '@tanstack/svelte-query@5.44.0(svelte@5.0.0-next.141)':
+    dependencies:
+      '@tanstack/query-core': 5.44.0
+      svelte: 5.0.0-next.141
 
   '@types/cookie@0.6.0': {}
 

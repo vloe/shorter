@@ -12,3 +12,4 @@ repository = "https://github.com/vloe/shorter"
 
 [workspace.dependencies]
 axum  = { version = "0.7", default-features = false }
+typeshare = "1.0.0"
