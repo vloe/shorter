@@ -12,7 +12,7 @@ use tower_http::cors::CorsLayer;
 use tower_service::Service;
 use worker::*;
 
-async fn my_middleware(req: axum::extract::Request, next: Next) -> axum::response::Response {
+async fn cache_control(req: axum::extract::Request, next: Next) -> axum::response::Response {
     let mut res = next.run(req).await;
     res.headers_mut()
         .insert(CACHE_CONTROL, "max-age=600".parse::<HeaderValue>().unwrap());
@@ -39,7 +39,7 @@ async fn fetch(
         .route("/", get(|| async { "sh-server" }))
         .merge(mount())
         .layer(cors)
-        .layer(middleware::from_fn(my_middleware))
+        .layer(middleware::from_fn(cache_control))
         .call(req)
         .await?;
 
