@@ -1,5 +1,9 @@
 use axum::{
-    http::{header::CONTENT_TYPE, HeaderValue, Method},
+    http::{
+        header::{CACHE_CONTROL, CONTENT_TYPE},
+        HeaderValue, Method,
+    },
+    middleware::{self, Next},
     routing::get,
     Router,
 };
@@ -7,6 +11,13 @@ use sh_core::api::mount;
 use tower_http::cors::CorsLayer;
 use tower_service::Service;
 use worker::*;
+
+async fn my_middleware(req: axum::extract::Request, next: Next) -> axum::response::Response {
+    let mut res = next.run(req).await;
+    res.headers_mut()
+        .insert(CACHE_CONTROL, "max-age=600".parse::<HeaderValue>().unwrap());
+    res
+}
 
 #[event(fetch)]
 async fn fetch(
@@ -28,6 +39,7 @@ async fn fetch(
         .route("/", get(|| async { "sh-server" }))
         .merge(mount())
         .layer(cors)
+        .layer(middleware::from_fn(my_middleware))
         .call(req)
         .await?;
 
