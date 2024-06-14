@@ -4,7 +4,7 @@
 </script>
 
 <div class="container px-6">
-	<footer class="flex h-28 items-center justify-between">
+	<footer class="flex h-24 items-center justify-between">
 		<div>
 			<h2 class="font-lumiera text-3xl">shorter</h2>
 			<p class="mt-1 text-sm text-muted-foreground">
