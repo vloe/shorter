@@ -1,13 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	darkMode: ["class"],
-	content: [
-        "./src/**/*.{html,js,svelte,ts}",
-        '../../packages/ui/src/lib/**/*.{svelte,ts}'
-    ],
+	content: ["./src/**/*.{html,js,svelte,ts}", "../../packages/ui/src/lib/**/*.{svelte,ts}"],
 	theme: {
 		container: {
 			center: true,
+		},
+		fontFamily: {
+			sans: ["Manrope", "ui-sans-serif", "sans-serif"],
+			lumiera: ["Lumiera"],
 		},
 		extend: {
 			colors: {

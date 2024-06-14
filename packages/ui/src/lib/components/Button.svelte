@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { cn } from "../utils/cn"
-	import type { Snippet } from 'svelte';
+	import type { Snippet } from "svelte"
 	import type { HTMLButtonAttributes } from "svelte/elements"
 	import { cva, type VariantProps } from "cva"
 
 	const variants = cva(
-		"cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+		"inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
 		{
 			variants: {
 				variant: {
@@ -28,14 +28,9 @@
 
 	// props
 	interface $Props extends HTMLButtonAttributes, VariantProps<typeof variants> {
-        children: Snippet
-    }
-	let { 
-        children,
-        variant = "primary", 
-        size = "default", 
-        ...props 
-    }: $Props = $props()
+		children: Snippet
+	}
+	let { children, variant = "primary", size = "default", ...props }: $Props = $props()
 </script>
 
 <button {...props} class={cn(variants({ variant, size }), props.class)}>
