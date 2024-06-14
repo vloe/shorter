@@ -26,3 +26,7 @@
 
 	$inspect($query.data)
 </script>
+
+<div class="container px-6">
+	<main class="flex min-h-screen flex-col items-center justify-center"></main>
+</div>
