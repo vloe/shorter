@@ -23,12 +23,6 @@
 		},
 		retry: false,
 	})
-</script>
 
-<input bind:value={params.domain} />
-<button onclick={() => $query.refetch()}>click to refetch</button>
-{#if $query.isError}
-	<p class="text-red-300">{$query.error.message}</p>
-{:else}
-	<p class="text-green-300">{JSON.stringify($query.data)}</p>
-{/if}
+	$inspect($query.data)
+</script>
