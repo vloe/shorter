@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Button from "@sh/ui/src/lib/components/Button.svelte"
-	import Link from "@sh/ui/src/lib/components/Link.svelte"
 	import Arrow from "@sh/ui/src/lib/icons/Arrow.svelte"
 </script>
 
@@ -9,17 +8,9 @@
 		<a href="/">
 			<h2 class="font-lumiera text-3xl">shorter</h2>
 		</a>
-		<nav class="flex items-center space-x-1">
-			<Button class="group space-x-1.5 rounded-xl duration-200">
-				<span>start now</span>
-				<Arrow class="h-3 w-3 stroke-[1.3px]" />
-			</Button>
-			<Link
-				href="https://github.com/vloe/shorter"
-				class="!no-underline duration-200 hover:text-primary/75"
-			>
-				log in
-			</Link>
-		</nav>
+		<Button class="group space-x-1.5 rounded-xl duration-200">
+			<span>try for free</span>
+			<Arrow class="h-3 w-3 stroke-[1.3px]" />
+		</Button>
 	</header>
 </div>
