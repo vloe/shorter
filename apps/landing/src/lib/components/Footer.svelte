@@ -8,7 +8,7 @@
 		<div>
 			<h2 class="font-lumiera text-3xl">shorter</h2>
 			<p class="mt-1 text-sm text-muted-foreground">
-				© {new Date().getFullYear()} shorter, inc.
+				© {new Date().getFullYear()} vloe, inc.
 			</p>
 		</div>
 		<div class="flex flex-row items-center space-x-4">
