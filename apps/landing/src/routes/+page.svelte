@@ -47,7 +47,7 @@
 					<Arrow class="h-3 w-3 stroke-[1.2px]" />
 				</Button>
 				<a
-					href="/login"
+					href="/"
 					class="group flex items-center space-x-[5px] text-sm font-medium duration-200 hover:text-primary/75"
 				>
 					<span>log in</span>
