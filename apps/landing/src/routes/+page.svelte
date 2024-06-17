@@ -42,7 +42,7 @@
 				find a shorter version of your domain like linktree.com -> linktr.ee.
 			</h2>
 			<Button class="group space-x-1.5 rounded-xl duration-200">
-				<span>start now</span>
+				<span>try now</span>
 				<Arrow class="h-3 w-3 stroke-[1.3px]" />
 			</Button>
 		</main>
