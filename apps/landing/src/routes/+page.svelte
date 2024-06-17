@@ -41,10 +41,19 @@
 			<h2 class="my-6 text-center">
 				find a shorter version of your domain like linktree.com -> linktr.ee.
 			</h2>
-			<Button class="group space-x-1.5 rounded-xl duration-200">
-				<span>try now</span>
-				<Arrow class="h-3 w-3 stroke-[1.3px]" />
-			</Button>
+			<div class="flex items-center space-x-6">
+				<Button class="group space-x-[5px] rounded-xl duration-200">
+					<span>start now</span>
+					<Arrow class="h-3 w-3 stroke-[1.2px]" />
+				</Button>
+				<a
+					href="/login"
+					class="group flex items-center space-x-[5px] text-sm font-medium duration-200 hover:text-primary/75"
+				>
+					<span>log in</span>
+					<Arrow class="h-3 w-3 stroke-[1.2px]" />
+				</a>
+			</div>
 		</main>
 	</div>
 </div>

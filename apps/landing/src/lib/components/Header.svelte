@@ -8,9 +8,18 @@
 		<a href="/">
 			<h2 class="font-lumiera text-3xl">shorter</h2>
 		</a>
-		<Button class="group space-x-1.5 rounded-xl duration-200">
-			<span>try for free</span>
-			<Arrow class="h-3 w-3 stroke-[1.3px]" />
-		</Button>
+		<div class="flex items-center space-x-6">
+			<Button class="group space-x-[5px] rounded-xl duration-200">
+				<span>start now</span>
+				<Arrow class="h-3 w-3 stroke-[1.2px]" />
+			</Button>
+			<a
+				href="/login"
+				class="group flex items-center space-x-[5px] text-sm font-medium duration-200 hover:text-primary/75"
+			>
+				<span>log in</span>
+				<Arrow class="h-3 w-3 stroke-[1.2px]" />
+			</a>
+		</div>
 	</header>
 </div>
