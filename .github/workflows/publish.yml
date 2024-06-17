@@ -25,6 +25,14 @@ jobs:
                   projectName: sh-landing
                   directory: ./apps/landing/build
 
+            - name: Publish web to cloudflare pages
+              uses: cloudflare/pages-action@v1
+              with:
+                  apiToken: ${{ secrets.CF_API_TOKEN }}
+                  accountId: ${{ secrets.CF_ACCOUNT_ID }}
+                  projectName: sh-web
+                  directory: ./apps/web/build
+
             - name: Publish server to cloudflare workers
               uses: cloudflare/wrangler-action@v3
               with:
