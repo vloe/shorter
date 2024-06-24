@@ -7,5 +7,6 @@ edition = { workspace = true }
 
 [dependencies]
 axum = { workspace = true, features = ["query", "json"] }
+worker = { workspace = true }
 serde = { version = "1.0", features = ["derive"] }
 typeshare = { workspace = true }

@@ -32,14 +32,10 @@
 <div class="container px-6">
 	<div class="pt-24 xl:pt-44">
 		<main class="flex min-h-screen flex-col items-center">
-			<h1 class="text-center text-5xl font-extrabold sm:text-7xl">
-				worlds first
-				<span class="text-muted-foreground line-through decoration-4">url</span>
-				domain
-				<br class="hidden lg:flex" /> shortener
-			</h1>
-			<h2 class="my-6 text-center">
-				find a shorter version of your domain like linktree.com -> linktr.ee.
+			<h1 class="text-center text-5xl font-extrabold sm:text-7xl">a domain shortener tool</h1>
+			<h2 class="my-6 max-w-2xl text-center">
+				searches through thousands of tlds to find a shorter version of your domain, for
+				example linktree.com --> linktr.ee
 			</h2>
 			<div class="flex items-center space-x-6">
 				<Button class="group space-x-[5px] rounded-xl duration-200">
