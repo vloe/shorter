@@ -7,8 +7,3 @@ command = "cargo install -q worker-build && worker-build --release"
 
 [env.dev]
 build = { command = "cargo install -q worker-build && worker-build --dev" }
-
-[[d1_databases]]
-binding = "db"
-database_name = "sh-db"
-database_id = "9219fa1c-081b-4988-af75-261197bda356"
