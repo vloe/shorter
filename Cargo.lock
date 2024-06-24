@@ -557,7 +557,6 @@ dependencies = [
  "axum",
  "serde",
  "typeshare",
- "worker",
 ]
 
 [[package]]

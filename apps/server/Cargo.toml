@@ -9,8 +9,8 @@ edition = { workspace = true }
 crate-type = ["cdylib"]
 
 [dependencies]
-worker = { workspace = true }
 axum = { workspace = true }
+worker = { verison = "0.0.21", features = ["http", "d1"] }
 tower-service = "0.3.2"
 console_error_panic_hook = { version = "0.1.1" }
 wasm-bindgen-futures = "0.4"
