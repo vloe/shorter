@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from "@sh/ui/src/lib/components/Button.svelte"
 	import Arrow from "@sh/ui/src/lib/icons/Arrow.svelte"
+	import Github from "@sh/ui/src/lib/icons/Github.svelte"
 </script>
 
 <div class="container px-6">
@@ -10,15 +11,17 @@
 		</a>
 		<div class="flex items-center space-x-6">
 			<Button class="group space-x-[5px] rounded-xl duration-200">
-				<span>start now</span>
+				<span>try for free</span>
 				<Arrow class="h-3 w-3 stroke-[1.2px]" />
 			</Button>
 			<a
-				href="/"
-				class="group flex items-center space-x-[5px] text-sm font-medium duration-200 hover:text-primary/75"
+				href="https://github.com/vloe/shorter"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="flex items-center space-x-1 text-sm font-medium duration-200 hover:text-primary/75"
 			>
-				<span>log in</span>
-				<Arrow class="h-3 w-3 stroke-[1.2px]" />
+				<Github class="h-4 w-4" />
+				<span>star on github</span>
 			</a>
 		</div>
 	</header>
