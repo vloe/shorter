@@ -6,7 +6,6 @@
 		"landing": "pnpm --filter @sh/landing -- ",
 		"web": "pnpm --filter @sh/web -- ",
 		"core": "pnpm --filter @sh/server -- ",
-		"tlds": "pnpm --filter @sh/tlds -- ",
 		"ui": "pnpm --filter @sh/ui -- ",
 		"gen:types": "typeshare ./core --lang=typescript --output-file=apps/landing/src/lib/types/core.ts"
 	},

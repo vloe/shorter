@@ -33,13 +33,6 @@ jobs:
                   projectName: sh-web
                   directory: ./apps/web/build
 
-            - name: Publish tlds to cloudflare workers
-              uses: cloudflare/wrangler-action@v3
-              with:
-                  apiToken: ${{ secrets.CF_API_TOKEN }}
-                  accountId: ${{ secrets.CF_ACCOUNT_ID }}
-                  workingDirectory: ./apps/tlds
-
             - name: Publish server to cloudflare workers
               uses: cloudflare/wrangler-action@v3
               with:
