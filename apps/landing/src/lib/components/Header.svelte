@@ -18,9 +18,9 @@
 				href="https://github.com/vloe/shorter"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="flex items-center space-x-1 text-sm font-medium duration-200 hover:text-primary/75"
+				class="flex items-center space-x-1.5 text-sm font-medium duration-200 hover:text-primary/75"
 			>
-				<Github class="h-4 w-4" />
+				<Github />
 				<span>star on github</span>
 			</a>
 		</div>
