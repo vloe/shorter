@@ -695,6 +695,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "sh-tlds"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "console_error_panic_hook",
+ "tower-service",
+ "wasm-bindgen-futures",
+ "worker",
+]
+
+[[package]]
 name = "siphasher"
 version = "0.3.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"

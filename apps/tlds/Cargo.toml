@@ -1,5 +1,5 @@
 [package]
-name = "sh-server"
+name = "sh-tlds"
 version = "0.1.0"
 license = { workspace = true }
 repository = { workspace = true }
@@ -14,5 +14,4 @@ worker = { workspace = true }
 tower-service = "0.3.2"
 console_error_panic_hook = { version = "0.1.1" }
 wasm-bindgen-futures = "0.4"
-sh-core = { path = "../../core" }
-tower-http = { version = "0.5.2", features = ["cors"] }
+

@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
-    "apps/server",
+    "apps/server", "apps/tlds",
     "core",
 ]
 
@@ -12,4 +12,5 @@ repository = "https://github.com/vloe/shorter"
 
 [workspace.dependencies]
 axum = { version = "0.7", default-features = false }
+worker = { version = "0.0.21", features = ["http"] }
 typeshare = "1.0.0"
