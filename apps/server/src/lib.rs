@@ -26,7 +26,8 @@ async fn fetch(req: HttpRequest, _env: Env, _ctx: Context) -> Result<Response<Bo
 
     let cors = CorsLayer::new()
         .allow_origin([
-            "http://localhost:5173".parse::<HeaderValue>().unwrap(),
+            "http://localhost:3000".parse::<HeaderValue>().unwrap(),
+            "http://localhost:3001".parse::<HeaderValue>().unwrap(),
             "https://shorter.dev".parse::<HeaderValue>().unwrap(),
         ])
         .allow_headers([header::CONTENT_TYPE])

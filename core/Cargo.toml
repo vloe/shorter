@@ -9,3 +9,4 @@ edition = { workspace = true }
 axum = { workspace = true, features = ["query", "json"] }
 serde = { version = "1.0", features = ["derive"] }
 typeshare = { workspace = true }
+url = "2.5.2"

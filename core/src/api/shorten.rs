@@ -1,6 +1,7 @@
 use axum::{extract::Query, http::StatusCode, routing::get, Json, Router};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
+use url::Url;
 
 #[typeshare]
 #[derive(Deserialize)]
@@ -20,10 +21,19 @@ pub fn mount() -> Router {
         get(|Query(params): Query<ShortenParams>| async move {
             let domain = params.domain.trim();
 
-            // validate
-            if domain.is_empty() {
-                return Err((StatusCode::BAD_REQUEST, "Domain is required"));
+            // validate user input
+            let err_msg = match domain {
+                d if d.is_empty() => "domain is required",
+                d if d.len() < 3 => "domain must be at least 3 characters",
+                d if d.len() > 255 => "domain must be at most 255 characters",
+                _ => "",
+            };
+
+            if !err_msg.is_empty() {
+                return Err((StatusCode::BAD_REQUEST, err_msg));
             }
+
+            // extract domain
 
             let res = Json(ShortenRes {
                 message: format!("hey your domain is: {}", domain),
