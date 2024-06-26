@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { cn } from "../utils/cn"
+	import { cva, type VariantProps } from "cva"
 	import type { Snippet } from "svelte"
 	import type { HTMLAnchorAttributes } from "svelte/elements"
-	import { cva, type VariantProps } from "cva"
 
 	const variants = cva(
-		"cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+		"inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
 		{
 			variants: {
 				variant: {
@@ -27,13 +27,13 @@
 		},
 	)
 
-	// props
 	interface $Props extends HTMLAnchorAttributes, VariantProps<typeof variants> {
 		children: Snippet
+		href: string
 	}
-	let { children, variant = "link", size = "default", href = null, ...props }: $Props = $props()
+	let { children, variant = "link", size = "default", href, ...props }: $Props = $props()
 </script>
 
-<a {...props} {href} class={cn(variants({ variant, size }), props.class)}>
-    {@render children()}
+<a {href} {...props} class={cn(variants({ variant, size }), props.class)}>
+	{@render children()}
 </a>

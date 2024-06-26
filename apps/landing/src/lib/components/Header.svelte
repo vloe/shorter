@@ -1,28 +1,47 @@
 <script lang="ts">
 	import Button from "@sh/ui/src/lib/components/Button.svelte"
-	import Arrow from "@sh/ui/src/lib/icons/Arrow.svelte"
-	import Github from "@sh/ui/src/lib/icons/Github.svelte"
+	import Link from "@sh/ui/src/lib/components/Link.svelte"
+	import Menu from "@sh/ui/src/lib/icons/Menu.svelte"
+	import DropdownMenuRoot from "@sh/ui/src/lib/components/dropdown-menu/DropdownMenuRoot.svelte"
+	import DropdownMenuTrigger from "@sh/ui/src/lib/components/dropdown-menu/DropdownMenuTrigger.svelte"
+	import DropdownMenuItem from "@sh/ui/src/lib/components/dropdown-menu/DropdownMenuItem.svelte"
+	import DropdownMenuContent from "@sh/ui/src/lib/components/dropdown-menu/DropdownMenuContent.svelte"
 </script>
 
-<div class="container px-6">
-	<header class="flex h-20 items-center justify-between">
-		<a href="/">
-			<h2 class="font-lumiera text-3xl">shorter</h2>
-		</a>
-		<div class="flex items-center space-x-6">
-			<Button class="group space-x-[5px] rounded-xl duration-200">
-				<span>try for free</span>
-				<Arrow class="h-3 w-3 stroke-[1.2px]" />
-			</Button>
-			<a
+<header class="flex h-16 items-center justify-between">
+	<a href="/">
+		<h2 class="font-lumiera text-3xl">shorter</h2>
+	</a>
+	<div class="hidden lg:flex">
+		<div class="flex items-center space-x-2">
+			<Button class="rounded-xl">start now</Button>
+			<Link
 				href="https://github.com/vloe/shorter"
 				target="_blank"
-				rel="noopener noreferrer"
-				class="flex items-center space-x-1.5 text-sm font-medium duration-200 hover:text-primary/75"
+				rel="noreferrer noopener"
+				class="!no-underline hover:text-primary/75"
 			>
-				<Github />
-				<span>star on github</span>
-			</a>
+				star on github
+			</Link>
 		</div>
-	</header>
-</div>
+	</div>
+	<div class="flex lg:hidden">
+		<DropdownMenuRoot>
+			<DropdownMenuTrigger>
+				<Button variant="ghost" size="icon">
+					<Menu />
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent class="w-36">
+				<DropdownMenuItem>start now</DropdownMenuItem>
+				<DropdownMenuItem
+					href="https://github.com/vloe/shorter"
+					target="_blank"
+					rel="noreferrer noopener"
+				>
+					repo
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenuRoot>
+	</div>
+</header>
