@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { cn } from "../utils/cn"
 
-	interface $Props {
+	type $Props = {
 		class?: string
 	}
 	let { class: className }: $Props = $props()
