@@ -1,23 +1,24 @@
 <script lang="ts">
-	import { DropdownMenu } from "bits-ui"
-	import type { Snippet } from "svelte"
 	import { cn } from "../../utils/cn"
 	import { flyAndScale } from "../../utils/flyAndScale"
+	import { DropdownMenu } from "bits-ui"
+	import type { DropdownMenu as DropdownMenuPrimitive } from "bits-ui"
+	import type { Snippet } from "svelte"
 
-	interface $Props {
+	type $Props = DropdownMenuPrimitive.ContentProps & {
 		children: Snippet
-		class?: string
 	}
 
-	let { children, class: className }: $Props = $props()
+	let { children, ...props }: $Props = $props()
 </script>
 
 <DropdownMenu.Content
+	{...props}
 	transition={flyAndScale}
 	sideOffset={8}
 	class={cn(
 		"w-full max-w-[229px] rounded-xl border border-muted bg-background px-1 py-1.5 shadow-popover",
-		className,
+		props.class,
 	)}
 >
 	{@render children()}

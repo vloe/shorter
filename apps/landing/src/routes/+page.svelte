@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Button from "@sh/ui/src/lib/components/Button.svelte"
-	import Link from "@sh/ui/src/lib/components/Link.svelte"
 </script>
 
 <div class="pt-24 xl:pt-40">
@@ -13,14 +12,15 @@
 			</h2>
 			<div class="flex items-center space-x-2">
 				<Button class="rounded-xl">start now</Button>
-				<Link
+				<Button
 					href="https://github.com/vloe/shorter"
 					target="_blank"
 					rel="noreferrer noopener"
+					variant="link"
 					class="!no-underline hover:text-primary/75"
 				>
 					star on github
-				</Link>
+				</Button>
 			</div>
 		</div>
 	</main>
