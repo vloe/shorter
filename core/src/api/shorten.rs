@@ -15,6 +15,28 @@ struct ShortenRes {
     message: String,
 }
 
+fn extract_sld(domain: &str) -> Result<String, &'static str> {
+    let prefixes = ["https://", ""];
+    let suffixes = [".com", "com", ""];
+
+    for prefix in &prefixes {
+        for suffix in &suffixes {
+            let url_str = format!("{}{}{}", prefix, domain, suffix);
+            if let Ok(url) = Url::parse(&url_str) {
+                if let Some(host) = url.host_str() {
+                    let parts: Vec<&str> = host.split('.').collect();
+                    if parts.len() >= 2 {
+                        let sld = parts[parts.len() - 2].to_string();
+                        return Ok(sld);
+                    }
+                }
+            }
+        }
+    }
+
+    Err("domain must be valid")
+}
+
 pub fn mount() -> Router {
     Router::new().route(
         "/shorten",
@@ -33,10 +55,14 @@ pub fn mount() -> Router {
                 return Err((StatusCode::BAD_REQUEST, err_msg));
             }
 
-            // extract domain
+            // extract sld
+            let sld = match extract_sld(domain) {
+                Ok(sld) => sld,
+                Err(err_msg) => return Err((StatusCode::BAD_REQUEST, err_msg)),
+            };
 
             let res = Json(ShortenRes {
-                message: format!("hey your domain is: {}", domain),
+                message: format!("sld: {}", sld),
             });
 
             return Ok(res);
