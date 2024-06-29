@@ -19,15 +19,14 @@ fn extract_sld(domain: &str) -> Result<String, &'static str> {
     let prefixes = ["https://", ""];
     let suffixes = [".com", "com", ""];
 
-    for prefix in &prefixes {
-        for suffix in &suffixes {
+    for prefix in prefixes {
+        for suffix in suffixes {
             let url_str = format!("{}{}{}", prefix, domain, suffix);
             if let Ok(url) = Url::parse(&url_str) {
                 if let Some(host) = url.host_str() {
                     let parts: Vec<&str> = host.split('.').collect();
                     if parts.len() >= 2 {
-                        let sld = parts[parts.len() - 2].to_string();
-                        return Ok(sld);
+                        return Ok(parts[parts.len() - 2].to_string());
                     }
                 }
             }
