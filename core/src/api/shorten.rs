@@ -1,7 +1,6 @@
 use axum::{extract::Query, http::StatusCode, routing::get, Json, Router};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
-use url::Url;
 
 #[typeshare]
 #[derive(Deserialize)]
@@ -9,62 +8,47 @@ struct ShortenParams {
     domain: String,
 }
 
+impl ShortenParams {
+    fn validate(&self) -> Result<(), (StatusCode, String)> {
+        const MIN_DOMAIN_LEN: usize = 4;
+        const MAX_DOMAIN_LEN: usize = 255;
+
+        let domain = self.domain.trim();
+        if domain.len() < MIN_DOMAIN_LEN {
+            return Err((
+                StatusCode::BAD_REQUEST,
+                format!("domain must be at least {} characters", MIN_DOMAIN_LEN),
+            ));
+        }
+        if domain.len() > MAX_DOMAIN_LEN {
+            return Err((
+                StatusCode::BAD_REQUEST,
+                format!("domain must be at most {} characters", MAX_DOMAIN_LEN),
+            ));
+        }
+
+        Ok(())
+    }
+}
+
 #[typeshare]
 #[derive(Serialize)]
 struct ShortenRes {
-    message: String,
+    domains: Vec<String>,
 }
 
-fn extract_sld(domain: &str) -> Result<String, &'static str> {
-    let prefixes = ["https://", ""];
-    let suffixes = [".com", "com", ""];
+async fn shorten(
+    Query(params): Query<ShortenParams>,
+) -> Result<Json<ShortenRes>, (StatusCode, String)> {
+    params.validate()?;
 
-    for prefix in prefixes {
-        for suffix in suffixes {
-            let url_str = format!("{}{}{}", prefix, domain, suffix);
-            if let Ok(url) = Url::parse(&url_str) {
-                if let Some(host) = url.host_str() {
-                    let parts: Vec<&str> = host.split('.').collect();
-                    if parts.len() >= 2 {
-                        return Ok(parts[parts.len() - 2].to_string());
-                    }
-                }
-            }
-        }
-    }
+    let res = ShortenRes {
+        domains: vec!["test.com".to_string()],
+    };
 
-    Err("domain must be valid")
+    Ok(Json(res))
 }
 
 pub fn mount() -> Router {
-    Router::new().route(
-        "/shorten",
-        get(|Query(params): Query<ShortenParams>| async move {
-            let domain = params.domain.trim();
-
-            // validate user input
-            let err_msg = match domain {
-                d if d.is_empty() => "domain is required",
-                d if d.len() < 3 => "domain must be at least 3 characters",
-                d if d.len() > 255 => "domain must be at most 255 characters",
-                _ => "",
-            };
-
-            if !err_msg.is_empty() {
-                return Err((StatusCode::BAD_REQUEST, err_msg));
-            }
-
-            // extract sld
-            let sld = match extract_sld(domain) {
-                Ok(sld) => sld,
-                Err(err_msg) => return Err((StatusCode::BAD_REQUEST, err_msg)),
-            };
-
-            let res = Json(ShortenRes {
-                message: format!("sld: {}", sld),
-            });
-
-            return Ok(res);
-        }),
-    )
+    Router::new().route("/shorten", get(shorten))
 }

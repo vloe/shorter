@@ -1,7 +1,7 @@
 use phf::{phf_set, Set};
 
 // "degenerate", "but", "works", "for", "now",
-static TLD_SET: Set<&'static str> = phf_set! {
+pub(crate) static TLDS: Set<&'static str> = phf_set! {
     "aaa",
     "aarp",
     "abb",
