@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as DropdownMenu from "@sh/ui/src/lib/components/dropdown-menu"
-	import Button from "@sh/ui/src/lib/components/Button.svelte"
-	import Menu from "@sh/ui/src/lib/icons/Menu.svelte"
+	import { Button } from "@sh/ui/src/lib/components/button"
+	import Menu from "$lib/icons/Menu.svelte"
 </script>
 
 <header class="flex h-16 items-center justify-between">

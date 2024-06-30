@@ -3,10 +3,9 @@
 */
 
 export interface ShortenParams {
-	domain: string;
+	domain: string
 }
 
 export interface ShortenRes {
-	domains: string[];
+	domains: string[]
 }
-

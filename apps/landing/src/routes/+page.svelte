@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from "@sh/ui/src/lib/components/Button.svelte"
+	import { Button } from "@sh/ui/src/lib/components/button"
 	import type { ShortenParams, ShortenRes } from "$lib/types/core"
 	import { createQuery } from "@tanstack/svelte-query"
 	import { apiUrl } from "$lib/constants/urls"
