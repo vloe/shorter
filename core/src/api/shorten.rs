@@ -12,7 +12,7 @@ struct ShortenParams {
 impl ShortenParams {
     fn validate(&self) -> Result<(), (StatusCode, String)> {
         const MIN_DOMAIN_LEN: usize = 4;
-        const MAX_DOMAIN_LEN: usize = 16; // for now, algo is so ass
+        const MAX_DOMAIN_LEN: usize = 64;
 
         let domain = self.domain.trim();
         if domain.is_empty() {
@@ -30,6 +30,9 @@ impl ShortenParams {
                 format!("domain must be at most {} characters", MAX_DOMAIN_LEN),
             ));
         }
+        if domain.contains(char::is_whitespace) {
+            return Err((StatusCode::BAD_REQUEST, "domain must be valid".to_string()));
+        }
         if domain.matches('.').count() > 1 {
             return Err((StatusCode::BAD_REQUEST, "domain must be valid".to_string()));
         }
@@ -44,56 +47,51 @@ struct ShortenRes {
     domains: Vec<String>,
 }
 
-fn generate_perms(s: &str) -> Vec<String> {
-    let vowels = ['a', 'e', 'i', 'o', 'u'];
-    let mut res = Vec::new();
-
-    // Base case: if the string is empty or has no vowels, return it as is
-    if s.is_empty() || !s.chars().any(|c| vowels.contains(&c)) {
-        res.push(s.to_string());
-        return res;
-    }
-
-    // Recursive case: generate permutations by removing vowels
-    for (i, c) in s.char_indices() {
-        if vowels.contains(&c) {
-            let new_str = format!("{}{}", &s[..i], &s[i + 1..]);
-            let sub_permutations = generate_perms(&new_str);
-            res.extend(sub_permutations);
-        }
-    }
-
-    // Add the original string as a permutation
-    res.push(s.to_string());
-
-    // Remove duplicates
-    res.sort();
-    res.dedup();
-    res
-}
-
 async fn shorten(
     Query(params): Query<ShortenParams>,
 ) -> Result<Json<ShortenRes>, (StatusCode, String)> {
     params.validate()?;
 
     let domain = params.domain.trim();
-    let sld = match domain.split_once('.') {
+
+    // extract sld
+    let mut sld = match domain.split_once('.') {
         Some((sld, _)) => sld.to_lowercase(),
         None => domain.to_lowercase(),
     };
 
-    let perms = generate_perms(&sld);
-    let mut domains: Vec<String> = Vec::new();
-    for p in perms {
-        let chars: Vec<char> = p.chars().collect();
-        for i in (0..chars.len()).rev() {
-            let suffix: String = chars[i..].iter().collect();
-            if let Some(tld) = TLDS.get(&suffix) {
-                let domain = format!("{}.{}", &p[..i], tld);
-                domains.push(domain);
+    // the algorithm :o
+    let mut domains = Vec::new();
+    let mut checked_sld = String::new();
+    const VOWELS: [char; 5] = ['a', 'e', 'i', 'o', 'u'];
+
+    for i in (0..sld.len()).rev() {
+        if sld == checked_sld {
+            continue;
+        }
+
+        for j in (1..sld.len()).rev() {
+            if j == sld.len() - 1 || j == 0 {
+                continue;
+            }
+
+            let (new_sld, new_tld) = sld.split_at(j);
+            if TLDS.get(new_tld).is_some() {
+                domains.push(format!("{}.{}", new_sld, new_tld));
             }
         }
+
+        checked_sld = sld.clone();
+        if VOWELS.contains(&sld.chars().nth(i).unwrap()) {
+            sld.remove(i);
+        }
+    }
+
+    if domains.is_empty() {
+        return Err((
+            StatusCode::BAD_REQUEST,
+            "could not find a shorter domain".to_string(),
+        ));
     }
 
     let res = ShortenRes { domains };
