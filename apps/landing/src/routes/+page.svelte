@@ -37,18 +37,7 @@
 				searches through thousands of tlds to find a shorter version of your domain, for
 				example linktree.com -> linktr.ee
 			</h2>
-			<div class="flex items-center space-x-2">
-				<Button on:click={() => scrollToTable()} class="rounded-xl">start now</Button>
-				<Button
-					href="https://github.com/vloe/shorter"
-					target="_blank"
-					rel="noreferrer noopener"
-					variant="link"
-					class="!no-underline hover:text-primary/75"
-				>
-					star on github
-				</Button>
-			</div>
+			<Button on:click={() => scrollToTable()} class="rounded-xl">start now</Button>
 		</div>
 		<div class="mb-28 mt-64">
 			<div class="flex w-full flex-col items-center">
