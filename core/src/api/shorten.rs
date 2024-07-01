@@ -12,7 +12,7 @@ struct ShortenParams {
 impl ShortenParams {
     fn validate(&self) -> Result<(), (StatusCode, String)> {
         const MIN_DOMAIN_LEN: usize = 4;
-        const MAX_DOMAIN_LEN: usize = 20; // for now, algo is so ass
+        const MAX_DOMAIN_LEN: usize = 16; // for now, algo is so ass
 
         let domain = self.domain.trim();
         if domain.is_empty() {
