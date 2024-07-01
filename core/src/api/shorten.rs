@@ -33,7 +33,7 @@ impl ShortenParams {
         if domain.contains(char::is_whitespace) {
             return Err((StatusCode::BAD_REQUEST, "domain must be valid".to_string()));
         }
-        if domain.contains(char::is_alphanumeric) {
+        if !domain.contains(char::is_alphanumeric) {
             return Err((StatusCode::BAD_REQUEST, "domain must be valid".to_string()));
         }
         if domain.matches('.').count() > 1 {
