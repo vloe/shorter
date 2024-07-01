@@ -2,6 +2,7 @@
 	import * as DropdownMenu from "@sh/ui/src/lib/components/dropdown-menu"
 	import { Button } from "@sh/ui/src/lib/components/button"
 	import Menu from "$lib/icons/Menu.svelte"
+	import { scrollToTable } from "$lib/utils/scrollToTable"
 </script>
 
 <header class="flex h-16 items-center justify-between">
@@ -10,7 +11,7 @@
 	</a>
 	<div class="hidden lg:flex">
 		<div class="flex items-center space-x-2">
-			<Button class="rounded-xl">start now</Button>
+			<Button on:click={() => scrollToTable()} class="rounded-xl">start now</Button>
 			<Button
 				href="https://github.com/vloe/shorter"
 				target="_blank"

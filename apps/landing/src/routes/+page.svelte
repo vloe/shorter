@@ -5,6 +5,7 @@
 	import type { ShortenParams, ShortenRes } from "$lib/types/core"
 	import { createQuery } from "@tanstack/svelte-query"
 	import { apiUrl } from "$lib/constants/urls"
+	import { scrollToTable } from "$lib/utils/scrollToTable"
 
 	let params = $state<ShortenParams>({
 		domain: "",
@@ -37,7 +38,7 @@
 				example linktree.com -> linktr.ee
 			</h2>
 			<div class="flex items-center space-x-2">
-				<Button class="rounded-xl">start now</Button>
+				<Button on:click={() => scrollToTable()} class="rounded-xl">start now</Button>
 				<Button
 					href="https://github.com/vloe/shorter"
 					target="_blank"
@@ -51,7 +52,10 @@
 		</div>
 		<div class="mb-28 mt-64">
 			<div class="flex w-full flex-col items-center">
-				<div class="min-h-[450px] w-full max-w-3xl rounded-xl border border-input p-4">
+				<div
+					class="min-h-[450px] w-full max-w-3xl rounded-xl border border-input p-4"
+					id="shorten-table"
+				>
 					<div class="mb-2 flex flex-row gap-x-2">
 						<Input bind:value={params.domain} placeholder="example.com" />
 						<Button class="h-9" on:click={() => $query.refetch()}>shorten</Button>
