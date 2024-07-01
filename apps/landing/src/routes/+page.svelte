@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { Button } from "@sh/ui/src/lib/components/button"
+	import { Input } from "@sh/ui/src/lib/components/input"
+	import * as Table from "@sh/ui/src/lib/components/table"
 	import type { ShortenParams, ShortenRes } from "$lib/types/core"
 	import { createQuery } from "@tanstack/svelte-query"
 	import { apiUrl } from "$lib/constants/urls"
@@ -47,26 +49,36 @@
 				</Button>
 			</div>
 		</div>
-		<div class="my-44">
+		<div class="mb-28 mt-64">
 			<div class="flex w-full flex-col items-center">
-				<div class="h-[450px] w-full max-w-3xl rounded-xl border border-input p-4">
+				<div class="min-h-[450px] w-full max-w-3xl rounded-xl border border-input p-4">
 					<div class="mb-2 flex flex-row gap-x-2">
-						<input
-							bind:value={params.domain}
-							placeholder="example.com"
-							class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-						/>
+						<Input bind:value={params.domain} placeholder="example.com" />
 						<Button class="h-9" on:click={() => $query.refetch()}>shorten</Button>
 					</div>
-					{#if $query.isSuccess}
-						<div class="flex flex-col gap-y-1">
-							{#each $query.data?.domains as domain}
-								<p class="ml-1 text-sm text-green-500">{domain}</p>
-							{/each}
-						</div>
-					{:else}
-						<p class="ml-1 text-sm text-red-500">{$query.error?.message}</p>
-					{/if}
+					<div>
+						{#if $query.isError}
+							<p class="ml-1 text-sm text-red-500">{$query.error.message}</p>
+						{/if}
+					</div>
+					<Table.Root>
+						<Table.Header>
+							<Table.Row>
+								<Table.Head class="w-[100px]">#</Table.Head>
+								<Table.Head>domain</Table.Head>
+							</Table.Row>
+						</Table.Header>
+						<Table.Body>
+							{#if $query.isSuccess}
+								{#each $query.data?.domains as domain, i (i)}
+									<Table.Row>
+										<Table.Cell>{i + 1}</Table.Cell>
+										<Table.Cell>{domain}</Table.Cell>
+									</Table.Row>
+								{/each}
+							{/if}
+						</Table.Body>
+					</Table.Root>
 				</div>
 			</div>
 		</div>
