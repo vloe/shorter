@@ -33,6 +33,9 @@ impl ShortenParams {
         if domain.contains(char::is_whitespace) {
             return Err((StatusCode::BAD_REQUEST, "domain must be valid".to_string()));
         }
+        if domain.contains(char::is_alphanumeric) {
+            return Err((StatusCode::BAD_REQUEST, "domain must be valid".to_string()));
+        }
         if domain.matches('.').count() > 1 {
             return Err((StatusCode::BAD_REQUEST, "domain must be valid".to_string()));
         }
@@ -69,18 +72,15 @@ async fn shorten(
         if sld == checked_sld {
             continue;
         }
-
         for j in (1..sld.len()).rev() {
             if j == sld.len() - 1 || j == 0 {
                 continue;
             }
-
             let (new_sld, new_tld) = sld.split_at(j);
             if TLDS.get(new_tld).is_some() {
                 domains.push(format!("{}.{}", new_sld, new_tld));
             }
         }
-
         checked_sld = sld.clone();
         if VOWELS.contains(&sld.chars().nth(i).unwrap()) {
             sld.remove(i);
