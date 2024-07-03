@@ -2,7 +2,6 @@ use crate::constants::tlds::TLDS;
 use axum::{extract::Query, http::StatusCode, routing::get, Json, Router};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
-use worker::console_log;
 
 #[typeshare]
 #[derive(Deserialize)]
@@ -57,7 +56,6 @@ async fn shorten(
     params.validate()?;
 
     let domain = params.domain.trim();
-    console_log!("domain: {}", domain);
 
     // extract sld
     let mut sld = match domain.split_once('.') {
