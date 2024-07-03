@@ -56,6 +56,7 @@ async fn shorten(
     params.validate()?;
 
     let domain = params.domain.trim();
+    println!("domain: {}", domain);
 
     // extract sld
     let mut sld = match domain.split_once('.') {
