@@ -694,6 +694,7 @@ dependencies = [
  "phf",
  "serde",
  "typeshare",
+ "worker",
 ]
 
 [[package]]
