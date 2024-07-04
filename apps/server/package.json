@@ -2,7 +2,7 @@
 	"name": "@sh/server",
 	"private": true,
 	"scripts": {
-		"dev": "wrangler dev build/worker/shim.mjs"
+		"dev": "wrangler dev"
 	},
 	"devDependencies": {
 		"wrangler": "^3.57.1"

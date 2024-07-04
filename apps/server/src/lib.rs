@@ -1,4 +1,8 @@
-use axum::{http::HeaderValue, routing::get, Router};
+use axum::{
+    http::{header, HeaderValue, Method},
+    routing::get,
+    Router,
+};
 use sh_core::api::mount;
 use std::time::Duration;
 use tower_http::cors::CorsLayer;
@@ -19,6 +23,8 @@ async fn fetch(
             "http://localhost:3001".parse::<HeaderValue>().unwrap(),
             "https://shorter.dev".parse::<HeaderValue>().unwrap(),
         ])
+        .allow_methods([Method::GET, Method::POST])
+        .allow_headers([header::CONTENT_TYPE])
         .max_age(Duration::from_secs(3600));
 
     let app = Router::new()
