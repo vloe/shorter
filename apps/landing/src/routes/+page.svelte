@@ -46,8 +46,12 @@
 					id="shorten-table"
 				>
 					<div class="mb-2 flex flex-row gap-x-2">
-						<Input bind:value={params.domain} placeholder="example.com" />
-						<Button class="h-9" on:click={() => $query.refetch()}>shorten</Button>
+						<Input
+							bind:value={params.domain}
+							on:keydown={(e) => e.key === "Enter" && $query.refetch()}
+							placeholder="example.com"
+						/>
+						<Button on:click={() => $query.refetch()} class="h-9">shorten</Button>
 					</div>
 					<div>
 						{#if $query.isError}
