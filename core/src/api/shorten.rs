@@ -27,7 +27,7 @@ pub fn mount() -> Router {
             let domain_validation = match domain {
                 d if d.is_empty() => Some("please provide a domain"),
                 d if d.len() < 3 => Some("domain must be at least 3 characters"),
-                d if d.len() > 255 => Some("domain must be at most 255 characters"),
+                d if d.len() > 64 => Some("domain must be at most 64 characters"),
                 _ => None,
             };
 
