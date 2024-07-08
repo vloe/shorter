@@ -1,45 +1,32 @@
 import { DOMParser } from "xmldom"
 import fs from "fs"
-
-const writeTldInfo = async () => {
-	const tldInfo = []
+;(async () => {
+	let tldInfo = []
 
 	// get tlds, categories, and managers
-	const res = await fetch("https://www.iana.org/domains/root/db")
-	const text = await res.text()
-	const doc = new DOMParser().parseFromString(text, "text/html")
+	let res = await fetch("https://www.iana.org/domains/root/db")
+	let text = await res.text()
+	let doc = new DOMParser().parseFromString(text, "text/html")
 
-	const table = doc.getElementsByTagName("table")[0]
-	const rows = table.getElementsByTagName("tr")
+	let table = doc.getElementsByTagName("table")[0]
+	let rows = table.getElementsByTagName("tr")
 
 	for (let i = 1; i < rows.length; i++) {
-		const cells = rows[i].getElementsByTagName("td")
-		const tld = cells[0].textContent.trim()
-		const type = cells[1].textContent.trim()
-		const manager = cells[2].textContent.trim().replace(/"/g, "")
+		let cells = rows[i].getElementsByTagName("td")
+		let tld = cells[0].textContent?.trim()
+		let type = cells[1].textContent?.trim()
+		let manager = cells[2].textContent?.trim().replace(/"/g, "")
 		tldInfo.push({ tld, type, manager })
 	}
 
 	// write to file
-	const rustCode = `
-use phf::{phf_map, Map};
-use serde::Serialize;
-use typeshare::typeshare;
+	const filePath = "../core/src/constants/tld_info.rs"
+	const linesToKeep = 14
 
-#[typeshare]
-#[derive(Serialize)]
-pub(crate) struct TldInfo {
-    name: &'static str,
-    category: &'static str,
-    manager: &'static str,
-}
-
-pub(crate) static TLD_INFO: Map<&str, TldInfo> = phf_map!(
-${tldInfo.map(({ tld, type, manager }) => `    "${tld}" => TldInfo { name: "${tld}", category: "${type}", manager: "${manager}" },`).join("\n")}
-);
-`
-
-	fs.writeFileSync("../core/src/constants/tld_info.rs", rustCode)
-}
-
-writeTldInfo()
+	let existingContent = fs.readFileSync(filePath, "utf8")
+	let lines = existingContent.split("\n")
+	let preservedLines = lines.slice(0, linesToKeep)
+	let newContent = `${tldInfo.map(({ tld, type, manager }) => `    "${tld}" => TldInfo { name: "${tld}", category: "${type}", manager: "${manager}" },`).join("\n")}`
+	let updatedContent = preservedLines.join("\n") + "\n" + newContent + "\n" + ");"
+	fs.writeFileSync(filePath, updatedContent)
+})()

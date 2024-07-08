@@ -1629,3 +1629,4 @@ Faculty of Engineering" },
     ".zuerich" => TldInfo { name: ".zuerich", category: "generic", manager: "Kanton Zürich (Canton of Zurich)" },
     ".zw" => TldInfo { name: ".zw", category: "country-code", manager: "Postal and Telecommunications Regulatory Authority of Zimbabwe (POTRAZ)" },
 );
+

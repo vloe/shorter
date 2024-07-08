@@ -5,7 +5,7 @@
 	import type { ShortenParams, ShortenRes } from "$lib/types/core"
 	import { createQuery } from "@tanstack/svelte-query"
 	import { apiUrl } from "$lib/constants/urls"
-	import { scrollToTable } from "$lib/utils/scrollToTable"
+	import { scrollToElement } from "$lib/utils/scrollToElement"
 
 	let params = $state<ShortenParams>({
 		domain: "",
@@ -37,7 +37,9 @@
 				searches through thousands of tlds to find a shorter version of your domain, for
 				example linktree.com -> linktr.ee
 			</h2>
-			<Button on:click={() => scrollToTable()} class="rounded-xl">start now</Button>
+			<Button on:click={() => scrollToElement("shorten-table")} class="rounded-xl">
+				start now
+			</Button>
 		</div>
 		<div class="mb-28 mt-64">
 			<div class="flex w-full flex-col items-center">
