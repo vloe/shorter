@@ -1,4 +1,4 @@
-use crate::constants::tlds::TLDS;
+use crate::constants::tld_info::{TldInfo, TLD_INFO};
 use axum::{extract::Query, http::StatusCode, routing::get, Json, Router};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
@@ -13,8 +13,15 @@ struct ShortenParams {
 
 #[typeshare]
 #[derive(Serialize)]
+struct Domain {
+    name: String,
+    tld_info: TldInfo,
+}
+
+#[typeshare]
+#[derive(Serialize)]
 struct ShortenRes {
-    domains: Vec<String>,
+    domains: Vec<Domain>,
 }
 
 pub fn mount() -> Router {
@@ -68,8 +75,12 @@ pub fn mount() -> Router {
                         continue;
                     }
                     let (new_sld, new_tld) = sld.split_at(j);
-                    if TLDS.get(new_tld).is_some() {
-                        domains.push(format!("{}.{}", new_sld, new_tld));
+                    let new_tld = format!(".{}", new_tld);
+                    if let Some(tld_info) = TLD_INFO.get(&new_tld) {
+                        domains.push(Domain {
+                            name: format!("{}{}", new_sld, new_tld),
+                            tld_info: tld_info.clone(),
+                        })
                     }
                 }
                 checked_sld = sld.clone();

@@ -70,7 +70,7 @@
 								{#each $query.data?.domains as domain, i (i)}
 									<Table.Row>
 										<Table.Cell>{i + 1}</Table.Cell>
-										<Table.Cell>{domain}</Table.Cell>
+										<Table.Cell>{domain.name}</Table.Cell>
 									</Table.Row>
 								{/each}
 							{/if}
