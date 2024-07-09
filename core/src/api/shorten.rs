@@ -16,6 +16,7 @@ struct ShortenParams {
 struct Domain {
     name: String,
     tld_info: TldInfo,
+    available: bool,
 }
 
 #[typeshare]
@@ -77,9 +78,12 @@ pub fn mount() -> Router {
                     let (new_sld, new_tld) = sld.split_at(j);
                     let new_tld = format!(".{}", new_tld);
                     if let Some(tld_info) = TLD_INFO.get(&new_tld) {
+                        let name = format!("{}{}", new_sld, new_tld);
+                        let available = is_available(name.clone(), tld_info.server);
                         domains.push(Domain {
-                            name: format!("{}{}", new_sld, new_tld),
+                            name,
                             tld_info: tld_info.clone(),
+                            available,
                         })
                     }
                 }
@@ -108,4 +112,8 @@ fn extract_sld_from_domain(domain: &str) -> String {
         return parts[0].to_string();
     }
     parts[parts.len() - 2].to_string()
+}
+
+fn is_available(domain: String, server: &str) -> bool {
+    false
 }

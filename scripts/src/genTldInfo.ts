@@ -17,11 +17,12 @@ import fs from "fs"
 		let category = cells[1].textContent?.trim()
 		let manager = cells[2].textContent?.trim().replace(/"/g, "")
 		if (tld) {
-			tldInfo.set(tld, { tld, category, manager, server: null })
+			tldInfo.set(tld, { tld, category, manager })
 		}
 	}
 
-	// get tld servers
+	// get the tlds that has a whois server
+	let tldsWithServer = new Map()
 	res = await fetch("https://raw.githubusercontent.com/rfc1036/whois/next/tld_serv_list")
 	text = await res.text()
 
@@ -36,12 +37,8 @@ import fs from "fs"
 			.split("#")[0]
 
 		let [tld, server] = line.split(/\s+/, 2)
-		if (tldInfo.has(tld)) {
-			let info = tldInfo.get(tld)
-			if (server && !server.startsWith("WEB") && !server.startsWith("NONE")) {
-				info.server = server.trim()
-			}
-			tldInfo.set(tld, info)
+		if (server && !server.startsWith("WEB") && !server.startsWith("NONE")) {
+			tldsWithServer.set(tld, tld)
 		}
 	}
 
@@ -52,33 +49,29 @@ import fs from "fs"
 		if (line.length === 0 || line.startsWith("#")) continue
 
 		let tld = "." + line.trim()
-		if (tldInfo.has(tld)) {
-			let info = tldInfo.get(tld)
-			if (tld && info.server === null) {
-				info.server = `whois.nic${tld}`
-			}
-			tldInfo.set(tld, info)
+		if (tld && !tldsWithServer.has(tld)) {
+			tldsWithServer.set(tld, tld)
 		}
 	}
 
 	// remove tlds that don't have a server
 	for (let tld of tldInfo.keys()) {
-		if (tldInfo.get(tld).server === null) {
+		if (!tldsWithServer.has(tld)) {
 			tldInfo.delete(tld)
 		}
 	}
 
 	// write to file
 	const filePath = "../core/src/constants/tld_info.rs"
-	const linesToKeep = 15
+	const linesToKeep = 14
 
 	let existingContent = fs.readFileSync(filePath, "utf8")
 	let lines = existingContent.split("\n")
 	let preservedLines = lines.slice(0, linesToKeep)
 	let newContent = Array.from(tldInfo.values())
 		.map(
-			({ tld, category, manager, server }) =>
-				`    "${tld}" => TldInfo { name: "${tld}", category: "${category}", manager: "${manager}", server: "${server}" },`,
+			({ tld, category, manager }) =>
+				`    "${tld}" => TldInfo { name: "${tld}", category: "${category}", manager: "${manager}" },`,
 		)
 		.join("\n")
 	let updatedContent = preservedLines.join("\n") + "\n" + newContent + "\n" + ");"

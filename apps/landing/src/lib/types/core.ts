@@ -10,12 +10,12 @@ export interface TldInfo {
 	name: string;
 	category: string;
 	manager: string;
-	server: string;
 }
 
 export interface Domain {
 	name: string;
 	tld_info: TldInfo;
+	available: boolean;
 }
 
 export interface ShortenRes {
