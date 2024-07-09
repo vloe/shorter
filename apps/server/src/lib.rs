@@ -3,7 +3,7 @@ use axum::{
     routing::get,
     Router,
 };
-use sh_core::api::mount;
+use sh_core::api::{mount, Ctx};
 use std::time::Duration;
 use tower_http::cors::CorsLayer;
 use tower_service::Service;
@@ -27,9 +27,11 @@ async fn fetch(
         .allow_headers([header::CONTENT_TYPE])
         .max_age(Duration::from_secs(3600));
 
+    let ctx = Ctx {};
+
     let app = Router::new()
         .route("/", get(|| async { "sh-server" }))
-        .merge(mount())
+        .merge(mount(ctx))
         .layer(cors)
         .call(req)
         .await?;

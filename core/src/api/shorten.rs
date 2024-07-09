@@ -1,19 +1,25 @@
+use super::Ctx;
 use crate::constants::tld_info::{TldInfo, TLD_INFO};
-use axum::{extract::Query, http::StatusCode, routing::get, Json, Router};
+use axum::{
+    extract::{Query, State},
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    Json,
+};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
 use typeshare::typeshare;
-use url::Url;
 
 #[typeshare]
 #[derive(Deserialize)]
-struct ShortenParams {
+pub(crate) struct ShortenParams {
     domain: String,
 }
 
 #[typeshare]
 #[derive(Serialize)]
-struct Domain {
+pub(crate) struct Domain {
     name: String,
     tld_info: TldInfo,
     available: bool,
@@ -21,93 +27,109 @@ struct Domain {
 
 #[typeshare]
 #[derive(Serialize)]
-struct ShortenRes {
+pub(crate) struct ShortenRes {
     domains: Vec<Domain>,
 }
 
-pub fn mount() -> Router {
-    Router::new().route(
-        "/shorten",
-        get(|Query(params): Query<ShortenParams>| async move {
-            let domain = params.domain.trim();
+#[derive(Error, Debug)]
+pub(crate) enum ShortenErr {
+    #[error("please provide a domain")]
+    EmptyDomain,
+    #[error("domain must be at least {0} characters")]
+    DomainTooShort(usize),
+    #[error("domain must be at most {0} characters")]
+    DomainTooLong(usize),
+    #[error("domain must be valid")]
+    UnvalidDomain,
+    #[error("could not find a shorter domain")]
+    NoDomainFound,
+}
 
-            // validate user input
-            let domain_validation = match domain {
-                d if d.is_empty() => Some("please provide a domain"),
-                d if d.len() < 3 => Some("domain must be at least 3 characters"),
-                d if d.len() > 64 => Some("domain must be at most 64 characters"),
-                _ => None,
-            };
+impl IntoResponse for ShortenErr {
+    fn into_response(self) -> Response {
+        (StatusCode::BAD_REQUEST, self.to_string()).into_response()
+    }
+}
 
-            if let Some(err_msg) = domain_validation {
-                return Err((StatusCode::BAD_REQUEST, err_msg));
+impl ShortenParams {
+    fn validate(&self) -> Result<(), ShortenErr> {
+        const MIN_DOMAIN_LEN: usize = 3;
+        const MAX_DOMAIN_LEN: usize = 64;
+
+        let domain = self.domain.trim();
+        if domain.is_empty() {
+            return Err(ShortenErr::EmptyDomain);
+        }
+        if domain.len() < MIN_DOMAIN_LEN {
+            return Err(ShortenErr::DomainTooShort(MIN_DOMAIN_LEN));
+        }
+        if domain.len() > MAX_DOMAIN_LEN {
+            return Err(ShortenErr::DomainTooLong(MAX_DOMAIN_LEN));
+        }
+        let domain_regex = Regex::new(r"^[a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})?$").unwrap();
+        if !domain_regex.is_match(domain) {
+            return Err(ShortenErr::UnvalidDomain);
+        }
+
+        Ok(())
+    }
+}
+
+pub(crate) async fn shorten(
+    Query(params): Query<ShortenParams>,
+    State(_ctx): State<Ctx>,
+) -> Result<Json<ShortenRes>, ShortenErr> {
+    params.validate()?;
+
+    let domain = params.domain.trim();
+    let mut sld = extract_sld_from_domain(&domain);
+
+    let mut domains = Vec::new();
+    let mut checked_sld = String::new();
+    const VOWELS: [char; 5] = ['a', 'e', 'i', 'o', 'u'];
+
+    for i in (0..sld.len()).rev() {
+        if sld == checked_sld {
+            break;
+        }
+
+        for j in (1..sld.len()).rev() {
+            if j == sld.len() - 1 || j == 0 {
+                continue;
             }
 
-            // extract sld
-            let mut sld = match Url::parse(domain) {
-                Ok(url) => {
-                    if let Some(d) = url.domain() {
-                        extract_sld_from_domain(d)
-                    } else {
-                        return Err((StatusCode::BAD_REQUEST, "domain must be valid"));
-                    }
-                }
-                Err(_) => {
-                    let domain_regex = Regex::new(r"^[a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})?$").unwrap();
-                    if domain_regex.is_match(domain) {
-                        extract_sld_from_domain(domain)
-                    } else {
-                        return Err((StatusCode::BAD_REQUEST, "domain must be valid"));
-                    }
-                }
-            };
+            let (new_sld, new_tld) = sld.split_at(j);
+            let new_tld = format!(".{}", new_tld);
 
-            // the algorithm
-            let mut domains = Vec::new();
-            let mut checked_sld = String::new();
-            const VOWELS: [char; 5] = ['a', 'e', 'i', 'o', 'u'];
-
-            for i in (0..sld.len()).rev() {
-                if sld == checked_sld {
-                    continue;
-                }
-                for j in (1..sld.len()).rev() {
-                    if j == sld.len() - 1 || j == 0 {
-                        continue;
-                    }
-                    let (new_sld, new_tld) = sld.split_at(j);
-                    let new_tld = format!(".{}", new_tld);
-                    if let Some(tld_info) = TLD_INFO.get(&new_tld) {
-                        domains.push(Domain {
-                            name: format!("{}{}", new_sld, new_tld),
-                            tld_info: tld_info.clone(),
-                            available: false,
-                        })
-                    }
-                }
-                checked_sld = sld.clone();
-                if VOWELS.contains(&sld.chars().nth(i).unwrap()) {
-                    sld.remove(i);
-                }
+            if let Some(tld_info) = TLD_INFO.get(&new_tld) {
+                domains.push(Domain {
+                    name: format!("{}{}", new_sld, new_tld),
+                    tld_info: tld_info.clone(),
+                    available: false,
+                });
             }
+        }
 
-            if domains.is_empty() {
-                return Err((StatusCode::BAD_REQUEST, "could not find a shorter domain"));
+        checked_sld = sld.clone();
+        if let Some(char) = sld.chars().nth(i) {
+            if VOWELS.contains(&char) {
+                sld.remove(i);
             }
+        }
+    }
 
-            let res = ShortenRes { domains };
-            Ok(Json(res))
-        }),
-    )
+    if domains.is_empty() {
+        return Err(ShortenErr::NoDomainFound);
+    }
+
+    let res = ShortenRes { domains };
+    Ok(Json(res))
 }
 
 fn extract_sld_from_domain(domain: &str) -> String {
     let parts: Vec<&str> = domain.split('.').collect();
-    if parts.len() == 1 {
+    if parts.len() <= 1 {
         return domain.to_string();
     }
-    if parts.len() == 2 {
-        return parts[0].to_string();
-    }
-    parts[parts.len() - 2].to_string()
+    parts[0].to_string()
 }

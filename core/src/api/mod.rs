@@ -2,8 +2,12 @@ use axum::{routing::get, Router};
 
 mod shorten;
 
-pub fn mount() -> Router {
+#[derive(Clone)]
+pub struct Ctx {}
+
+pub fn mount(ctx: Ctx) -> Router {
     Router::new()
         .route("/health", get(|| async { "ok" }))
-        .merge(shorten::mount())
+        .route("/shorten", get(shorten::shorten))
+        .with_state(ctx)
 }

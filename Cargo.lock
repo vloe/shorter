@@ -694,8 +694,9 @@ dependencies = [
  "phf",
  "regex",
  "serde",
+ "thiserror",
  "typeshare",
- "url",
+ "worker",
 ]
 
 [[package]]
