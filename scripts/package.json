@@ -2,6 +2,7 @@
 	"name": "@sh/scripts",
 	"private": true,
 	"devDependencies": {
+		"@sh/config": "workspace:^",
 		"@types/xmldom": "^0.1.34",
 		"bun": "^1.1.18",
 		"bun-types": "latest",

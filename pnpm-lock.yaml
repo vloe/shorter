@@ -26,9 +26,18 @@ importers:
       '@sh/config':
         specifier: workspace:^
         version: link:../../packages/config
+      '@sh/constants':
+        specifier: workspace:^
+        version: link:../../packages/constants
+      '@sh/types':
+        specifier: workspace:^
+        version: link:../../packages/types
       '@sh/ui':
         specifier: workspace:^
         version: link:../../packages/ui
+      '@sh/utils':
+        specifier: workspace:^
+        version: link:../../packages/utils
       '@sveltejs/adapter-static':
         specifier: ^3.0.1
         version: 3.0.1(@sveltejs/kit@2.5.4(@sveltejs/vite-plugin-svelte@4.0.0-next.3(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.13.0)))(svelte@5.0.0-next.141)(vite@5.2.6(@types/node@20.13.0)))
@@ -41,18 +50,12 @@ importers:
       '@tanstack/svelte-query':
         specifier: ^5.44.0
         version: 5.44.0(svelte@5.0.0-next.141)
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
       svelte:
         specifier: ^5.0.0-next.1
         version: 5.0.0-next.141
       svelte-check:
         specifier: ^3.6.0
         version: 3.6.8(postcss-load-config@5.1.0(postcss@8.4.38))(postcss@8.4.38)(svelte@5.0.0-next.141)
-      tailwind-merge:
-        specifier: ^2.3.0
-        version: 2.3.0
       tslib:
         specifier: ^2.4.1
         version: 2.6.2
@@ -117,6 +120,24 @@ importers:
         specifier: ^5.0.0
         version: 5.4.3
 
+  packages/constants:
+    devDependencies:
+      '@sh/config':
+        specifier: workspace:^
+        version: link:../config
+      typescript:
+        specifier: ^5.0.0
+        version: 5.4.3
+
+  packages/types:
+    devDependencies:
+      '@sh/config':
+        specifier: workspace:^
+        version: link:../config
+      typescript:
+        specifier: ^5.0.0
+        version: 5.4.3
+
   packages/ui:
     dependencies:
       bits-ui:
@@ -138,6 +159,15 @@ importers:
       '@sh/config':
         specifier: workspace:^
         version: link:../config
+      '@sh/constants':
+        specifier: workspace:^
+        version: link:../constants
+      '@sh/types':
+        specifier: workspace:^
+        version: link:../types
+      '@sh/utils':
+        specifier: workspace:^
+        version: link:../utils
       '@sveltejs/adapter-auto':
         specifier: ^3.0.0
         version: 3.2.1(@sveltejs/kit@2.5.4(@sveltejs/vite-plugin-svelte@3.0.2(svelte@4.2.18)(vite@5.2.6(@types/node@20.13.0)))(svelte@4.2.18)(vite@5.2.6(@types/node@20.13.0)))
@@ -147,6 +177,9 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.0
         version: 3.0.2(svelte@4.2.18)(vite@5.2.6(@types/node@20.13.0))
+      '@tanstack/svelte-query':
+        specifier: ^5.44.0
+        version: 5.44.0(svelte@4.2.18)
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.19(postcss@8.4.38)
@@ -172,8 +205,29 @@ importers:
         specifier: ^5.0.3
         version: 5.2.6(@types/node@20.13.0)
 
+  packages/utils:
+    devDependencies:
+      '@sh/config':
+        specifier: workspace:^
+        version: link:../config
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      svelte:
+        specifier: ^4.2.18
+        version: 4.2.18
+      tailwind-merge:
+        specifier: ^2.3.0
+        version: 2.3.0
+      typescript:
+        specifier: ^5.0.0
+        version: 5.4.3
+
   scripts:
     devDependencies:
+      '@sh/config':
+        specifier: workspace:^
+        version: link:../packages/config
       '@types/xmldom':
         specifier: ^0.1.34
         version: 0.1.34
@@ -2288,6 +2342,11 @@ snapshots:
       tslib: 2.6.2
 
   '@tanstack/query-core@5.44.0': {}
+
+  '@tanstack/svelte-query@5.44.0(svelte@4.2.18)':
+    dependencies:
+      '@tanstack/query-core': 5.44.0
+      svelte: 4.2.18
 
   '@tanstack/svelte-query@5.44.0(svelte@5.0.0-next.141)':
     dependencies:

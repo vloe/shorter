@@ -7,7 +7,7 @@
 		"web": "pnpm --filter @sh/web -- ",
 		"core": "pnpm --filter @sh/server -- ",
 		"ui": "pnpm --filter @sh/ui -- ",
-		"gen:types": "typeshare ./core --lang=typescript --output-file=apps/landing/src/lib/types/core.ts",
+		"gen:types": "typeshare ./core --lang=typescript --output-file=packages/types/src/bindings.ts",
 		"gen:tld-info": "cd scripts && bun run src/genTldInfo.ts"
 	},
 	"devDependencies": {

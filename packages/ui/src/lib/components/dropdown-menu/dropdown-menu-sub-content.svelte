@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui"
-	import { cn, flyAndScale } from "../../utils"
+	import { cn } from "@sh/utils/src/cn"
+	import { flyAndScale } from "@sh/utils/src/flyAndScale"
 
 	type $$Props = DropdownMenuPrimitive.SubContentProps
 

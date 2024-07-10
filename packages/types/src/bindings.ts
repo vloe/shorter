@@ -3,22 +3,21 @@
 */
 
 export interface ShortenParams {
-	domain: string;
+	domain: string
 }
 
 export interface TldInfo {
-	name: string;
-	category: string;
-	manager: string;
+	name: string
+	category: string
+	manager: string
 }
 
 export interface Domain {
-	name: string;
-	tld_info: TldInfo;
-	available: boolean;
+	name: string
+	tld_info: TldInfo
+	available: boolean
 }
 
 export interface ShortenRes {
-	domains: Domain[];
+	domains: Domain[]
 }
-
