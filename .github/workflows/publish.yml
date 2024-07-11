@@ -17,8 +17,12 @@ jobs:
             - name: Setup rust and cargo-watch
               uses: ./.github/actions/setup-rust
 
-            - name: Setup aws credentials
-              uses: ./.github/actions/setup-aws
+            - name: Configure aws credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: eu-west-2
 
             - name: Build
               run: pnpm build
