@@ -2,9 +2,7 @@
 	"name": "@sh/server",
 	"private": true,
 	"scripts": {
-		"dev": "wrangler dev"
-	},
-	"devDependencies": {
-		"wrangler": "^3.57.1"
+		"dev": "cargo lambda watch",
+		"build": "cargo lambda build --release"
 	}
 }

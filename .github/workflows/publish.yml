@@ -14,6 +14,12 @@ jobs:
             - name: Setup Node.js, pnpm and dependencies
               uses: ./.github/actions/setup-pnpm
 
+            - name: Setup rust and cargo-watch
+              uses: ./.github/actions/setup-rust
+
+            - name: Setup aws credentials
+              uses: ./.github/actions/setup-aws
+
             - name: Build
               run: pnpm build
 
@@ -25,17 +31,6 @@ jobs:
                   projectName: sh-landing
                   directory: ./apps/landing/build
 
-            - name: Publish web to cloudflare pages
-              uses: cloudflare/pages-action@v1
-              with:
-                  apiToken: ${{ secrets.CF_API_TOKEN }}
-                  accountId: ${{ secrets.CF_ACCOUNT_ID }}
-                  projectName: sh-web
-                  directory: ./apps/web/build
-
-            - name: Publish server to cloudflare workers
-              uses: cloudflare/wrangler-action@v3
-              with:
-                  apiToken: ${{ secrets.CF_API_TOKEN }}
-                  accountId: ${{ secrets.CF_ACCOUNT_ID }}
-                  workingDirectory: ./apps/server
+            - name: Publish server to aws lambda
+              run: |
+                  cargo lambda deploy --iam-role arn:aws:iam::533267168525:role/lambda sh-server
