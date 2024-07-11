@@ -15,7 +15,7 @@
 		"@sh/types": "workspace:^",
 		"@sh/ui": "workspace:^",
 		"@sh/utils": "workspace:^",
-		"@sveltejs/adapter-static": "^3.0.1",
+		"@sveltejs/adapter-cloudflare": "^4.6.1",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "4.0.0-next.3",
 		"@tanstack/svelte-query": "^5.44.0",

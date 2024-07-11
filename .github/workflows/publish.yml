@@ -33,7 +33,7 @@ jobs:
                   apiToken: ${{ secrets.CF_API_TOKEN }}
                   accountId: ${{ secrets.CF_ACCOUNT_ID }}
                   projectName: sh-landing
-                  directory: ./apps/landing/build
+                  directory: ./apps/landing/.svelte-kit/cloudflare
 
             - name: Publish server to aws lambda
               run: |
