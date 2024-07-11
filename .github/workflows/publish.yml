@@ -37,4 +37,4 @@ jobs:
 
             - name: Publish server to aws lambda
               run: |
-                  cargo lambda deploy --iam-role arn:aws:iam::533267168525:role/lambda sh-server
+                  cargo lambda deploy --iam-role arn:aws:iam::533267168525:role/lambda --enable-function-url sh-server
