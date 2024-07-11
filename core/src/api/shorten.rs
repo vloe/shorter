@@ -22,7 +22,7 @@ pub(crate) struct ShortenParams {
 pub(crate) struct Domain {
     name: String,
     tld: Tld,
-    available: bool,
+    status: String,
 }
 
 #[typeshare]
@@ -102,10 +102,11 @@ pub(crate) async fn shorten(
             let new_tld = format!(".{}", new_tld);
 
             if let Some(tld) = TLDS.get(&new_tld) {
+                let name = format!("{}{}", new_sld, new_tld);
                 domains.push(Domain {
-                    name: format!("{}{}", new_sld, new_tld),
+                    name: name.clone(),
                     tld: tld.clone(),
-                    available: false,
+                    status: get_status(&name),
                 });
             }
         }
@@ -133,3 +134,5 @@ fn extract_sld_from_domain(domain: &str) -> String {
     }
     parts[0].to_string()
 }
+
+fn get_status(domain: &str) -> String {}

@@ -1,9 +1,10 @@
 import { DOMParser } from "xmldom"
 import fs from "fs"
+import type { Tld } from "@sh/types/src/bindings"
 ;(async () => {
-	let tlds = new Map()
+	let tlds: Map<string, Tld> = new Map()
 
-	// get tlds, categories, and managers
+	// get tld names, categories, and managers
 	let res = await fetch("https://www.iana.org/domains/root/db")
 	let text = await res.text()
 	let doc = new DOMParser().parseFromString(text, "text/html")
@@ -13,16 +14,17 @@ import fs from "fs"
 
 	for (let i = 1; i < rows.length; i++) {
 		let cells = rows[i].getElementsByTagName("td")
-		let tld = cells[0].textContent?.trim()
+
+		let name = cells[0].textContent?.trim()
 		let category = cells[1].textContent?.trim()
 		let manager = cells[2].textContent?.trim().replace(/"/g, "")
-		if (tld) {
-			tlds.set(tld, { tld, category, manager })
+
+		if (name && category && manager) {
+			tlds.set(name, { name, category, manager, server: "NONE" })
 		}
 	}
 
-	// get the tlds that has a whois server
-	let tldsWithServer = new Map()
+	// get whois servers
 	res = await fetch("https://raw.githubusercontent.com/rfc1036/whois/next/tld_serv_list")
 	text = await res.text()
 
@@ -36,9 +38,13 @@ import fs from "fs"
 			.replace("IP6", "")
 			.split("#")[0]
 
-		let [tld, server] = line.split(/\s+/, 2)
-		if (server && !server.startsWith("WEB") && !server.startsWith("NONE")) {
-			tldsWithServer.set(tld, tld)
+		let [name, server] = line.split(/\s+/, 2)
+		if (tlds.has(name)) {
+			let tld = tlds.get(name)
+			if (tld && server && !server.startsWith("WEB") && !server.startsWith("NONE")) {
+				tld.server = server.trim()
+				tlds.set(name, tld)
+			}
 		}
 	}
 
@@ -48,30 +54,27 @@ import fs from "fs"
 	for (let line of text.split("\n")) {
 		if (line.length === 0 || line.startsWith("#")) continue
 
-		let tld = "." + line.trim()
-		if (tld && !tldsWithServer.has(tld)) {
-			tldsWithServer.set(tld, tld)
-		}
-	}
-
-	// remove tlds that don't have a server
-	for (let tld of tlds.keys()) {
-		if (!tldsWithServer.has(tld)) {
-			tlds.delete(tld)
+		let name = "." + line.trim()
+		if (tlds.has(name)) {
+			let tld = tlds.get(name)
+			if (tld && tld.server === "NONE") {
+				tld.server = `whois.nic${name}`
+				tlds.set(name, tld)
+			}
 		}
 	}
 
 	// write to file
 	const filePath = "../core/src/constants/tlds.rs"
-	const linesToKeep = 14
+	const linesToKeep = 15
 
 	let existingContent = fs.readFileSync(filePath, "utf8")
 	let lines = existingContent.split("\n")
 	let preservedLines = lines.slice(0, linesToKeep)
 	let newContent = Array.from(tlds.values())
 		.map(
-			({ tld, category, manager }) =>
-				`    "${tld}" => Tld { name: "${tld}", category: "${category}", manager: "${manager}" },`,
+			({ name, category, manager, server }) =>
+				`    "${name}" => Tld { name: "${name}", category: "${category}", manager: "${manager}", server: "${server}" },`,
 		)
 		.join("\n")
 	let updatedContent = preservedLines.join("\n") + "\n" + newContent + "\n" + ");"

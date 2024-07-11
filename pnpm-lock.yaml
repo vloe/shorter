@@ -191,6 +191,9 @@ importers:
       '@sh/config':
         specifier: workspace:^
         version: link:../packages/config
+      '@sh/types':
+        specifier: workspace:^
+        version: link:../packages/types
       '@types/xmldom':
         specifier: ^0.1.34
         version: 0.1.34
