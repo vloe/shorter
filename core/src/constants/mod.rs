@@ -1,1 +1,1 @@
-pub(crate) mod tld_info;
+pub(crate) mod tlds;

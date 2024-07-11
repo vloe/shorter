@@ -1,7 +1,7 @@
 import { DOMParser } from "xmldom"
 import fs from "fs"
 ;(async () => {
-	let tldInfo = new Map()
+	let tlds = new Map()
 
 	// get tlds, categories, and managers
 	let res = await fetch("https://www.iana.org/domains/root/db")
@@ -17,7 +17,7 @@ import fs from "fs"
 		let category = cells[1].textContent?.trim()
 		let manager = cells[2].textContent?.trim().replace(/"/g, "")
 		if (tld) {
-			tldInfo.set(tld, { tld, category, manager })
+			tlds.set(tld, { tld, category, manager })
 		}
 	}
 
@@ -55,23 +55,23 @@ import fs from "fs"
 	}
 
 	// remove tlds that don't have a server
-	for (let tld of tldInfo.keys()) {
+	for (let tld of tlds.keys()) {
 		if (!tldsWithServer.has(tld)) {
-			tldInfo.delete(tld)
+			tlds.delete(tld)
 		}
 	}
 
 	// write to file
-	const filePath = "../core/src/constants/tld_info.rs"
+	const filePath = "../core/src/constants/tlds.rs"
 	const linesToKeep = 14
 
 	let existingContent = fs.readFileSync(filePath, "utf8")
 	let lines = existingContent.split("\n")
 	let preservedLines = lines.slice(0, linesToKeep)
-	let newContent = Array.from(tldInfo.values())
+	let newContent = Array.from(tlds.values())
 		.map(
 			({ tld, category, manager }) =>
-				`    "${tld}" => TldInfo { name: "${tld}", category: "${category}", manager: "${manager}" },`,
+				`    "${tld}" => Tld { name: "${tld}", category: "${category}", manager: "${manager}" },`,
 		)
 		.join("\n")
 	let updatedContent = preservedLines.join("\n") + "\n" + newContent + "\n" + ");"

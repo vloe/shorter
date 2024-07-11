@@ -7,7 +7,7 @@
 		"core": "pnpm --filter @sh/server -- ",
 		"ui": "pnpm --filter @sh/ui -- ",
 		"gen:types": "typeshare ./core --lang=typescript --output-file=packages/types/src/bindings.ts",
-		"gen:tld-info": "cd scripts && bun run src/genTldInfo.ts"
+		"gen:tlds": "cd scripts && bun run src/genTlds.ts"
 	},
 	"devDependencies": {
 		"prettier": "^3.2.5",

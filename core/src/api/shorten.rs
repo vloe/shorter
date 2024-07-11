@@ -1,5 +1,5 @@
 use super::Ctx;
-use crate::constants::tld_info::{TldInfo, TLD_INFO};
+use crate::constants::tlds::{Tld, TLDS};
 use axum::{
     extract::{Query, State},
     http::StatusCode,
@@ -21,7 +21,7 @@ pub(crate) struct ShortenParams {
 #[derive(Serialize)]
 pub(crate) struct Domain {
     name: String,
-    tld_info: TldInfo,
+    tld: Tld,
     available: bool,
 }
 
@@ -101,10 +101,10 @@ pub(crate) async fn shorten(
             let (new_sld, new_tld) = sld.split_at(j);
             let new_tld = format!(".{}", new_tld);
 
-            if let Some(tld_info) = TLD_INFO.get(&new_tld) {
+            if let Some(tld) = TLDS.get(&new_tld) {
                 domains.push(Domain {
                     name: format!("{}{}", new_sld, new_tld),
-                    tld_info: tld_info.clone(),
+                    tld: tld.clone(),
                     available: false,
                 });
             }
