@@ -10,6 +10,7 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use typeshare::typeshare;
+use url::Url;
 
 #[typeshare]
 #[derive(Deserialize)]
@@ -65,10 +66,6 @@ impl ShortenParams {
         if domain.len() > MAX_DOMAIN_LEN {
             return Err(ShortenErr::DomainTooLong(MAX_DOMAIN_LEN));
         }
-        let domain_regex = Regex::new(r"^[a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})?$").unwrap();
-        if !domain_regex.is_match(domain) {
-            return Err(ShortenErr::UnvalidDomain);
-        }
 
         Ok(())
     }
@@ -81,7 +78,26 @@ pub(crate) async fn shorten(
     params.validate()?;
 
     let domain = params.domain.trim();
-    let mut sld = extract_sld_from_domain(&domain);
+
+    let mut sld = match Url::parse(&domain) {
+        Ok(url) => {
+            if let Some(d) = url.domain() {
+                let parts: Vec<&str> = d.split('.').collect();
+                parts[parts.len() - 2].to_string()
+            } else {
+                return Err(ShortenErr::UnvalidDomain);
+            }
+        }
+        Err(_) => {
+            let domain_regex = Regex::new(r"^[a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})?$").unwrap();
+            if domain_regex.is_match(&domain) {
+                let parts: Vec<&str> = domain.split('.').collect();
+                parts[0].to_string()
+            } else {
+                return Err(ShortenErr::UnvalidDomain);
+            }
+        }
+    };
 
     let mut domains = Vec::new();
     let mut checked_sld = String::new();
@@ -123,12 +139,4 @@ pub(crate) async fn shorten(
 
     let res = ShortenRes { domains };
     Ok(Json(res))
-}
-
-fn extract_sld_from_domain(domain: &str) -> String {
-    let parts: Vec<&str> = domain.split('.').collect();
-    if parts.len() <= 1 {
-        return domain.to_string();
-    }
-    parts[0].to_string()
 }
