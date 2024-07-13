@@ -22,7 +22,6 @@ pub(crate) struct ShortenParams {
 pub(crate) struct Domain {
     name: String,
     tld: Tld,
-    status: String,
 }
 
 #[typeshare]
@@ -106,7 +105,6 @@ pub(crate) async fn shorten(
                 domains.push(Domain {
                     name: name.clone(),
                     tld: tld.clone(),
-                    status: get_status(&name),
                 });
             }
         }
@@ -134,5 +132,3 @@ fn extract_sld_from_domain(domain: &str) -> String {
     }
     parts[0].to_string()
 }
-
-fn get_status(domain: &str) -> String {}
