@@ -3,6 +3,7 @@ use axum::{
     routing::get,
     Router,
 };
+use hickory_resolver::TokioAsyncResolver;
 use lambda_http::{run, tracing, Error};
 use sh_core::api::{mount, Ctx};
 use std::time::Duration;
@@ -23,7 +24,12 @@ async fn main() -> Result<(), Error> {
         .allow_headers([header::CONTENT_TYPE])
         .max_age(Duration::from_secs(3600));
 
-    let ctx = Ctx {};
+    let resolver = {
+        let (cfg, opts) = hickory_resolver::system_conf::read_system_conf()?;
+        TokioAsyncResolver::tokio(cfg, opts)
+    };
+
+    let ctx = Ctx { resolver };
 
     let app = Router::new()
         .route("/", get(|| async { "sh-server" }))
