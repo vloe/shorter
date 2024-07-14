@@ -7,9 +7,12 @@ edition = { workspace = true }
 
 [dependencies]
 axum = { workspace = true, features = ["query", "json"] }
+tokio = { workspace = true }
 typeshare = { workspace = true }
+hickory-resolver = { workspace = true }
 serde = { version = "1.0", features = ["derive"] }
 phf = { version = "0.11.1", features = ["macros"] }
 regex = "1.10.5"
 thiserror = "1.0.61"
 url = "2.5.2"
+futures = "0.3.30"

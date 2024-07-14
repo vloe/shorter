@@ -13,10 +13,15 @@ export interface Tld {
 	server: string;
 }
 
+export enum Status {
+	Available = "Available",
+	Unavailable = "Unavailable",
+}
+
 export interface Domain {
 	name: string;
 	tld: Tld;
-	status: string;
+	status: Status;
 }
 
 export interface ShortenRes {
