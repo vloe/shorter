@@ -50,6 +50,7 @@
 			<Table.Row>
 				<Table.Head class="w-[100px]">#</Table.Head>
 				<Table.Head>domain</Table.Head>
+				<Table.Head>status</Table.Head>
 			</Table.Row>
 		</Table.Header>
 		<Table.Body>
@@ -58,6 +59,7 @@
 					<Table.Row>
 						<Table.Cell>{i + 1}</Table.Cell>
 						<Table.Cell>{domain.name}</Table.Cell>
+						<Table.Cell>{domain.status.toLowerCase()}</Table.Cell>
 					</Table.Row>
 				{/each}
 			{/if}
