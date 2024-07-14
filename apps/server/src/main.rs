@@ -26,7 +26,7 @@ async fn main() -> Result<(), Error> {
 
     let resolver = {
         let (cfg, opts) = hickory_resolver::system_conf::read_system_conf()?;
-        TokioAsyncResolver::tokio(cfg, opts)
+        TokioAsyncResolver::tokio(cfg, opts).into()
     };
 
     let ctx = Ctx { resolver };

@@ -6,6 +6,8 @@ use axum::{
     response::{IntoResponse, Response},
     Json,
 };
+use futures::future::join_all;
+use hickory_resolver::{error::ResolveError, proto::rr::RecordType, TokioAsyncResolver};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -23,6 +25,7 @@ pub(crate) struct ShortenParams {
 pub(crate) struct Domain {
     name: String,
     tld: Tld,
+    status: Status,
 }
 
 #[typeshare]
@@ -73,7 +76,7 @@ impl ShortenParams {
 
 pub(crate) async fn shorten(
     Query(params): Query<ShortenParams>,
-    State(_ctx): State<Ctx>,
+    State(ctx): State<Ctx>,
 ) -> Result<Json<ShortenRes>, ShortenErr> {
     params.validate()?;
 
@@ -99,7 +102,7 @@ pub(crate) async fn shorten(
         }
     };
 
-    let mut domains = Vec::new();
+    let mut domain_futures = vec![];
     let mut checked_sld = String::new();
     const VOWELS: [char; 5] = ['a', 'e', 'i', 'o', 'u'];
 
@@ -113,15 +116,18 @@ pub(crate) async fn shorten(
                 continue;
             }
 
-            let (new_sld, new_tld) = sld.split_at(j);
-            let new_tld = format!(".{}", new_tld);
+            let (new_sld, new_tld) = (&sld[..j], format!(".{}", &sld[j..]));
+            let new_domain = format!("{}{}", new_sld, new_tld);
 
             if let Some(tld) = TLDS.get(&new_tld) {
-                let name = format!("{}{}", new_sld, new_tld);
-                domains.push(Domain {
-                    name: name.clone(),
-                    tld: tld.clone(),
-                });
+                let resolver = ctx.resolver.clone();
+                domain_futures.push(tokio::spawn(async move {
+                    Domain {
+                        name: new_domain.clone(),
+                        tld: tld.clone(),
+                        status: get_status(&new_domain, &resolver).await.unwrap(),
+                    }
+                }))
             }
         }
 
@@ -133,10 +139,40 @@ pub(crate) async fn shorten(
         }
     }
 
+    let domains: Vec<Domain> = join_all(domain_futures)
+        .await
+        .into_iter()
+        .filter_map(|res| res.ok())
+        .collect();
+
     if domains.is_empty() {
         return Err(ShortenErr::NoDomainFound);
     }
 
-    let res = ShortenRes { domains };
-    Ok(Json(res))
+    Ok(Json(ShortenRes { domains }))
+}
+
+#[typeshare]
+#[derive(Serialize)]
+pub(crate) enum Status {
+    Available,
+    Unavailable,
+}
+
+async fn get_status(domain: &str, resolver: &TokioAsyncResolver) -> Result<Status, ResolveError> {
+    // Check for NS records
+    let ns_result = resolver.lookup(domain, RecordType::NS).await;
+
+    // Check for SOA records if NS lookup fails
+    if ns_result.is_err() {
+        let soa_result = resolver.lookup(domain, RecordType::SOA).await;
+        if soa_result.is_ok() {
+            return Ok(Status::Unavailable);
+        }
+    } else {
+        return Ok(Status::Unavailable);
+    }
+
+    // If both NS and SOA lookups fail, the domain is likely available
+    Ok(Status::Available)
 }

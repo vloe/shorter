@@ -1,11 +1,12 @@
 use axum::{routing::get, Router};
 use hickory_resolver::TokioAsyncResolver;
+use std::sync::Arc;
 
 mod shorten;
 
 #[derive(Clone)]
 pub struct Ctx {
-    pub resolver: TokioAsyncResolver,
+    pub resolver: Arc<TokioAsyncResolver>,
 }
 
 pub fn mount(ctx: Ctx) -> Router {
