@@ -7,7 +7,7 @@ use axum::{
     Json,
 };
 use futures::future::join_all;
-use hickory_resolver::{error::ResolveError, proto::rr::RecordType, TokioAsyncResolver};
+use hickory_resolver::{proto::rr::RecordType, TokioAsyncResolver};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -82,28 +82,9 @@ pub(crate) async fn shorten(
     params.validate()?;
 
     let domain = params.domain.trim();
+    let sld = extract_sld(&domain)?;
 
-    let mut sld = match Url::parse(&domain) {
-        Ok(url) => {
-            if let Some(d) = url.domain() {
-                let parts: Vec<&str> = d.split('.').collect();
-                parts[parts.len() - 2].to_string()
-            } else {
-                return Err(ShortenErr::UnvalidDomain);
-            }
-        }
-        Err(_) => {
-            let domain_regex = Regex::new(r"^[a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})?$").unwrap();
-            if domain_regex.is_match(&domain) {
-                let parts: Vec<&str> = domain.split('.').collect();
-                parts[0].to_string()
-            } else {
-                return Err(ShortenErr::UnvalidDomain);
-            }
-        }
-    };
-
-    const MAX_VOWELS: usize = 15;
+    const MAX_VOWELS: usize = 6;
     let mut domain_futures = vec![];
 
     for perm in vowel_perms(sld, MAX_VOWELS) {
@@ -117,7 +98,7 @@ pub(crate) async fn shorten(
                     Domain {
                         name: new_domain.clone(),
                         tld: tld.clone(),
-                        status: get_status(&new_domain, &resolver).await.unwrap(),
+                        status: get_status(&new_domain, &resolver).await,
                     }
                 }))
             }
@@ -137,6 +118,28 @@ pub(crate) async fn shorten(
     Ok(Json(ShortenRes { domains }))
 }
 
+fn extract_sld(domain: &str) -> Result<String, ShortenErr> {
+    match Url::parse(&domain) {
+        Ok(url) => {
+            if let Some(d) = url.domain() {
+                let parts: Vec<&str> = d.split('.').collect();
+                return Ok(parts[parts.len() - 2].to_string());
+            } else {
+                return Err(ShortenErr::UnvalidDomain);
+            }
+        }
+        Err(_) => {
+            let domain_regex = Regex::new(r"^[a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})?$").unwrap();
+            if domain_regex.is_match(&domain) {
+                let parts: Vec<&str> = domain.split('.').collect();
+                return Ok(parts[0].to_string());
+            } else {
+                return Err(ShortenErr::UnvalidDomain);
+            }
+        }
+    }
+}
+
 #[typeshare]
 #[derive(Serialize)]
 pub(crate) enum Status {
@@ -144,25 +147,22 @@ pub(crate) enum Status {
     Unavailable,
 }
 
-async fn get_status(domain: &str, resolver: &TokioAsyncResolver) -> Result<Status, ResolveError> {
-    // Check for NS records
+async fn get_status(domain: &str, resolver: &TokioAsyncResolver) -> Status {
     let ns_result = resolver.lookup(domain, RecordType::NS).await;
 
-    // Check for SOA records if NS lookup fails
     if ns_result.is_err() {
         let soa_result = resolver.lookup(domain, RecordType::SOA).await;
         if soa_result.is_ok() {
-            return Ok(Status::Unavailable);
+            return Status::Unavailable;
         }
     } else {
-        return Ok(Status::Unavailable);
+        return Status::Unavailable;
     }
 
-    // If both NS and SOA lookups fail, the domain is likely available
-    Ok(Status::Available)
+    Status::Available
 }
 
-fn vowel_perms(word: String, max_perms: usize) -> Vec<String> {
+fn vowel_perms(word: String, max_vowels: usize) -> Vec<String> {
     const VOWELS: [char; 5] = ['a', 'e', 'i', 'o', 'u'];
     let word_len = word.len();
     let mut res = Vec::with_capacity(word_len * (word_len + 1) / 2);
@@ -178,26 +178,20 @@ fn vowel_perms(word: String, max_perms: usize) -> Vec<String> {
         }
     }
 
-    let mut count = 0;
-    for i in (0..v.len()).rev() {
+    let v_len = v.len();
+    for i in (0..v_len).rev() {
         let mut wo_i = word.clone();
         wo_i.remove(v_pos[&i]);
         res.push(wo_i.clone());
-        count += 1;
 
-        for j in (i + 1..v.len()).rev() {
+        for j in (i + 1..v_len).rev() {
             let mut wo_ij = wo_i.clone();
             wo_ij.remove(v_pos[&j] - 1);
             res.push(wo_ij);
-            count += 1;
-
-            if count >= max_perms {
-                return res;
-            }
         }
 
-        if count >= max_perms {
-            return res;
+        if v_len - i >= max_vowels {
+            break;
         }
     }
 
