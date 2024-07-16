@@ -10,6 +10,7 @@ use futures::future::join_all;
 use hickory_resolver::{error::ResolveError, proto::rr::RecordType, TokioAsyncResolver};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use thiserror::Error;
 use typeshare::typeshare;
 use url::Url;
@@ -102,21 +103,12 @@ pub(crate) async fn shorten(
         }
     };
 
+    const MAX_VOWELS: usize = 15;
     let mut domain_futures = vec![];
-    let mut checked_sld = String::new();
-    const VOWELS: [char; 5] = ['a', 'e', 'i', 'o', 'u'];
 
-    for i in (0..sld.len()).rev() {
-        if sld == checked_sld {
-            break;
-        }
-
-        for j in (1..sld.len()).rev() {
-            if j == sld.len() - 1 || j == 0 {
-                continue;
-            }
-
-            let (new_sld, new_tld) = (&sld[..j], format!(".{}", &sld[j..]));
+    for perm in vowel_perms(sld, MAX_VOWELS) {
+        for i in (1..perm.len()).rev() {
+            let (new_sld, new_tld) = (&perm[..i], format!(".{}", &perm[i..]));
             let new_domain = format!("{}{}", new_sld, new_tld);
 
             if let Some(tld) = TLDS.get(&new_tld) {
@@ -128,13 +120,6 @@ pub(crate) async fn shorten(
                         status: get_status(&new_domain, &resolver).await.unwrap(),
                     }
                 }))
-            }
-        }
-
-        checked_sld = sld.clone();
-        if let Some(char) = sld.chars().nth(i) {
-            if VOWELS.contains(&char) {
-                sld.remove(i);
             }
         }
     }
@@ -175,4 +160,46 @@ async fn get_status(domain: &str, resolver: &TokioAsyncResolver) -> Result<Statu
 
     // If both NS and SOA lookups fail, the domain is likely available
     Ok(Status::Available)
+}
+
+fn vowel_perms(word: String, max_perms: usize) -> Vec<String> {
+    const VOWELS: [char; 5] = ['a', 'e', 'i', 'o', 'u'];
+    let word_len = word.len();
+    let mut res = Vec::with_capacity(word_len * (word_len + 1) / 2);
+    res.push(word.clone());
+
+    let mut v: Vec<char> = Vec::with_capacity(word_len);
+    let mut v_pos: HashMap<usize, usize> = HashMap::with_capacity(word_len);
+
+    for (i, ch) in word.chars().enumerate() {
+        if VOWELS.contains(&ch) {
+            v_pos.insert(v.len(), i);
+            v.push(ch);
+        }
+    }
+
+    let mut count = 0;
+    for i in (0..v.len()).rev() {
+        let mut wo_i = word.clone();
+        wo_i.remove(v_pos[&i]);
+        res.push(wo_i.clone());
+        count += 1;
+
+        for j in (i + 1..v.len()).rev() {
+            let mut wo_ij = wo_i.clone();
+            wo_ij.remove(v_pos[&j] - 1);
+            res.push(wo_ij);
+            count += 1;
+
+            if count >= max_perms {
+                return res;
+            }
+        }
+
+        if count >= max_perms {
+            return res;
+        }
+    }
+
+    res
 }
