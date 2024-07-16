@@ -1,9 +1,6 @@
 [workspace]
 resolver = "2"
-members = [
-    "apps/server",
-    "core",
-]
+members = ["apps/server", "core"]
 
 [workspace.package]
 license = "MIT"
@@ -11,7 +8,7 @@ edition = "2021"
 repository = "https://github.com/vloe/shorter"
 
 [workspace.dependencies]
-axum = { version = "0.7" }
-tokio = { version = "1.38.0", features = ["macros"] }
-typeshare = "1.0.0"
+# third party dependencies used by two or more of our crates
+axum = "0.7"
+tokio = "1.38.0"
 hickory-resolver = "0.24.1"

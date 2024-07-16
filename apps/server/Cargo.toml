@@ -6,9 +6,14 @@ repository = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
+# sh-crates
+sh-core = { path = "../../core" }
+
+# workspace dependencies
 axum = { workspace = true }
-tokio = { workspace = true }
+tokio = { workspace = true, features = ["macros"] }
 hickory-resolver = { workspace = true }
+
+# specific server dependencies 
 lambda_http = "0.12.0"
 tower-http = { version = "0.5.2", features = ["cors"] }
-sh-core = { path = "../../core" }

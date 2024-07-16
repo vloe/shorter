@@ -1630,4 +1630,3 @@ Faculty of Engineering", server: "NONE" },
     ".zuerich" => Tld { name: ".zuerich", category: "generic", manager: "Kanton Zürich (Canton of Zurich)", server: "whois.nic.zuerich" },
     ".zw" => Tld { name: ".zw", category: "country-code", manager: "Postal and Telecommunications Regulatory Authority of Zimbabwe (POTRAZ)", server: "NONE" },
 );
-
