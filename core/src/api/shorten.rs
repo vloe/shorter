@@ -103,8 +103,10 @@ pub(crate) async fn shorten(
         }
     };
 
+    const MAX_VOWELS: usize = 15;
     let mut domain_futures = vec![];
-    for perm in vowel_perms(sld) {
+
+    for perm in vowel_perms(sld, MAX_VOWELS) {
         for i in (1..perm.len()).rev() {
             let (new_sld, new_tld) = (&perm[..i], format!(".{}", &perm[i..]));
             let new_domain = format!("{}{}", new_sld, new_tld);
@@ -160,7 +162,7 @@ async fn get_status(domain: &str, resolver: &TokioAsyncResolver) -> Result<Statu
     Ok(Status::Available)
 }
 
-fn vowel_perms(word: String) -> Vec<String> {
+fn vowel_perms(word: String, max_perms: usize) -> Vec<String> {
     const VOWELS: [char; 5] = ['a', 'e', 'i', 'o', 'u'];
     let word_len = word.len();
     let mut res = Vec::with_capacity(word_len * (word_len + 1) / 2);
@@ -176,15 +178,26 @@ fn vowel_perms(word: String) -> Vec<String> {
         }
     }
 
+    let mut count = 0;
     for i in (0..v.len()).rev() {
         let mut wo_i = word.clone();
         wo_i.remove(v_pos[&i]);
         res.push(wo_i.clone());
+        count += 1;
 
         for j in (i + 1..v.len()).rev() {
             let mut wo_ij = wo_i.clone();
             wo_ij.remove(v_pos[&j] - 1);
             res.push(wo_ij);
+            count += 1;
+
+            if count >= max_perms {
+                return res;
+            }
+        }
+
+        if count >= max_perms {
+            return res;
         }
     }
 
