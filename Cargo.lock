@@ -1141,7 +1141,6 @@ dependencies = [
  "futures",
  "hickory-resolver",
  "phf",
- "regex",
  "serde",
  "thiserror",
  "tokio",
