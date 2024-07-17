@@ -8,7 +8,6 @@ use axum::{
 };
 use futures::future::join_all;
 use hickory_resolver::{proto::rr::RecordType, TokioAsyncResolver};
-use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use thiserror::Error;
@@ -119,25 +118,27 @@ pub(crate) async fn shorten(
 }
 
 fn extract_sld(domain: &str) -> Result<String, ShortenErr> {
-    match Url::parse(&domain) {
-        Ok(url) => {
-            if let Some(d) = url.domain() {
-                let parts: Vec<&str> = d.split('.').collect();
-                return Ok(parts[parts.len() - 2].to_string());
-            } else {
-                return Err(ShortenErr::UnvalidDomain);
-            }
-        }
-        Err(_) => {
-            let domain_regex = Regex::new(r"^[a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})?$").unwrap();
-            if domain_regex.is_match(&domain) {
-                let parts: Vec<&str> = domain.split('.').collect();
-                return Ok(parts[0].to_string());
-            } else {
-                return Err(ShortenErr::UnvalidDomain);
+    /* function returns the sld (second level domain) of a domain.
+    works on all: example, example.com, http://example.com etc... */
+    if !domain.contains('.') {
+        return Ok(domain.to_string());
+    }
+
+    let url = Url::parse(domain)
+        .or_else(|_| Url::parse(&format!("http://{}", domain)))
+        .map_err(|_| ShortenErr::UnvalidDomain)?;
+
+    if let Some(d) = url.domain() {
+        let parts: Vec<&str> = d.split('.').collect();
+        for i in 1..parts.len() {
+            let potential_tld = format!(".{}", parts[i]);
+            if TLDS.get(&potential_tld).is_some() {
+                return Ok(parts[i - 1].to_string());
             }
         }
     }
+
+    Err(ShortenErr::UnvalidDomain)
 }
 
 #[typeshare]
