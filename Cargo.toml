@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["apps/server", "core"]
+members = ["apps/server", "core", "scripts"]
 
 [workspace.package]
 license = "MIT"

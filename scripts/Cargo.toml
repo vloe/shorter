@@ -1,0 +1,14 @@
+[package]
+name = "sh-scripts"
+version = "0.1.0"
+license = { workspace = true }
+repository = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+# workspace dependencies
+tokio = { workspace = true, features = ["full"] }
+
+# specific scripts dependencies 
+reqwest = "0.12.5"
+scraper = "0.19.1"
