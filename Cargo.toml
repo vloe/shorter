@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["apps/server", "core", "scripts"]
+members = ["apps/server", "core", "crates/*", "scripts"]
 
 [workspace.package]
 license = "MIT"
@@ -12,3 +12,4 @@ repository = "https://github.com/vloe/shorter"
 axum = "0.7"
 tokio = "1.38.0"
 hickory-resolver = "0.24.1"
+dotenv = "0.15.0"

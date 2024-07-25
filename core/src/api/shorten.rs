@@ -1,5 +1,4 @@
 use super::Ctx;
-use crate::constants::tlds::{Tld, TLDS};
 use axum::{
     extract::{Query, State},
     http::StatusCode,
@@ -9,6 +8,7 @@ use axum::{
 use futures::future::join_all;
 use hickory_resolver::{proto::rr::RecordType, TokioAsyncResolver};
 use serde::{Deserialize, Serialize};
+use sh_domain::tlds::{Tld, TLDS};
 use std::collections::HashMap;
 use thiserror::Error;
 use typeshare::typeshare;

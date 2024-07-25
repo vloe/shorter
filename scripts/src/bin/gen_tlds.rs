@@ -91,7 +91,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     tlds.retain(|tld| tlds_with_server.contains_key(&tld.name));
 
     // finally write the tlds to file
-    let mut file = File::create("../core/src/constants/tlds.rs")?;
+    let mut file = File::create("../crates/domain/tlds.rs")?;
     writeln!(file, "// don't edit this file, it's auto-generated.")?;
     writeln!(file, "use phf::{{phf_map, Map}};")?;
     writeln!(file, "use serde::Serialize;")?;
