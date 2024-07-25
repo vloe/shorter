@@ -10,8 +10,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     const CZDS_API_AUTH_URL: &str = "https://account-api.icann.org/api/authenticate";
     const CZDS_API_BASE_URL: &str = "https://czds-api.icann.org/czds/downloads/links";
-    const ZONE_DIR: &str = "../crates/dommain/tmp/";
-    const DOMAINS_FILE: &str = "../crates/domain/assets/domains.bin";
+    const ZONE_DIR: &str = "../crates/dommain/src/tmp/";
+    const DOMAINS_FILE: &str = "../crates/domain/src/assets/domains.bin";
 
     let client = reqwest::Client::builder()
         .user_agent("curl/7.79.1")

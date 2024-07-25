@@ -6,3 +6,9 @@ repository = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
+# workspace dependencies
+typeshare = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+
+# specific domain dependencies 
+phf = { version = "0.11.1", features = ["macros"] }

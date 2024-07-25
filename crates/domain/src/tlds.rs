@@ -6,13 +6,13 @@ use typeshare::typeshare;
 
 #[typeshare]
 #[derive(Serialize, Clone)]
-pub(crate) struct Tld {
-    pub(crate) name: &'static str,
-    pub(crate) category: &'static str,
-    pub(crate) manager: &'static str,
+pub struct Tld {
+    pub name: &'static str,
+    pub category: &'static str,
+    pub manager: &'static str,
 }
 
-pub(crate) static TLDS: Map<&str, Tld> = phf_map!(
+pub static TLDS: Map<&str, Tld> = phf_map!(
     ".aaa" => Tld { name: ".aaa", category: "generic", manager: "american automobile association, inc." },
     ".aarp" => Tld { name: ".aarp", category: "generic", manager: "aarp" },
     ".abb" => Tld { name: ".abb", category: "generic", manager: "abb ltd" },

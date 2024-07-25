@@ -1766,6 +1766,11 @@ version = "0.1.0"
 [[package]]
 name = "sh-domain"
 version = "0.1.0"
+dependencies = [
+ "phf 0.11.2",
+ "serde",
+ "typeshare",
+]
 
 [[package]]
 name = "sh-scripts"
