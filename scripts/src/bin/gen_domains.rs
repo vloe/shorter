@@ -21,7 +21,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let zone_urls = get_zone_urls(&client, CZDS_API_BASE_URL, &access_token).await?;
 
     for (i, zone_url) in zone_urls.iter().enumerate() {
-        download_zone(&client, zone_url, ZONE_DIR, &access_token).await?;
+        download_zone(&client, zone_url, &access_token, ZONE_DIR).await?;
         println!("{}/{}", i + 1, zone_urls.len());
     }
 
@@ -73,8 +73,8 @@ async fn get_zone_urls(
 async fn download_zone(
     client: &reqwest::Client,
     url: &str,
-    dir: &str,
     access_token: &str,
+    dir: &str,
 ) -> Result<(), Box<dyn Error>> {
     let res = client
         .get(url)
