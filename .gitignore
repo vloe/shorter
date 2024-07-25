@@ -11,3 +11,4 @@
 **/vite.config.ts.timestamp-*
 **/.svelte-kit
 **/.wrangler
+**/.turbo
