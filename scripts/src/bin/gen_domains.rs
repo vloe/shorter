@@ -7,7 +7,7 @@ use std::hash::{Hash, Hasher};
 use std::{env, error::Error, fs::OpenOptions, io::prelude::*, path::Path};
 use tokio::{
     fs::{self, File},
-    io::{AsyncBufReadExt, AsyncReadExt, AsyncWriteExt, BufReader},
+    io::{AsyncBufReadExt, AsyncWriteExt, BufReader},
 };
 
 #[tokio::main]
@@ -42,7 +42,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         println!("{}/{}: {}", i + 1, zone_urls.len(), file_name);
     }
 
-    test_domains("org", DOMAINS_FILE, BITMAP_SIZE).await?;
+    fs::remove_dir_all(ZONE_DIR).await?;
 
     Ok(())
 }
@@ -137,7 +137,7 @@ async fn bitmap_zone(
 
     let mut mmap = unsafe { MmapOptions::new().map_mut(&file)? };
 
-    // Process the zone file
+    // process the zone file
     let zone_file = File::open(file_path).await?;
     let reader = BufReader::new(zone_file);
     let mut lines = reader.lines();
@@ -168,44 +168,4 @@ fn domain_to_index(domain: &str, bitmap_size: usize) -> usize {
     let mut hasher = DefaultHasher::new();
     domain.hash(&mut hasher);
     (hasher.finish() % (bitmap_size as u64 * 8)) as usize
-}
-
-async fn test_domains(
-    tld: &str,
-    domains_file: &str,
-    bitmap_size: usize,
-) -> Result<(), Box<dyn Error>> {
-    let mut bitmap = vec![0u8; bitmap_size];
-    let mut file = File::open(domains_file).await?;
-    file.read_exact(&mut bitmap).await?;
-
-    let test_domains = vec![
-        format!("google.{}", tld),
-        format!("github.{}", tld),
-        format!("microsoft.{}", tld),
-        format!("rust.{}", tld),
-        format!("nonexistent123456789.{}", tld),
-        format!("vloe.{}", tld),
-        format!("shorter.{}", tld),
-        format!("dudethereisnoooowaythisexists.{}", tld),
-    ];
-
-    println!("\nTesting .dev domains:");
-    for domain in test_domains {
-        let index = domain_to_index(&domain, bitmap_size);
-        let byte_index = index / 8;
-        let bit_index = index % 8;
-        let is_registered = (bitmap[byte_index] & (1 << bit_index)) != 0;
-        println!(
-            "{}: {}",
-            domain,
-            if is_registered {
-                "Registered"
-            } else {
-                "Not registered"
-            }
-        );
-    }
-
-    Ok(())
 }
