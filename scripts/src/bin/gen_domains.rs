@@ -94,8 +94,6 @@ async fn parse_zone_url(
     let file_name = format!("{}.txt", data);
     let file_path = format!("{}{}", zone_dir, file_name);
 
-    println!("downloading: {}", zone);
-
     // create dir if it doesn't exist
     if !Path::new(zone_dir).exists() {
         fs::create_dir_all(zone_dir).await?;

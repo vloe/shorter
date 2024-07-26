@@ -4,6 +4,7 @@ on:
     schedule:
         - cron: "0 0 * * *"
     workflow_dispatch: # allows manual triggering
+
 jobs:
     generate:
         runs-on: ubuntu-latest
@@ -15,12 +16,15 @@ jobs:
             - name: Setup Node.js, pnpm and dependencies
               uses: ./.github/actions/setup-pnpm
 
-            - name: Run generation scripts
+            - name: run generation scripts
+              env:
+                  ICANN_USERNAME: ${{ secrets.ICANN_USERNAME }}
+                  ICANN_PASSWORD: ${{ secrets.ICANN_PASSWORD }}
               run: |
                   pnpm gen:tlds
                   pnpm gen:domains
 
-            - name: Commit and push changes
+            - name: commit and push changes
               run: |
                   git config --local user.email "action@github.com"
                   git config --local user.name "GitHub Action"
