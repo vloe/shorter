@@ -3,6 +3,7 @@ use flate2::read::GzDecoder;
 use memmap2::MmapOptions;
 use serde_json::{json, Value};
 use sh_crypto::hash::Hash;
+use sh_domain::domain_available::BITMAP_SIZE;
 use std::{env, error::Error, fs::OpenOptions, io::prelude::*, path::Path};
 use tokio::{
     fs::{self, File},
@@ -17,7 +18,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
     const CZDS_API_AUTH_URL: &str = "https://account-api.icann.org/api/authenticate";
     const ZONE_DIR: &str = "../crates/domain/src/tmp/";
     const DOMAINS_FILE: &str = "../crates/domain/src/assets/domains.bin";
-    const BITMAP_SIZE: usize = 50_000_000; // 50mb
 
     let client = reqwest::Client::builder()
         .user_agent("curl/7.79.1")

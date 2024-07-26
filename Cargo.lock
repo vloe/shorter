@@ -1767,8 +1767,11 @@ version = "0.1.0"
 name = "sh-domain"
 version = "0.1.0"
 dependencies = [
+ "memmap2",
  "phf 0.11.2",
  "serde",
+ "sh-crypto",
+ "tokio",
  "typeshare",
 ]
 
@@ -1783,6 +1786,7 @@ dependencies = [
  "scraper",
  "serde_json",
  "sh-crypto",
+ "sh-domain",
  "tokio",
 ]
 
