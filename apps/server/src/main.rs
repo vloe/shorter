@@ -75,7 +75,7 @@ async fn run_prod(app: Router) -> Result<(), Box<dyn std::error::Error>> {
     use lambda_http::{run, tracing, Error};
 
     tracing::init_default_subscriber();
-    run(app).await?;
+    run(app).await;
 
     Ok(())
 }

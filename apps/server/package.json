@@ -3,6 +3,6 @@
 	"private": true,
 	"scripts": {
 		"dev": "cargo watch -x 'run -p sh-server'",
-		"build": "cargo lambda build --release"
+		"build": "cargo lambda build --features lambda --release"
 	}
 }
