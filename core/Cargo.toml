@@ -6,15 +6,19 @@ repository = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
+# sh-crates
+sh-domain = { path = "../crates/domain" }
+sh-crypto = { path = "../crates/crypto" }
+
 # workspace dependencies
 axum = { workspace = true, features = ["query", "json"] }
 tokio = { workspace = true }
 hickory-resolver = { workspace = true }
+typeshare = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
 
 # specific core dependencies 
-serde = { version = "1.0", features = ["derive"] }
 phf = { version = "0.11.1", features = ["macros"] }
 thiserror = "1.0.61"
 url = "2.5.2"
 futures = "0.3.30"
-typeshare = "1.0.0"

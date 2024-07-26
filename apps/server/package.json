@@ -2,7 +2,7 @@
 	"name": "@sh/server",
 	"private": true,
 	"scripts": {
-		"dev": "cargo lambda watch",
+		"dev": "cargo watch -x 'run -p sh-server'",
 		"build": "cargo lambda build --release"
 	}
 }
