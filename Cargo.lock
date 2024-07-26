@@ -1782,6 +1782,7 @@ dependencies = [
  "reqwest",
  "scraper",
  "serde_json",
+ "sh-crypto",
  "tokio",
 ]
 

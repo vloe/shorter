@@ -2,8 +2,7 @@ use dotenv::dotenv;
 use flate2::read::GzDecoder;
 use memmap2::MmapOptions;
 use serde_json::{json, Value};
-use std::collections::hash_map::DefaultHasher;
-use std::hash::{Hash, Hasher};
+use sh_crypto::hash::Hash;
 use std::{env, error::Error, fs::OpenOptions, io::prelude::*, path::Path};
 use tokio::{
     fs::{self, File},
@@ -152,7 +151,7 @@ async fn bitmap_zone(
             domain = &domain[..domain.len() - 1];
         }
         if !domain.is_empty() {
-            let index = domain_to_index(domain, bitmap_size);
+            let index = Hash::domain_to_index(domain, bitmap_size);
             let byte_index = index / 8;
             let bit_index = index % 8;
             mmap[byte_index] |= 1 << bit_index;
@@ -162,10 +161,4 @@ async fn bitmap_zone(
     mmap.flush()?;
 
     Ok(())
-}
-
-fn domain_to_index(domain: &str, bitmap_size: usize) -> usize {
-    let mut hasher = DefaultHasher::new();
-    domain.hash(&mut hasher);
-    (hasher.finish() % (bitmap_size as u64 * 8)) as usize
 }

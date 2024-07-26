@@ -6,6 +6,9 @@ repository = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
+# sh-crates
+sh-crypto = { path = "../crates/crypto" }
+
 # workspace dependencies
 tokio = { workspace = true, features = ["full"] }
 dotenv = { workspace = true }
