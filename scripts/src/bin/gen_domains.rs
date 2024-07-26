@@ -1,29 +1,48 @@
 use dotenv::dotenv;
 use flate2::read::GzDecoder;
+use memmap2::MmapOptions;
 use serde_json::{json, Value};
-use std::{env, error::Error, io::prelude::*};
-use tokio::{fs::File, io::AsyncWriteExt};
+use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
+use std::{env, error::Error, fs::OpenOptions, io::prelude::*, path::Path};
+use tokio::{
+    fs::{self, File},
+    io::{AsyncBufReadExt, AsyncReadExt, AsyncWriteExt, BufReader},
+};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     dotenv().ok();
 
+    const CZDS_API_URL: &str = "https://czds-api.icann.org/czds/downloads/links";
     const CZDS_API_AUTH_URL: &str = "https://account-api.icann.org/api/authenticate";
-    const CZDS_API_BASE_URL: &str = "https://czds-api.icann.org/czds/downloads/links";
-    const ZONE_DIR: &str = "../crates/dommain/src/tmp/";
+    const ZONE_DIR: &str = "../crates/domain/src/tmp/";
     const DOMAINS_FILE: &str = "../crates/domain/src/assets/domains.bin";
+    const BITMAP_SIZE: usize = 50_000_000; // 50mb
 
     let client = reqwest::Client::builder()
         .user_agent("curl/7.79.1")
         .build()?;
 
     let access_token = get_access_token(&client, CZDS_API_AUTH_URL).await?;
-    let zone_urls = get_zone_urls(&client, CZDS_API_BASE_URL, &access_token).await?;
+    let zone_urls = get_zone_urls(&client, CZDS_API_URL, &access_token).await?;
 
-    for (i, zone_url) in zone_urls.iter().enumerate() {
-        download_zone(&client, zone_url, &access_token, ZONE_DIR).await?;
-        println!("{}/{}", i + 1, zone_urls.len());
+    for (i, zone_url) in zone_urls.iter().rev().enumerate() {
+        let (file_name, file_path) = parse_zone_url(zone_url, ZONE_DIR).await?;
+
+        if let Err(e) = download_zone(&client, zone_url, &access_token, &file_path).await {
+            println!("failed to download zone: {}, err: {}", zone_url, e);
+            continue;
+        };
+        if let Err(e) = bitmap_zone(&file_path, DOMAINS_FILE, BITMAP_SIZE).await {
+            println!("failed to bitmap zone: {}, err: {}", zone_url, e);
+            continue;
+        };
+
+        println!("{}/{}: {}", i + 1, zone_urls.len(), file_name);
     }
+
+    test_domains("org", DOMAINS_FILE, BITMAP_SIZE).await?;
 
     Ok(())
 }
@@ -37,10 +56,6 @@ async fn get_access_token(client: &reqwest::Client, url: &str) -> Result<String,
         }))
         .send()
         .await?;
-
-    if !res.status().is_success() {
-        return Err(format!("failed to get access token from: {}", url).into());
-    }
 
     let access_token = res.json::<Value>().await?["accessToken"]
         .as_str()
@@ -61,48 +76,136 @@ async fn get_zone_urls(
         .send()
         .await?;
 
-    if !res.status().is_success() {
-        return Err(format!("failed to get zone files from: {}", url).into());
-    }
-
     let zone_urls = res.json().await?;
 
     Ok(zone_urls)
 }
 
+async fn parse_zone_url(
+    zone_url: &str,
+    zone_dir: &str,
+) -> Result<(String, String), Box<dyn Error>> {
+    let zone_name = zone_url.split('/').last().unwrap();
+    let file_name = zone_name.replace(".zone", ".txt").to_string();
+    let file_path = format!("{}{}", zone_dir, file_name);
+
+    // create dir if it doesn't exist
+    if !Path::new(zone_dir).exists() {
+        fs::create_dir_all(zone_dir).await?;
+    }
+
+    Ok((file_name, file_path))
+}
+
 async fn download_zone(
     client: &reqwest::Client,
-    url: &str,
+    zone_url: &str,
     access_token: &str,
-    dir: &str,
+    file_path: &str,
 ) -> Result<(), Box<dyn Error>> {
     let res = client
-        .get(url)
+        .get(zone_url)
         .header("Authorization", format!("Bearer {}", access_token))
         .send()
         .await?;
 
-    if !res.status().is_success() {
-        return Err(format!("failed to fetch zone url: {}", url).into());
-    }
-
-    let bytes = match res.bytes().await {
-        Ok(b) => b,
-        Err(e) => {
-            return Err(format!("failed to fetch bytes from url: {}: {}", url, e).into());
-        }
-    };
-
-    // decompress the data
+    // decompress
+    let bytes = res.bytes().await?;
     let mut gz = GzDecoder::new(&bytes[..]);
     let mut s = String::new();
     gz.read_to_string(&mut s)?;
 
-    // write the data to file
-    let file_name = url.split('/').last().unwrap().replace(".zone", ".txt");
-    let file_path = format!("{}{}", dir, file_name);
+    // write to file
     let mut file = File::create(&file_path).await?;
     file.write_all(s.as_bytes()).await?;
+
+    Ok(())
+}
+
+async fn bitmap_zone(
+    file_path: &str,
+    domains_file: &str,
+    bitmap_size: usize,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .open(domains_file)?;
+
+    file.set_len(bitmap_size as u64)?;
+
+    let mut mmap = unsafe { MmapOptions::new().map_mut(&file)? };
+
+    // Process the zone file
+    let zone_file = File::open(file_path).await?;
+    let reader = BufReader::new(zone_file);
+    let mut lines = reader.lines();
+
+    while let Some(line) = lines.next_line().await? {
+        if line.starts_with(';') || line.is_empty() {
+            continue;
+        }
+
+        let mut domain = line.split_whitespace().next().unwrap_or("");
+        if domain.ends_with('.') {
+            domain = &domain[..domain.len() - 1];
+        }
+        if !domain.is_empty() {
+            let index = domain_to_index(domain, bitmap_size);
+            let byte_index = index / 8;
+            let bit_index = index % 8;
+            mmap[byte_index] |= 1 << bit_index;
+        }
+    }
+
+    mmap.flush()?;
+
+    Ok(())
+}
+
+fn domain_to_index(domain: &str, bitmap_size: usize) -> usize {
+    let mut hasher = DefaultHasher::new();
+    domain.hash(&mut hasher);
+    (hasher.finish() % (bitmap_size as u64 * 8)) as usize
+}
+
+async fn test_domains(
+    tld: &str,
+    domains_file: &str,
+    bitmap_size: usize,
+) -> Result<(), Box<dyn Error>> {
+    let mut bitmap = vec![0u8; bitmap_size];
+    let mut file = File::open(domains_file).await?;
+    file.read_exact(&mut bitmap).await?;
+
+    let test_domains = vec![
+        format!("google.{}", tld),
+        format!("github.{}", tld),
+        format!("microsoft.{}", tld),
+        format!("rust.{}", tld),
+        format!("nonexistent123456789.{}", tld),
+        format!("vloe.{}", tld),
+        format!("shorter.{}", tld),
+        format!("dudethereisnoooowaythisexists.{}", tld),
+    ];
+
+    println!("\nTesting .dev domains:");
+    for domain in test_domains {
+        let index = domain_to_index(&domain, bitmap_size);
+        let byte_index = index / 8;
+        let bit_index = index % 8;
+        let is_registered = (bitmap[byte_index] & (1 << bit_index)) != 0;
+        println!(
+            "{}: {}",
+            domain,
+            if is_registered {
+                "Registered"
+            } else {
+                "Not registered"
+            }
+        );
+    }
 
     Ok(())
 }
