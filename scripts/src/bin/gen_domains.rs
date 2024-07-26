@@ -3,7 +3,7 @@ use flate2::read::GzDecoder;
 use memmap2::MmapOptions;
 use serde_json::{json, Value};
 use sh_crypto::hash::Hash;
-use sh_domain::domain_available::BITMAP_SIZE;
+use sh_domain::{domain_available::BITMAP_SIZE, tlds::TLDS};
 use std::{env, error::Error, fs::OpenOptions, io::prelude::*, path::Path};
 use tokio::{
     fs::{self, File},
@@ -26,8 +26,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let access_token = get_access_token(&client, CZDS_API_AUTH_URL).await?;
     let zone_urls = get_zone_urls(&client, CZDS_API_URL, &access_token).await?;
 
-    for (i, zone_url) in zone_urls.iter().rev().enumerate() {
-        let (file_name, file_path) = parse_zone_url(zone_url, ZONE_DIR).await?;
+    for (i, zone_url) in zone_urls.iter().enumerate() {
+        let (zone, file_path) = parse_zone_url(zone_url, ZONE_DIR).await?;
+
+        if TLDS.get(&zone.as_str()).is_none() {
+            println!("invalid zone: {}", zone);
+            continue;
+        }
 
         if let Err(e) = download_zone(&client, zone_url, &access_token, &file_path).await {
             println!("failed to download zone: {}, err: {}", zone_url, e);
@@ -38,7 +43,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             continue;
         };
 
-        println!("{}/{}: {}", i + 1, zone_urls.len(), file_name);
+        println!("{}/{}: {}", i + 1, zone_urls.len(), zone);
     }
 
     fs::remove_dir_all(ZONE_DIR).await?;
@@ -84,16 +89,19 @@ async fn parse_zone_url(
     zone_url: &str,
     zone_dir: &str,
 ) -> Result<(String, String), Box<dyn Error>> {
-    let zone_name = zone_url.split('/').last().unwrap();
-    let file_name = zone_name.replace(".zone", ".txt").to_string();
+    let data = zone_url.split('/').last().unwrap().replace(".zone", "");
+    let zone = format!(".{}", data);
+    let file_name = format!("{}.txt", data);
     let file_path = format!("{}{}", zone_dir, file_name);
+
+    println!("downloading: {}", zone);
 
     // create dir if it doesn't exist
     if !Path::new(zone_dir).exists() {
         fs::create_dir_all(zone_dir).await?;
     }
 
-    Ok((file_name, file_path))
+    Ok((zone, file_path))
 }
 
 async fn download_zone(
