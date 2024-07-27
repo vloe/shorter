@@ -16,8 +16,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     const CZDS_API_URL: &str = "https://czds-api.icann.org/czds/downloads/links";
     const CZDS_API_AUTH_URL: &str = "https://account-api.icann.org/api/authenticate";
-    const ZONE_DIR: &str = "../crates/domain/src/tmp/";
-    const DOMAINS_FILE: &str = "../crates/domain/src/assets/domains.bin";
+    const ZONE_DIR: &str = "../apps/server/src/tmp/";
+    const DOMAINS_FILE: &str = "../apps/server/src/data/domains.bin";
 
     let client = reqwest::Client::builder()
         .user_agent("curl/7.79.1")
@@ -41,7 +41,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
         };
         match bitmap_zone(&file_path, DOMAINS_FILE, BITMAP_SIZE).await {
             Ok(bits_used) => {
-                println!("{} used {} bits", zone, bits_used);
+                println!(
+                    "{}/{}: {} ({} bits)",
+                    i + 1,
+                    zone_urls.len(),
+                    zone,
+                    bits_used
+                );
                 total_bits_used += bits_used;
             }
             Err(e) => {
@@ -49,12 +55,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
                 continue;
             }
         }
-
-        println!("{}/{}: {}", i + 1, zone_urls.len(), zone);
     }
 
     println!(
-        "total bits used: {}, bitmap_size: {}",
+        "total bits: {}, bitmap_size: {}",
         total_bits_used, BITMAP_SIZE
     );
 
@@ -173,7 +177,7 @@ async fn bitmap_zone(
             let index = Hash::domain_to_index(domain, bitmap_size);
             let byte_index = index / 8;
             let bit_index = index % 8;
-            mmap[byte_index] |= 1 << (7 - bit_index);
+            mmap[byte_index] |= 1 << bit_index; // No need to reverse bits
             bits_used += 1;
         }
     }
