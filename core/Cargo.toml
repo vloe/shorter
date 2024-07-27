@@ -16,6 +16,7 @@ tokio = { workspace = true }
 hickory-resolver = { workspace = true }
 typeshare = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
+bitvec = { workspace = true }
 
 # specific core dependencies 
 phf = { version = "0.11.1", features = ["macros"] }

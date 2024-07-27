@@ -6,7 +6,6 @@ use axum::{
     Json,
 };
 use futures::future::join_all;
-use hickory_resolver::{proto::rr::RecordType, TokioAsyncResolver};
 use serde::{Deserialize, Serialize};
 use sh_domain::{
     domain_available::domain_available,
@@ -28,7 +27,7 @@ pub(crate) struct ShortenParams {
 pub(crate) struct Domain {
     name: String,
     tld: Tld,
-    status: Status,
+    status: bool,
 }
 
 #[typeshare]
@@ -95,12 +94,11 @@ pub(crate) async fn shorten(
             let new_domain = format!("{}{}", new_sld, new_tld);
 
             if let Some(tld) = TLDS.get(&new_tld) {
-                let resolver = ctx.resolver.clone();
                 domain_futures.push(tokio::spawn(async move {
                     Domain {
                         name: new_domain.clone(),
                         tld: tld.clone(),
-                        status: get_status(&new_domain, &resolver).await,
+                        status: domain_available(&new_domain, &ctx.domains).await,
                     }
                 }))
             }
@@ -142,37 +140,6 @@ fn extract_sld(domain: &str) -> Result<String, ShortenErr> {
     }
 
     Err(ShortenErr::UnvalidDomain)
-}
-
-#[typeshare]
-#[derive(Serialize)]
-pub(crate) enum Status {
-    Available,
-    Unavailable,
-}
-
-async fn get_status(domain: &str, resolver: &TokioAsyncResolver) -> Status {
-    let domain_available = domain_available(domain, "../../crates/domain/src/assets/domains.bin")
-        .await
-        .unwrap();
-
-    if domain_available {
-        println!("domain available from bitmap");
-        return Status::Available;
-    }
-
-    let ns_result = resolver.lookup(domain, RecordType::NS).await;
-
-    if ns_result.is_err() {
-        let soa_result = resolver.lookup(domain, RecordType::SOA).await;
-        if soa_result.is_ok() {
-            return Status::Unavailable;
-        }
-    } else {
-        return Status::Unavailable;
-    }
-
-    Status::Available
 }
 
 fn vowel_perms(word: String, max_vowels: usize) -> Vec<String> {

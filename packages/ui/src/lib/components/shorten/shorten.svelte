@@ -82,7 +82,11 @@
 						</Table.Cell>
 						<Table.Cell>
 							<div class="flex items-center gap-1">
-								<p>{domain.status.toLowerCase()}</p>
+								{#if domain.status}
+									<p>available</p>
+								{:else}
+									<p>unavailable</p>
+								{/if}
 								<Popover.Root>
 									<Popover.Trigger>
 										<Info class="size-3.5 fill-muted-foreground" />

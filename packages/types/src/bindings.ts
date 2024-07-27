@@ -6,22 +6,10 @@ export interface ShortenParams {
 	domain: string;
 }
 
-export interface Tld {
-	name: string;
-	category: string;
-	manager: string;
-	server: string;
-}
-
-export enum Status {
-	Available = "Available",
-	Unavailable = "Unavailable",
-}
-
 export interface Domain {
 	name: string;
 	tld: Tld;
-	status: Status;
+	status: boolean;
 }
 
 export interface ShortenRes {

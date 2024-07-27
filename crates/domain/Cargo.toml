@@ -13,7 +13,7 @@ sh-crypto = { path = "../crypto" }
 tokio = { workspace = true, features = ["full"] }
 typeshare = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
-memmap2 = { workspace = true }
+bitvec = { workspace = true }
 
 # specific domain dependencies 
 phf = { version = "0.11.1", features = ["macros"] }

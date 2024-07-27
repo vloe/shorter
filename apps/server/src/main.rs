@@ -4,14 +4,21 @@ use axum::{
     routing::get,
     BoxError, Router,
 };
+use bitvec::prelude::*;
 use hickory_resolver::TokioAsyncResolver;
 use sh_core::api::{mount, Ctx};
 use std::time::Duration;
 use tower::{buffer::BufferLayer, limit::RateLimitLayer, ServiceBuilder};
 use tower_http::cors::CorsLayer;
 
+mod utils;
+
+const BIT_MAP: &[u8] = include_bytes!("../data/domains.bin");
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    dotenv::dotenv().ok();
+
     const MAX_AGE: u64 = 3600;
     const RATE_LIMIT_PERIOD: u64 = 1;
     const RATE_LIMIT_MAX_REQS: u64 = 10;
@@ -65,7 +72,9 @@ fn get_ctx() -> Result<Ctx, Box<dyn std::error::Error>> {
         TokioAsyncResolver::tokio(cfg, opts).into()
     };
 
-    let ctx = Ctx { resolver };
+    let domains = unsafe { BitSlice::from_slice_unchecked(BIT_MAP) };
+
+    let ctx = Ctx { resolver, domains };
 
     Ok(ctx)
 }
@@ -84,7 +93,9 @@ async fn run_prod(app: Router) -> Result<(), Box<dyn std::error::Error>> {
 async fn run_dev(app: Router, addr: &str) -> Result<(), Box<dyn std::error::Error>> {
     println!("\nlistening on http://{}\n", addr);
     let listener = tokio::net::TcpListener::bind(&addr).await?;
-    axum::serve(listener, app).await?;
+    axum::serve(listener, app)
+        .with_graceful_shutdown(utils::shutdown_signal())
+        .await?;
 
     Ok(())
 }
