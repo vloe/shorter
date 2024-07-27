@@ -1,32 +1,13 @@
 use bitvec::prelude::*;
 use sh_crypto::hash::Hash;
 
-pub const BITMAP_SIZE: usize = 20_000_000; // 20mb
+pub const BITMAP_SIZE: usize = 150000000;
 
 pub async fn domain_available(domain: &str, domains: &'static BitSlice<u8, Msb0>) -> bool {
     let index = Hash::domain_to_index(domain, BITMAP_SIZE);
 
     let is_registered = domains[index];
     let is_available = !is_registered;
-
-    // Debug information
-    println!(
-        "Domain: {}, Index: {}, Is Registered: {}, Is Available: {}",
-        domain, index, is_registered, is_available
-    );
-
-    // Print surrounding bits for context
-    let start = index.saturating_sub(5);
-    let end = (index + 6).min(domains.len());
-    println!("Surrounding bits: {:?}", &domains[start..end]);
-
-    // Print some statistics about the bitmap
-    let set_bits = domains.count_ones();
-    println!(
-        "Total set bits in bitmap: {} out of {}",
-        set_bits,
-        domains.len()
-    );
 
     is_available
 }

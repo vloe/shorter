@@ -158,7 +158,6 @@ async fn bitmap_zone(
 
     let mut mmap = unsafe { MmapOptions::new().map_mut(&file)? };
 
-    // process the zone file
     let zone_file = File::open(file_path).await?;
     let reader = BufReader::new(zone_file);
     let mut lines = reader.lines();
@@ -173,11 +172,10 @@ async fn bitmap_zone(
         if domain.ends_with('.') {
             domain = &domain[..domain.len() - 1];
         }
+
         if !domain.is_empty() {
             let index = Hash::domain_to_index(domain, bitmap_size);
-            let byte_index = index / 8;
-            let bit_index = index % 8;
-            mmap[byte_index] |= 1 << bit_index; // No need to reverse bits
+            mmap[index / 8] |= 1 << (7 - (index % 8));
             bits_used += 1;
         }
     }
