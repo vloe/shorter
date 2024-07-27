@@ -3,7 +3,10 @@ use flate2::read::GzDecoder;
 use memmap2::MmapOptions;
 use serde_json::{json, Value};
 use sh_crypto::hash::Hash;
-use sh_domain::{domain_available::BITMAP_SIZE, tlds::TLDS};
+use sh_domain::{
+    domain_available::{BITMAP_BIT_SIZE, BITMAP_BYTE_SIZE},
+    tlds::TLDS,
+};
 use std::{env, error::Error, fs::OpenOptions, io::prelude::*, path::Path};
 use tokio::{
     fs::{self, File},
@@ -39,7 +42,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             println!("failed to download zone: {}, err: {}", zone_url, e);
             continue;
         };
-        match bitmap_zone(&file_path, DOMAINS_FILE, BITMAP_SIZE).await {
+        match bitmap_zone(&file_path, DOMAINS_FILE, BITMAP_BYTE_SIZE, BITMAP_BIT_SIZE).await {
             Ok(bits_used) => {
                 println!(
                     "{}/{}: {} ({} bits)",
@@ -59,7 +62,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     println!(
         "total bits: {}, bitmap_size: {}",
-        total_bits_used, BITMAP_SIZE
+        total_bits_used, BITMAP_BIT_SIZE
     );
 
     fs::remove_dir_all(ZONE_DIR).await?;
@@ -146,7 +149,8 @@ async fn download_zone(
 async fn bitmap_zone(
     file_path: &str,
     domains_file: &str,
-    bitmap_size: usize,
+    bitmap_byte_size: usize,
+    bitmap_bit_size: usize,
 ) -> Result<i32, Box<dyn std::error::Error>> {
     let file = OpenOptions::new()
         .read(true)
@@ -154,7 +158,7 @@ async fn bitmap_zone(
         .create(true)
         .open(domains_file)?;
 
-    file.set_len(bitmap_size as u64)?;
+    file.set_len(bitmap_byte_size as u64)?;
 
     let mut mmap = unsafe { MmapOptions::new().map_mut(&file)? };
 
@@ -174,7 +178,7 @@ async fn bitmap_zone(
         }
 
         if !domain.is_empty() {
-            let index = Hash::domain_to_index(domain, bitmap_size);
+            let index = Hash::domain_to_index(domain, bitmap_bit_size);
             mmap[index / 8] |= 1 << (7 - (index % 8));
             bits_used += 1;
         }
