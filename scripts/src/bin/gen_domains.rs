@@ -26,6 +26,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let access_token = get_access_token(&client, CZDS_API_AUTH_URL).await?;
     let zone_urls = get_zone_urls(&client, CZDS_API_URL, &access_token).await?;
 
+    let mut total_bits_used = 0;
     for (i, zone_url) in zone_urls.iter().enumerate() {
         let (zone, file_path) = parse_zone_url(zone_url, ZONE_DIR).await?;
 
@@ -38,13 +39,24 @@ async fn main() -> Result<(), Box<dyn Error>> {
             println!("failed to download zone: {}, err: {}", zone_url, e);
             continue;
         };
-        if let Err(e) = bitmap_zone(&file_path, DOMAINS_FILE, BITMAP_SIZE).await {
-            println!("failed to bitmap zone: {}, err: {}", zone_url, e);
-            continue;
-        };
+        match bitmap_zone(&file_path, DOMAINS_FILE, BITMAP_SIZE).await {
+            Ok(bits_used) => {
+                println!("{} used {} bits", zone, bits_used);
+                total_bits_used += bits_used;
+            }
+            Err(e) => {
+                println!("failed to bitmap zone: {}, err: {}", zone, e);
+                continue;
+            }
+        }
 
         println!("{}/{}: {}", i + 1, zone_urls.len(), zone);
     }
+
+    println!(
+        "total bits used: {}, bitmap_size: {}",
+        total_bits_used, BITMAP_SIZE
+    );
 
     fs::remove_dir_all(ZONE_DIR).await?;
 
@@ -131,7 +143,7 @@ async fn bitmap_zone(
     file_path: &str,
     domains_file: &str,
     bitmap_size: usize,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<i32, Box<dyn std::error::Error>> {
     let file = OpenOptions::new()
         .read(true)
         .write(true)
@@ -147,6 +159,7 @@ async fn bitmap_zone(
     let reader = BufReader::new(zone_file);
     let mut lines = reader.lines();
 
+    let mut bits_used = 0;
     while let Some(line) = lines.next_line().await? {
         if line.starts_with(';') || line.is_empty() {
             continue;
@@ -161,10 +174,11 @@ async fn bitmap_zone(
             let byte_index = index / 8;
             let bit_index = index % 8;
             mmap[byte_index] |= 1 << bit_index;
+            bits_used += 1;
         }
     }
 
     mmap.flush()?;
 
-    Ok(())
+    Ok(bits_used)
 }

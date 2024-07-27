@@ -9,7 +9,7 @@ use futures::future::join_all;
 use hickory_resolver::{proto::rr::RecordType, TokioAsyncResolver};
 use serde::{Deserialize, Serialize};
 use sh_domain::{
-    domain_available::{self, domain_available},
+    domain_available::domain_available,
     tlds::{Tld, TLDS},
 };
 use std::collections::HashMap;
@@ -152,13 +152,14 @@ pub(crate) enum Status {
 }
 
 async fn get_status(domain: &str, resolver: &TokioAsyncResolver) -> Status {
-    //let domain_available = domain_available(domain, "../../crates/domain/src/assets/domains.bin")
-    //    .await
-    //    .unwrap();
+    let domain_available = domain_available(domain, "../../crates/domain/src/assets/domains.bin")
+        .await
+        .unwrap();
 
-    //if domain_available {
-    //    return Status::Available;
-    //}
+    if domain_available {
+        println!("domain available from bitmap");
+        return Status::Available;
+    }
 
     let ns_result = resolver.lookup(domain, RecordType::NS).await;
 

@@ -2,7 +2,7 @@ use memmap2::MmapOptions;
 use sh_crypto::hash::Hash;
 use std::fs::File;
 
-pub const BITMAP_SIZE: usize = 10_000_000; // 50mb
+pub const BITMAP_SIZE: usize = 50_000_000; // 50mb
 
 pub async fn domain_available(
     domain: &str,
