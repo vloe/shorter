@@ -4,26 +4,27 @@ use axum::{
     routing::get,
     BoxError, Router,
 };
-use bitvec::prelude::*;
+use dotenv::dotenv;
 use hickory_resolver::TokioAsyncResolver;
+use memmap2::MmapOptions;
 use sh_core::api::{mount, Ctx};
-use std::time::Duration;
+use std::{fs::File, sync::Arc, time::Duration};
+
 use tower::{buffer::BufferLayer, limit::RateLimitLayer, ServiceBuilder};
 use tower_http::cors::CorsLayer;
 
 mod utils;
 
-const BIT_MAP: &[u8] = include_bytes!("../data/domains.bin");
+const MAX_AGE: u64 = 3600;
+const RATE_LIMIT_PERIOD: u64 = 1;
+const RATE_LIMIT_MAX_REQS: u64 = 10;
+const RATE_LIMIT_BUFFER: usize = 1000;
+const ADDR: &str = "127.0.0.1:9000";
+const DOMAINS_FILE: &str = "./data/domains.bin";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    dotenv::dotenv().ok();
-
-    const MAX_AGE: u64 = 3600;
-    const RATE_LIMIT_PERIOD: u64 = 1;
-    const RATE_LIMIT_MAX_REQS: u64 = 10;
-    const RATE_LIMIT_BUFFER: usize = 1000;
-    const ADDR: &str = "127.0.0.1:9000";
+    dotenv().ok();
 
     let cors = CorsLayer::new()
         .allow_origin([
@@ -61,7 +62,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     run_prod(app).await?;
 
     #[cfg(not(feature = "lambda"))]
-    run_dev(app, ADDR).await?;
+    run_dev(app).await?;
 
     Ok(())
 }
@@ -72,7 +73,11 @@ fn get_ctx() -> Result<Ctx, Box<dyn std::error::Error>> {
         TokioAsyncResolver::tokio(cfg, opts).into()
     };
 
-    let domains = unsafe { BitSlice::from_slice_unchecked(BIT_MAP) };
+    let domains = {
+        let file = File::open(DOMAINS_FILE)?;
+        let mmap = unsafe { MmapOptions::new().map(&file)? };
+        Arc::new(mmap)
+    };
 
     let ctx = Ctx { resolver, domains };
 
@@ -90,9 +95,9 @@ async fn run_prod(app: Router) -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[cfg(not(feature = "lambda"))]
-async fn run_dev(app: Router, addr: &str) -> Result<(), Box<dyn std::error::Error>> {
-    println!("\nlistening on http://{}\n", addr);
-    let listener = tokio::net::TcpListener::bind(&addr).await?;
+async fn run_dev(app: Router) -> Result<(), Box<dyn std::error::Error>> {
+    println!("\nlistening on http://{}\n", ADDR);
+    let listener = tokio::net::TcpListener::bind(&ADDR).await?;
     axum::serve(listener, app)
         .with_graceful_shutdown(utils::shutdown_signal())
         .await?;

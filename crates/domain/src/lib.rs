@@ -1,2 +1,2 @@
-pub mod domain_available;
+pub mod domain;
 pub mod tlds;

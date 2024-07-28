@@ -7,10 +7,7 @@ use axum::{
 };
 use futures::future::join_all;
 use serde::{Deserialize, Serialize};
-use sh_domain::{
-    domain_available::domain_available,
-    tlds::{Tld, TLDS},
-};
+use sh_domain::{domain::Domain, tlds::TLDS};
 use std::collections::HashMap;
 use thiserror::Error;
 use typeshare::typeshare;
@@ -20,14 +17,6 @@ use url::Url;
 #[derive(Deserialize)]
 pub(crate) struct ShortenParams {
     domain: String,
-}
-
-#[typeshare]
-#[derive(Serialize)]
-pub(crate) struct Domain {
-    name: String,
-    tld: Tld,
-    status: bool,
 }
 
 #[typeshare]
@@ -94,13 +83,8 @@ pub(crate) async fn shorten(
             let new_domain = format!("{}{}", new_sld, new_tld);
 
             if let Some(tld) = TLDS.get(&new_tld) {
-                domain_futures.push(tokio::spawn(async move {
-                    Domain {
-                        name: new_domain.clone(),
-                        tld: tld.clone(),
-                        status: domain_available(&new_domain, &ctx.domains).await,
-                    }
-                }))
+                let d = Domain::new(new_domain.clone(), tld.clone(), &ctx.domains.clone());
+                domain_futures.push(tokio::spawn(async move { d }))
             }
         }
     }
