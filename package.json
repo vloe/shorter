@@ -6,7 +6,7 @@
 		"landing": "pnpm --filter @sh/landing -- ",
 		"core": "pnpm --filter @sh/server -- ",
 		"ui": "pnpm --filter @sh/ui -- ",
-		"gen:types": "typeshare ./core --lang=typescript --output-file=packages/types/src/bindings.ts",
+		"gen:types": "typeshare ./core ./crates --lang=typescript --output-file=packages/types/src/bindings.ts",
 		"gen:tlds": "cd scripts && cargo run --bin gen_tlds",
 		"gen:domains": "cd scripts && cargo run --bin gen_domains"
 	},

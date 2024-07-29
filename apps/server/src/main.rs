@@ -21,6 +21,7 @@ const RATE_LIMIT_MAX_REQS: u64 = 10;
 const RATE_LIMIT_BUFFER: usize = 1000;
 const ADDR: &str = "127.0.0.1:9000";
 const DOMAINS_FILE: &str = "data/domains.bin";
+const DOMAINS_FILE_LAMBDA: &str = "/var/task/data/domains.bin";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -74,7 +75,7 @@ fn get_ctx() -> Result<Ctx, Box<dyn std::error::Error>> {
     };
 
     let domains = {
-        let file = File::open(DOMAINS_FILE)?;
+        let file = File::open(DOMAINS_FILE).or_else(|_| File::open(DOMAINS_FILE_LAMBDA))?;
         let mmap = unsafe { MmapOptions::new().map(&file)? };
         Arc::new(mmap)
     };

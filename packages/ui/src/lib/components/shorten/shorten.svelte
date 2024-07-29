@@ -81,25 +81,7 @@
 							</div>
 						</Table.Cell>
 						<Table.Cell>
-							<div class="flex items-center gap-1">
-								{#if domain.status}
-									<p>available</p>
-								{:else}
-									<p>unavailable</p>
-								{/if}
-								<Popover.Root>
-									<Popover.Trigger>
-										<Info class="size-3.5 fill-muted-foreground" />
-									</Popover.Trigger>
-									<Popover.Content class="text-sm">
-										<span class="font-medium">note:</span>
-										<span>
-											not 100% accurate because it only checks dns records
-											(for now)
-										</span>
-									</Popover.Content>
-								</Popover.Root>
-							</div>
+							<p>{domain.available ? "available" : "unavailable"}</p>
 						</Table.Cell>
 					</Table.Row>
 				{/each}
