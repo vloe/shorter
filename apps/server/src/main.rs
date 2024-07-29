@@ -20,7 +20,7 @@ const RATE_LIMIT_PERIOD: u64 = 1;
 const RATE_LIMIT_MAX_REQS: u64 = 10;
 const RATE_LIMIT_BUFFER: usize = 1000;
 const ADDR: &str = "127.0.0.1:9000";
-const DOMAINS_FILE: &str = "./data/domains.bin";
+const DOMAINS_FILE: &str = "data/domains.bin";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
