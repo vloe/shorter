@@ -172,7 +172,7 @@ async fn bitmap_zone(
 
         if !domain.is_empty() {
             let index = Hash::domain_to_index(domain, DOMAINS_BIT_SIZE);
-            mmap[index / 8] |= 1 << (7 - (index % 8));
+            mmap[index / 8] |= 1 << (index % 8);
             bits_used += 1;
         }
     }
