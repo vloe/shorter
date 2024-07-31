@@ -111,6 +111,8 @@ async fn run_dev(app: Router) -> Result<(), Box<dyn std::error::Error>> {
 fn test_file_paths() -> Result<(), Box<dyn std::error::Error>> {
     let possible_paths = vec![
         "data/domains.bin",
+        "/data/domains.bin",
+        "./data/domains.bin",
         "apps/server/data/domains.bin",
         "/var/task/data/domains.bin",
         "/var/task/apps/server/data/domains.bin",

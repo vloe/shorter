@@ -4,6 +4,7 @@ version = "0.1.0"
 license = { workspace = true }
 repository = { workspace = true }
 edition = { workspace = true }
+include = ["src/**/*", "data/**/*"]
 
 [dependencies]
 # sh-crates
@@ -23,3 +24,6 @@ tower = { version = "0.4.13", features = ["limit", "buffer"] }
 
 [features]
 lambda = ["dep:lambda_http"]
+
+[package.metadata.lambda.deploy]
+include = ["data/domains.bin"]
