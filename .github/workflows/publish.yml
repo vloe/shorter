@@ -37,10 +37,6 @@ jobs:
 
             - name: List project contents
               run: |
-                  echo "Project root contents:"
-                  ls -R
-                  echo "Data directory contents:"
-                  ls -R data
                   echo "Data directory contents:"
                   ls -R apps/server/data
 
