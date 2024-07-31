@@ -35,11 +35,6 @@ jobs:
                   projectName: sh-landing
                   directory: ./apps/landing/.svelte-kit/cloudflare
 
-            - name: List project contents
-              run: |
-                  echo "Data directory contents:"
-                  ls -R apps/server/data
-
             - name: Publish server to aws lambda
               run: |
                   cargo lambda deploy --iam-role arn:aws:iam::533267168525:role/lambda --include apps/server/data --enable-function-url sh-server

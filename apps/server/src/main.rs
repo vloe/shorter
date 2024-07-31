@@ -27,7 +27,7 @@ const RATE_LIMIT_MAX_REQS: u64 = 10;
 const RATE_LIMIT_BUFFER: usize = 1000;
 const ADDR: &str = "127.0.0.1:9000";
 const DOMAINS_FILE: &str = "data/domains.bin";
-const DOMAINS_FILE_LAMBDA: &str = "/var/task/data/domains.bin";
+const DOMAINS_FILE_LAMBDA: &str = "apps/server/data/domains.bin";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -75,8 +75,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn get_ctx() -> Result<Ctx, Box<dyn std::error::Error>> {
-    test_file_paths()?;
-
     let resolver = {
         let (cfg, opts) = hickory_resolver::system_conf::read_system_conf()?;
         TokioAsyncResolver::tokio(cfg, opts).into()
@@ -110,91 +108,6 @@ async fn run_dev(app: Router) -> Result<(), Box<dyn std::error::Error>> {
     axum::serve(listener, app)
         .with_graceful_shutdown(utils::shutdown_signal())
         .await?;
-
-    Ok(())
-}
-
-fn test_file_paths() -> Result<(), Box<dyn std::error::Error>> {
-    let possible_paths = vec![
-        "data/domains.bin",
-        "/data/domains.bin",
-        "./data/domains.bin",
-        "apps/server/data/domains.bin",
-        "/var/task/data/domains.bin",
-        "/var/task/apps/server/data/domains.bin",
-        "src/data/domains.bin",
-        "../data/domains.bin",
-        "/domains.bin",
-        "/opt/data/domains.bin",
-        "/tmp/data/domains.bin",
-        "/var/data/domains.bin",
-        "/var/task/data/domains.bin",
-        "/var/runtime/data/domains.bin",
-        "/var/lang/data/domains.bin",
-        "/opt/domains.bin",
-        "/tmp/domains.bin",
-        "/var/domains.bin",
-        "/var/task/domains.bin",
-        "/var/runtime/domains.bin",
-        "/var/lang/domains.bin",
-    ];
-
-    println!("Current working directory: {:?}", env::current_dir()?);
-
-    fn check_file_permissions(path: &str) {
-        match std::fs::metadata(path) {
-            Ok(metadata) => println!(
-                "File permissions for {}: {:?}",
-                path,
-                metadata.permissions()
-            ),
-            Err(e) => println!("Failed to get metadata for {}: {}", path, e),
-        }
-    }
-
-    // In test_file_paths function:
-    for path in possible_paths {
-        match File::open(path) {
-            Ok(_) => {
-                println!("Successfully opened file at path: {}", path);
-                check_file_permissions(path);
-            }
-            Err(e) => println!("Failed to open file at path: {}. Error: {}", path, e),
-        }
-    }
-
-    // Test absolute path
-    if let Ok(mut dir) = env::current_dir() {
-        dir.push("data");
-        dir.push("domains.bin");
-        match File::open(&dir) {
-            Ok(_) => println!("Successfully opened file at absolute path: {:?}", dir),
-            Err(e) => println!(
-                "Failed to open file at absolute path: {:?}. Error: {}",
-                dir, e
-            ),
-        }
-    }
-
-    // List contents of the current directory and its parent
-    fn list_dir_contents(dir: &Path) {
-        println!("Contents of {:?}:", dir);
-        match std::fs::read_dir(dir) {
-            Ok(entries) => {
-                for entry in entries {
-                    if let Ok(entry) = entry {
-                        println!("  {:?}", entry.path());
-                    }
-                }
-            }
-            Err(e) => println!("Failed to read directory: {}", e),
-        }
-    }
-
-    list_dir_contents(&env::current_dir()?);
-    if let Some(parent) = env::current_dir()?.parent() {
-        list_dir_contents(parent);
-    }
 
     Ok(())
 }
