@@ -8,7 +8,13 @@ use dotenv::dotenv;
 use hickory_resolver::TokioAsyncResolver;
 use memmap2::MmapOptions;
 use sh_core::api::{mount, Ctx};
-use std::{env, fs::File, path::Path, sync::Arc, time::Duration};
+use std::{
+    env,
+    fs::{File, Metadata},
+    path::Path,
+    sync::Arc,
+    time::Duration,
+};
 
 use tower::{buffer::BufferLayer, limit::RateLimitLayer, ServiceBuilder};
 use tower_http::cors::CorsLayer;
@@ -119,13 +125,40 @@ fn test_file_paths() -> Result<(), Box<dyn std::error::Error>> {
         "src/data/domains.bin",
         "../data/domains.bin",
         "/domains.bin",
+        "/opt/data/domains.bin",
+        "/tmp/data/domains.bin",
+        "/var/data/domains.bin",
+        "/var/task/data/domains.bin",
+        "/var/runtime/data/domains.bin",
+        "/var/lang/data/domains.bin",
+        "/opt/domains.bin",
+        "/tmp/domains.bin",
+        "/var/domains.bin",
+        "/var/task/domains.bin",
+        "/var/runtime/domains.bin",
+        "/var/lang/domains.bin",
     ];
 
     println!("Current working directory: {:?}", env::current_dir()?);
 
+    fn check_file_permissions(path: &str) {
+        match std::fs::metadata(path) {
+            Ok(metadata) => println!(
+                "File permissions for {}: {:?}",
+                path,
+                metadata.permissions()
+            ),
+            Err(e) => println!("Failed to get metadata for {}: {}", path, e),
+        }
+    }
+
+    // In test_file_paths function:
     for path in possible_paths {
         match File::open(path) {
-            Ok(_) => println!("Successfully opened file at path: {}", path),
+            Ok(_) => {
+                println!("Successfully opened file at path: {}", path);
+                check_file_permissions(path);
+            }
             Err(e) => println!("Failed to open file at path: {}. Error: {}", path, e),
         }
     }
