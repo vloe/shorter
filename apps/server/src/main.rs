@@ -8,7 +8,7 @@ use dotenv::dotenv;
 use hickory_resolver::TokioAsyncResolver;
 use memmap2::MmapOptions;
 use sh_core::api::{mount, Ctx};
-use std::{fs::File, sync::Arc, time::Duration};
+use std::{env, fs::File, path::Path, sync::Arc, time::Duration};
 
 use tower::{buffer::BufferLayer, limit::RateLimitLayer, ServiceBuilder};
 use tower_http::cors::CorsLayer;
@@ -69,6 +69,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn get_ctx() -> Result<Ctx, Box<dyn std::error::Error>> {
+    test_file_paths()?;
+
     let resolver = {
         let (cfg, opts) = hickory_resolver::system_conf::read_system_conf()?;
         TokioAsyncResolver::tokio(cfg, opts).into()
@@ -102,6 +104,62 @@ async fn run_dev(app: Router) -> Result<(), Box<dyn std::error::Error>> {
     axum::serve(listener, app)
         .with_graceful_shutdown(utils::shutdown_signal())
         .await?;
+
+    Ok(())
+}
+
+fn test_file_paths() -> Result<(), Box<dyn std::error::Error>> {
+    let possible_paths = vec![
+        "data/domains.bin",
+        "apps/server/data/domains.bin",
+        "/var/task/data/domains.bin",
+        "/var/task/apps/server/data/domains.bin",
+        "src/data/domains.bin",
+        "../data/domains.bin",
+        "/domains.bin",
+    ];
+
+    println!("Current working directory: {:?}", env::current_dir()?);
+
+    for path in possible_paths {
+        match File::open(path) {
+            Ok(_) => println!("Successfully opened file at path: {}", path),
+            Err(e) => println!("Failed to open file at path: {}. Error: {}", path, e),
+        }
+    }
+
+    // Test absolute path
+    if let Ok(mut dir) = env::current_dir() {
+        dir.push("data");
+        dir.push("domains.bin");
+        match File::open(&dir) {
+            Ok(_) => println!("Successfully opened file at absolute path: {:?}", dir),
+            Err(e) => println!(
+                "Failed to open file at absolute path: {:?}. Error: {}",
+                dir, e
+            ),
+        }
+    }
+
+    // List contents of the current directory and its parent
+    fn list_dir_contents(dir: &Path) {
+        println!("Contents of {:?}:", dir);
+        match std::fs::read_dir(dir) {
+            Ok(entries) => {
+                for entry in entries {
+                    if let Ok(entry) = entry {
+                        println!("  {:?}", entry.path());
+                    }
+                }
+            }
+            Err(e) => println!("Failed to read directory: {}", e),
+        }
+    }
+
+    list_dir_contents(&env::current_dir()?);
+    if let Some(parent) = env::current_dir()?.parent() {
+        list_dir_contents(parent);
+    }
 
     Ok(())
 }
