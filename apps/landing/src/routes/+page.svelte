@@ -1,1 +1,10 @@
-<p class="text-sky-300">sh-landing</p>
+<script lang="ts">
+	const title = "shorter"
+	const desc = "a domain shortener tool"
+</script>
+
+<svelte:head>
+	<title>{title}</title>
+	<meta name="title" content={title} />
+	<meta name="description" content={desc} />
+</svelte:head>
