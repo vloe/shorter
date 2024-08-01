@@ -3,7 +3,13 @@
 	import { type BtnProps, btnVariants } from "./index"
 	import { cx } from "$lib/utils/cva.config"
 
-	let { intent = "primary", size = "default", class: className, ...props }: BtnProps = $props()
+	let {
+		children,
+		intent = "primary",
+		size = "default",
+		class: className,
+		...props
+	}: BtnProps = $props()
 </script>
 
 <ButtonPrimitive.Root
@@ -12,5 +18,5 @@
 	on:click
 	on:keydown
 >
-	<slot />
+	{@render children()}
 </ButtonPrimitive.Root>
