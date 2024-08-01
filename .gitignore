@@ -12,3 +12,5 @@
 **/.svelte-kit
 **/.wrangler
 **/.turbo
+**/.output
+**/Thumbs.db

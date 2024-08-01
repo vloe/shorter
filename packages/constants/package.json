@@ -1,8 +1,0 @@
-{
-	"name": "@sh/constants",
-	"private": true,
-	"devDependencies": {
-		"@sh/config": "workspace:^",
-		"typescript": "^5.0.0"
-	}
-}
