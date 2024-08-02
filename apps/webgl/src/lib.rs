@@ -1,5 +1,8 @@
+use std::f32::consts::PI;
 use wasm_bindgen::prelude::*;
-use web_sys::{HtmlCanvasElement, WebGlProgram, WebGlRenderingContext, WebGlShader};
+use web_sys::{HtmlCanvasElement, WebGlProgram, WebGlRenderingContext};
+
+mod utils;
 
 #[wasm_bindgen]
 pub struct WebGLRenderer {
@@ -16,42 +19,71 @@ impl WebGLRenderer {
             .unwrap()
             .dyn_into::<WebGlRenderingContext>()?;
 
-        let vert_shader = compile_shader(
+        let vert_shader = utils::compile_shader(
             &context,
             WebGlRenderingContext::VERTEX_SHADER,
             r#"
-            attribute vec4 position;
+            attribute vec2 position;
+            attribute vec3 color;
+            varying vec3 vColor;
             void main() {
-                gl_Position = position;
+                gl_Position = vec4(position, 0.0, 1.0);
+                vColor = color;
             }
             "#,
         )?;
 
-        let frag_shader = compile_shader(
+        let frag_shader = utils::compile_shader(
             &context,
             WebGlRenderingContext::FRAGMENT_SHADER,
             r#"
+            precision mediump float;
+            varying vec3 vColor;
             void main() {
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                gl_FragColor = vec4(vColor, 1.0);
             }
             "#,
         )?;
 
-        let program = link_program(&context, &vert_shader, &frag_shader)?;
+        let program = utils::link_program(&context, &vert_shader, &frag_shader)?;
         context.use_program(Some(&program));
 
         Ok(WebGLRenderer { context, program })
     }
 
     pub fn render(&self) {
-        self.context.clear_color(0.0, 0.0, 0.0, 1.0);
+        self.context.clear_color(0.0, 0.0, 0.0, 0.0); // transparent bg
         self.context.clear(WebGlRenderingContext::COLOR_BUFFER_BIT);
 
-        let vertices: [f32; 4] = [-1.0, -1.0, 1.0, 1.0];
-        let buffer = self.context.create_buffer().unwrap();
-        self.context
-            .bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&buffer));
+        let num_waves = 200;
+        let points_per_wave = 500;
+        let mut vertices = Vec::new();
+        let mut colors = Vec::new();
 
+        for i in 0..num_waves {
+            let t = i as f32 / num_waves as f32;
+            let y_offset = -0.5 + t;
+            let amplitude = 0.4 - t * 0.3;
+            let phase = t * PI * 2.0;
+            let frequency = 1.0 + t * 0.5;
+
+            let color = interpolate_color(t);
+
+            for j in 0..=points_per_wave {
+                let x = (j as f32 / points_per_wave as f32) * 2.0 - 1.0;
+                let y = amplitude * ((x * frequency * PI * 2.0) + phase).sin() + y_offset;
+                vertices.push(x);
+                vertices.push(y);
+
+                colors.push(color.0);
+                colors.push(color.1);
+                colors.push(color.2);
+            }
+        }
+
+        let vertex_buffer = self.context.create_buffer().unwrap();
+        self.context
+            .bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&vertex_buffer));
         unsafe {
             let vert_array = js_sys::Float32Array::view(&vertices);
             self.context.buffer_data_with_array_buffer_view(
@@ -61,8 +93,22 @@ impl WebGLRenderer {
             );
         }
 
+        let color_buffer = self.context.create_buffer().unwrap();
+        self.context
+            .bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&color_buffer));
+        unsafe {
+            let color_array = js_sys::Float32Array::view(&colors);
+            self.context.buffer_data_with_array_buffer_view(
+                WebGlRenderingContext::ARRAY_BUFFER,
+                &color_array,
+                WebGlRenderingContext::STATIC_DRAW,
+            );
+        }
+
         let position_attribute_location =
             self.context.get_attrib_location(&self.program, "position");
+        self.context
+            .bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&vertex_buffer));
         self.context.vertex_attrib_pointer_with_i32(
             position_attribute_location as u32,
             2,
@@ -74,56 +120,37 @@ impl WebGLRenderer {
         self.context
             .enable_vertex_attrib_array(position_attribute_location as u32);
 
-        self.context.draw_arrays(WebGlRenderingContext::LINES, 0, 2);
+        let color_attribute_location = self.context.get_attrib_location(&self.program, "color");
+        self.context
+            .bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&color_buffer));
+        self.context.vertex_attrib_pointer_with_i32(
+            color_attribute_location as u32,
+            3,
+            WebGlRenderingContext::FLOAT,
+            false,
+            0,
+            0,
+        );
+        self.context
+            .enable_vertex_attrib_array(color_attribute_location as u32);
+
+        for i in 0..num_waves {
+            self.context.draw_arrays(
+                WebGlRenderingContext::LINE_STRIP,
+                (i * (points_per_wave + 1)) as i32,
+                (points_per_wave + 1) as i32,
+            );
+        }
     }
 }
 
-fn compile_shader(
-    context: &WebGlRenderingContext,
-    shader_type: u32,
-    source: &str,
-) -> Result<WebGlShader, String> {
-    let shader = context
-        .create_shader(shader_type)
-        .ok_or_else(|| String::from("Unable to create shader object"))?;
-    context.shader_source(&shader, source);
-    context.compile_shader(&shader);
+fn interpolate_color(t: f32) -> (f32, f32, f32) {
+    let orange = (1.0, 0.5, 0.0);
+    let red = (1.0, 0.0, 0.0);
 
-    if context
-        .get_shader_parameter(&shader, WebGlRenderingContext::COMPILE_STATUS)
-        .as_bool()
-        .unwrap_or(false)
-    {
-        Ok(shader)
-    } else {
-        Err(context
-            .get_shader_info_log(&shader)
-            .unwrap_or_else(|| String::from("Unknown error creating shader")))
-    }
-}
-
-fn link_program(
-    context: &WebGlRenderingContext,
-    vert_shader: &WebGlShader,
-    frag_shader: &WebGlShader,
-) -> Result<WebGlProgram, String> {
-    let program = context
-        .create_program()
-        .ok_or_else(|| String::from("Unable to create shader object"))?;
-
-    context.attach_shader(&program, vert_shader);
-    context.attach_shader(&program, frag_shader);
-    context.link_program(&program);
-
-    if context
-        .get_program_parameter(&program, WebGlRenderingContext::LINK_STATUS)
-        .as_bool()
-        .unwrap_or(false)
-    {
-        Ok(program)
-    } else {
-        Err(context
-            .get_program_info_log(&program)
-            .unwrap_or_else(|| String::from("Unknown error creating program object")))
-    }
+    (
+        orange.0 * (1.0 - t) + red.0 * t,
+        orange.1 * (1.0 - t) + red.1 * t,
+        orange.2 * (1.0 - t) + red.2 * t,
+    )
 }

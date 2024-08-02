@@ -19,5 +19,6 @@ web-sys = { version = "0.3.69", features = [
   "Document",
   "Element",
   "HtmlCanvasElement",
+  "WebGlUniformLocation",
 ] }
 js-sys = "0.3.69"
