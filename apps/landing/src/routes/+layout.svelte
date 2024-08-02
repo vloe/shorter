@@ -2,6 +2,7 @@
 	import "../app.css"
 	import type { Snippet } from "svelte"
 	import Header from "$lib/components/Header.svelte"
+	import Bg from "$lib/components/Bg.svelte"
 
 	type $Props = {
 		children: Snippet
@@ -14,3 +15,4 @@
 	<Header />
 	{@render children()}
 </div>
+<Bg />
