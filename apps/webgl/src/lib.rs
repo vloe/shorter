@@ -35,7 +35,10 @@ impl WebGLRenderer {
 
             void main() {
                 vec2 pos = position;
-                float wave = sin(pos.x * 5.0 + u_time * (1.0 + u_scroll * 0.5)) * 0.1;
+                float baseWave = sin(pos.x * 5.0 + u_time * 0.5) * 0.1;
+                float scrollEffect = u_scroll * 0.2; // Limit scroll impact
+                float scrollWave = sin(pos.x * 3.0 - u_time * 0.3) * scrollEffect;
+                float wave = baseWave + scrollWave;
                 float cursorEffect = smoothstep(0.1, 0.0, distance(pos, u_cursor)) * 0.05;
                 pos.y += wave + cursorEffect;
                 gl_Position = vec4(pos, 0.0, 1.0);

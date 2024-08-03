@@ -21,6 +21,7 @@
 	})
 
 	function animate(time = 0) {
+		console.log(time)
 		if (renderer) {
 			const normalizedCursorX = (cursorX / window.innerWidth) * 2 - 1
 			const normalizedCursorY = -(cursorY / window.innerHeight) * 2 + 1
