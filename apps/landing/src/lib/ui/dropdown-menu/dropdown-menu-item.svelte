@@ -12,7 +12,7 @@
 
 <DropdownMenuPrimitive.Item
 	class={cx(
-		"relative flex  cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm text-white/85 outline-none data-[highlighted]:bg-white/10 data-[highlighted]:text-white",
+		"relative flex cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm text-white/85 outline-none data-[highlighted]:bg-white/10 data-[highlighted]:text-white",
 		className,
 	)}
 	on:click

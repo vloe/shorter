@@ -21,7 +21,7 @@
 	{transition}
 	{sideOffset}
 	class={cx(
-		"z-50 min-w-[8rem] rounded-lg border border-white/15 bg-black p-1 text-white shadow-md focus:outline-none",
+		"z-50 min-w-[8rem] rounded-lg border border-white/20 bg-black p-1 text-white shadow-md focus:outline-none",
 		className,
 	)}
 	{...props}
