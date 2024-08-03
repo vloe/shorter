@@ -1,6 +1,6 @@
 use std::f32::consts::PI;
 use wasm_bindgen::prelude::*;
-use web_sys::{HtmlCanvasElement, WebGlProgram, WebGlRenderingContext};
+use web_sys::{HtmlCanvasElement, WebGlProgram, WebGlRenderingContext, WebGlUniformLocation};
 
 mod utils;
 
@@ -8,6 +8,9 @@ mod utils;
 pub struct WebGLRenderer {
     context: WebGlRenderingContext,
     program: WebGlProgram,
+    time_location: WebGlUniformLocation,
+    cursor_location: WebGlUniformLocation,
+    scroll_location: WebGlUniformLocation,
 }
 
 #[wasm_bindgen]
@@ -26,8 +29,16 @@ impl WebGLRenderer {
             attribute vec2 position;
             attribute vec3 color;
             varying vec3 vColor;
+            uniform float u_time;
+            uniform vec2 u_cursor;
+            uniform float u_scroll;
+
             void main() {
-                gl_Position = vec4(position, 0.0, 1.0);
+                vec2 pos = position;
+                float wave = sin(pos.x * 5.0 + u_time * (1.0 + u_scroll * 0.5)) * 0.1;
+                float cursorEffect = smoothstep(0.1, 0.0, distance(pos, u_cursor)) * 0.05;
+                pos.y += wave + cursorEffect;
+                gl_Position = vec4(pos, 0.0, 1.0);
                 vColor = color;
             }
             "#,
@@ -48,12 +59,27 @@ impl WebGLRenderer {
         let program = utils::link_program(&context, &vert_shader, &frag_shader)?;
         context.use_program(Some(&program));
 
-        Ok(WebGLRenderer { context, program })
+        let time_location = context.get_uniform_location(&program, "u_time").unwrap();
+        let cursor_location = context.get_uniform_location(&program, "u_cursor").unwrap();
+        let scroll_location = context.get_uniform_location(&program, "u_scroll").unwrap();
+
+        Ok(WebGLRenderer {
+            context,
+            program,
+            time_location,
+            cursor_location,
+            scroll_location,
+        })
     }
 
-    pub fn render(&self) {
+    pub fn render(&self, time: f32, cursor_x: f32, cursor_y: f32, scroll: f32) {
         self.context.clear_color(0.0, 0.0, 0.0, 0.0); // transparent bg
         self.context.clear(WebGlRenderingContext::COLOR_BUFFER_BIT);
+
+        self.context.uniform1f(Some(&self.time_location), time);
+        self.context
+            .uniform2f(Some(&self.cursor_location), cursor_x, cursor_y);
+        self.context.uniform1f(Some(&self.scroll_location), scroll);
 
         let num_waves = 200;
         let points_per_wave = 500;
@@ -141,6 +167,10 @@ impl WebGLRenderer {
                 (points_per_wave + 1) as i32,
             );
         }
+    }
+
+    pub fn resize(&self, width: u32, height: u32) {
+        self.context.viewport(0, 0, width as i32, height as i32);
     }
 }
 
