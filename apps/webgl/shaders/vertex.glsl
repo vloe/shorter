@@ -8,10 +8,10 @@ uniform float u_scroll;
 void main() {
     vec2 pos = position;
     float t = pos.y;
-    float y_offset = -0.5 + t * 0.5; // Reduced offset range
-    float amplitude = 0.2 - t * 0.25; // Reduced amplitude
-    float phase = t * 3.14159 * 1.7; // Increased phase multiplier
-    float frequency = 2.0 + t * 0.5; // Increased base frequency
+    float y_offset = -0.5 + t * 0.5;
+    float amplitude = 0.2 - t * 0.25;
+    float phase = t * 3.14159 * 1.7;
+    float frequency = 2.0 + t * 0.5;
 
     pos.y = amplitude * sin((pos.x * frequency * 6.28318) + phase) + y_offset;
 
@@ -22,11 +22,20 @@ void main() {
     float scrollEffect = u_scroll * 0.1;
     float scrollWave = sin(pos.x * 3.0 - u_time * 0.3) * scrollEffect;
     
-    float distanceToCursor = distance(pos, u_cursor);
+    // transform cursor position to match the wave's coordinate space
+    float angle = radians(45.0);
+    vec2 transformedCursor = u_cursor;
+    transformedCursor = (transformedCursor - vec2(0.8, 0.5)) / vec2(0.6, -0.6) / 1.5;
+    transformedCursor = vec2(
+        transformedCursor.x * cos(-angle) - transformedCursor.y * sin(-angle),
+        transformedCursor.x * sin(-angle) + transformedCursor.y * cos(-angle)
+    );
+    
+    float distanceToCursor = distance(pos, transformedCursor);
     float cursorInfluence = smoothstep(0.4, 0.0, distanceToCursor);
     
-    float modifiedFrequency = mix(baseFrequency, baseFrequency * 1.3, cursorInfluence);
-    float modifiedAmplitude = mix(baseAmplitude, baseAmplitude * 1.3, cursorInfluence);
+    float modifiedFrequency = mix(baseFrequency, baseFrequency * 1.1, cursorInfluence);
+    float modifiedAmplitude = mix(baseAmplitude, baseAmplitude * 1.1, cursorInfluence);
     float modifiedPhase = cursorInfluence * sin(u_time * 2.0) * 1.5;
     
     float modifiedWave = sin(pos.x * modifiedFrequency + u_time * 0.5 + modifiedPhase) * modifiedAmplitude;
@@ -35,18 +44,17 @@ void main() {
     
     pos.y += finalWave;
 
-    // Apply transformation to rotate and position the wave
-    float angle = radians(45.0); // Slightly reduced angle
+    // apply transformation to rotate and position the wave
     vec2 rotatedPos;
     rotatedPos.x = pos.x * cos(angle) - pos.y * sin(angle);
     rotatedPos.y = pos.x * sin(angle) + pos.y * cos(angle);
 
-    // Scale and position
-    rotatedPos = rotatedPos * 1.5; // Increase scale to make it longer
-    rotatedPos.x = rotatedPos.x * 0.6 + 0.8; // Adjust horizontal position
-    rotatedPos.y = -rotatedPos.y * 0.6 + 0.5; // Adjust vertical position
+    // scale and position
+    rotatedPos = rotatedPos * 1.5;
+    rotatedPos.x = rotatedPos.x * 0.6 + 0.8;
+    rotatedPos.y = -rotatedPos.y * 0.6 + 0.5;
 
     gl_Position = vec4(rotatedPos * 2.0 - 1.0, 0.0, 1.0);
     
-    vColor = mix(color, vec3(0.2, 0.4, 1.0), cursorInfluence * 0.5); // Adjusted color to be more blue
+    vColor = mix(color, vec3(0.2, 0.4, 1.0), cursorInfluence * 0.3);
 }
