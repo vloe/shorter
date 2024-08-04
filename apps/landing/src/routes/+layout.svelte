@@ -11,8 +11,9 @@
 	let { children }: $Props = $props()
 </script>
 
-<div class="container mx-auto scroll-smooth px-8 sm:px-10 lg:px-12">
+<Bg />
+
+<div class="container mx-auto scroll-smooth px-8 sm:px-10 lg:px-14">
 	<Header />
 	{@render children()}
 </div>
-<Bg />
