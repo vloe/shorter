@@ -49,3 +49,14 @@ pub(crate) fn link_program(
             .unwrap_or_else(|| String::from("Unknown error creating program object")))
     }
 }
+
+pub(crate) fn interpolate_color(t: f32) -> (f32, f32, f32) {
+    let orange = (1.0, 0.5, 0.0);
+    let red = (1.0, 0.0, 0.0);
+
+    (
+        orange.0 * (1.0 - t) + red.0 * t,
+        orange.1 * (1.0 - t) + red.1 * t,
+        orange.2 * (1.0 - t) + red.2 * t,
+    )
+}

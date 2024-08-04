@@ -1,9 +1,8 @@
 <script lang="ts">
 	import init, { WebGLRenderer } from "../../../../webgl/pkg/sh_webgl"
 
-	let canvas: HTMLCanvasElement
-	let renderer: WebGLRenderer
-
+	let renderer: WebGLRenderer | null = $state(null)
+	let canvas: HTMLCanvasElement | null = $state(null)
 	let animationId = $state(0)
 	let cursorX = $state(0)
 	let cursorY = $state(0)
@@ -13,6 +12,7 @@
 
 	$effect(() => {
 		async function setupWebGL() {
+			if (!canvas) return
 			await init()
 			canvas.width = innerWidth
 			canvas.height = innerHeight
