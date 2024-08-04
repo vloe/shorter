@@ -25,8 +25,8 @@
 
 	function animate(time = 0) {
 		if (renderer) {
-			let normalizedCursorX = (cursorX / innerWidth) * 2 - 1
-			let normalizedCursorY = -(cursorY / innerHeight) * 2 + 1
+			let normalizedCursorX = cursorX / innerWidth
+			let normalizedCursorY = 1.0 - cursorY / innerHeight
 			let normalizedScrollY = scrollY / (document.documentElement.scrollHeight - innerHeight)
 			renderer.render(time * 0.001, normalizedCursorX, normalizedCursorY, normalizedScrollY)
 		}

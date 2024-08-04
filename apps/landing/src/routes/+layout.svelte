@@ -2,7 +2,7 @@
 	import "../app.css"
 	import type { Snippet } from "svelte"
 	import Header from "$lib/components/Header.svelte"
-	import Bg from "$lib/components/Bg.svelte"
+	import Wave from "$lib/components/Wave.svelte"
 
 	type $Props = {
 		children: Snippet
@@ -11,7 +11,7 @@
 	let { children }: $Props = $props()
 </script>
 
-<Bg />
+<Wave />
 
 <div class="container mx-auto scroll-smooth px-8 sm:px-10 lg:px-14">
 	<Header />

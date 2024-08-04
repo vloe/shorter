@@ -36,7 +36,7 @@ void main() {
     pos.y += finalWave;
 
     // Apply transformation to rotate and position the wave
-    float angle = radians(40.0); // Slightly reduced angle
+    float angle = radians(45.0); // Slightly reduced angle
     vec2 rotatedPos;
     rotatedPos.x = pos.x * cos(angle) - pos.y * sin(angle);
     rotatedPos.y = pos.x * sin(angle) + pos.y * cos(angle);
