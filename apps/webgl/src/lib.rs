@@ -1,6 +1,8 @@
 use std::f32::consts::PI;
 use wasm_bindgen::prelude::*;
-use web_sys::{HtmlCanvasElement, WebGlProgram, WebGlRenderingContext, WebGlUniformLocation};
+use web_sys::{
+    HtmlCanvasElement, WebGlBuffer, WebGlProgram, WebGlRenderingContext, WebGlUniformLocation,
+};
 
 mod utils;
 
@@ -11,6 +13,10 @@ pub struct WebGLRenderer {
     time_location: WebGlUniformLocation,
     cursor_location: WebGlUniformLocation,
     scroll_location: WebGlUniformLocation,
+    vertex_buffer: WebGlBuffer,
+    color_buffer: WebGlBuffer,
+    num_waves: u32,
+    points_per_wave: u32,
 }
 
 #[wasm_bindgen]
@@ -35,7 +41,14 @@ impl WebGLRenderer {
 
             void main() {
                 vec2 pos = position;
-                
+                float t = pos.y;
+                float y_offset = -0.5 + t;
+                float amplitude = 0.4 - t * 0.3;
+                float phase = t * 3.14159 * 1.5;
+                float frequency = 1.0 + t * 0.3;
+
+                pos.y = amplitude * sin((pos.x * frequency * 6.28318) + phase) + y_offset;
+
                 float baseFrequency = 6.0;
                 float baseAmplitude = 0.08;
                 float baseWave = sin(pos.x * baseFrequency + u_time * 0.5) * baseAmplitude;
@@ -55,7 +68,7 @@ impl WebGLRenderer {
                 float finalWave = mix(baseWave, modifiedWave, cursorInfluence) + scrollWave;
                 
                 pos.y += finalWave;
-                gl_Position = vec4(pos, 0.0, 1.0);
+                gl_Position = vec4(pos.x, pos.y, 0.0, 1.0);
                 
                 vColor = mix(color, vec3(1.0, 0.5, 0.2), cursorInfluence * 0.5);
             }
@@ -81,53 +94,51 @@ impl WebGLRenderer {
         let cursor_location = context.get_uniform_location(&program, "u_cursor").unwrap();
         let scroll_location = context.get_uniform_location(&program, "u_scroll").unwrap();
 
-        Ok(WebGLRenderer {
+        let num_waves = 100;
+        let points_per_wave = 200;
+
+        let vertex_buffer = context.create_buffer().unwrap();
+        let color_buffer = context.create_buffer().unwrap();
+
+        let mut renderer = WebGLRenderer {
             context,
             program,
             time_location,
             cursor_location,
             scroll_location,
-        })
+            vertex_buffer,
+            color_buffer,
+            num_waves,
+            points_per_wave,
+        };
+
+        renderer.setup_buffers()?;
+
+        Ok(renderer)
     }
 
-    pub fn render(&self, time: f32, cursor_x: f32, cursor_y: f32, scroll: f32) {
-        self.context.clear_color(0.0, 0.0, 0.0, 0.0); // transparent bg
-        self.context.clear(WebGlRenderingContext::COLOR_BUFFER_BIT);
-
-        self.context.uniform1f(Some(&self.time_location), time);
-        self.context
-            .uniform2f(Some(&self.cursor_location), cursor_x, cursor_y);
-        self.context.uniform1f(Some(&self.scroll_location), scroll);
-
-        let num_waves = 200;
-        let points_per_wave = 500;
+    fn setup_buffers(&mut self) -> Result<(), JsValue> {
         let mut vertices = Vec::new();
         let mut colors = Vec::new();
 
-        for i in 0..num_waves {
-            let t = i as f32 / num_waves as f32;
-            let y_offset = -0.5 + t;
-            let amplitude = 0.4 - t * 0.3;
-            let phase = t * PI * 1.5;
-            let frequency = 1.0 + t * 0.3;
-
-            let color = interpolate_color(t);
-
-            for j in 0..=points_per_wave {
-                let x = (j as f32 / points_per_wave as f32) * 2.0 - 1.0;
-                let y = amplitude * ((x * frequency * PI * 2.0) + phase).sin() + y_offset;
+        for i in 0..self.num_waves {
+            let t = i as f32 / self.num_waves as f32;
+            for j in 0..=self.points_per_wave {
+                let x = (j as f32 / self.points_per_wave as f32) * 2.0 - 1.0;
                 vertices.push(x);
-                vertices.push(y);
+                vertices.push(t);
 
+                let color = interpolate_color(t);
                 colors.push(color.0);
                 colors.push(color.1);
                 colors.push(color.2);
             }
         }
 
-        let vertex_buffer = self.context.create_buffer().unwrap();
-        self.context
-            .bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&vertex_buffer));
+        self.context.bind_buffer(
+            WebGlRenderingContext::ARRAY_BUFFER,
+            Some(&self.vertex_buffer),
+        );
         unsafe {
             let vert_array = js_sys::Float32Array::view(&vertices);
             self.context.buffer_data_with_array_buffer_view(
@@ -137,9 +148,10 @@ impl WebGLRenderer {
             );
         }
 
-        let color_buffer = self.context.create_buffer().unwrap();
-        self.context
-            .bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&color_buffer));
+        self.context.bind_buffer(
+            WebGlRenderingContext::ARRAY_BUFFER,
+            Some(&self.color_buffer),
+        );
         unsafe {
             let color_array = js_sys::Float32Array::view(&colors);
             self.context.buffer_data_with_array_buffer_view(
@@ -149,10 +161,24 @@ impl WebGLRenderer {
             );
         }
 
+        Ok(())
+    }
+
+    pub fn render(&self, time: f32, cursor_x: f32, cursor_y: f32, scroll: f32) {
+        self.context.clear_color(0.0, 0.0, 0.0, 0.0);
+        self.context.clear(WebGlRenderingContext::COLOR_BUFFER_BIT);
+
+        self.context.uniform1f(Some(&self.time_location), time);
+        self.context
+            .uniform2f(Some(&self.cursor_location), cursor_x, cursor_y);
+        self.context.uniform1f(Some(&self.scroll_location), scroll);
+
         let position_attribute_location =
             self.context.get_attrib_location(&self.program, "position");
-        self.context
-            .bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&vertex_buffer));
+        self.context.bind_buffer(
+            WebGlRenderingContext::ARRAY_BUFFER,
+            Some(&self.vertex_buffer),
+        );
         self.context.vertex_attrib_pointer_with_i32(
             position_attribute_location as u32,
             2,
@@ -165,8 +191,10 @@ impl WebGLRenderer {
             .enable_vertex_attrib_array(position_attribute_location as u32);
 
         let color_attribute_location = self.context.get_attrib_location(&self.program, "color");
-        self.context
-            .bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&color_buffer));
+        self.context.bind_buffer(
+            WebGlRenderingContext::ARRAY_BUFFER,
+            Some(&self.color_buffer),
+        );
         self.context.vertex_attrib_pointer_with_i32(
             color_attribute_location as u32,
             3,
@@ -178,11 +206,11 @@ impl WebGLRenderer {
         self.context
             .enable_vertex_attrib_array(color_attribute_location as u32);
 
-        for i in 0..num_waves {
+        for i in 0..self.num_waves {
             self.context.draw_arrays(
                 WebGlRenderingContext::LINE_STRIP,
-                (i * (points_per_wave + 1)) as i32,
-                (points_per_wave + 1) as i32,
+                (i * (self.points_per_wave + 1)) as i32,
+                (self.points_per_wave + 1) as i32,
             );
         }
     }
