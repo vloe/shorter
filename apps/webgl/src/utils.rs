@@ -51,12 +51,24 @@ pub(crate) fn link_program(
 }
 
 pub(crate) fn interpolate_color(t: f32) -> (f32, f32, f32) {
-    let orange = (1.0, 0.5, 0.0);
-    let red = (1.0, 0.0, 0.0);
+    let purple = (139, 107, 255); // sh purple
+    let blue = (107, 123, 245); // sh blue
+
+    // convert rgb to float values between 0 and 1
+    let purple_f = (
+        purple.0 as f32 / 255.0,
+        purple.1 as f32 / 255.0,
+        purple.2 as f32 / 255.0,
+    );
+    let blue_f = (
+        blue.0 as f32 / 255.0,
+        blue.1 as f32 / 255.0,
+        blue.2 as f32 / 255.0,
+    );
 
     (
-        orange.0 * (1.0 - t) + red.0 * t,
-        orange.1 * (1.0 - t) + red.1 * t,
-        orange.2 * (1.0 - t) + red.2 * t,
+        blue_f.0 * (1.0 - t) + purple_f.0 * t,
+        blue_f.1 * (1.0 - t) + purple_f.1 * t,
+        blue_f.2 * (1.0 - t) + purple_f.2 * t,
     )
 }

@@ -16,7 +16,7 @@ void main() {
     pos.y = amplitude * sin((pos.x * frequency * 6.28318) + phase) + y_offset;
 
     float baseFrequency = 6.0;
-    float baseAmplitude = 0.08;
+    float baseAmplitude = 0.05;
     float baseWave = sin(pos.x * baseFrequency + u_time * 0.5) * baseAmplitude;
     
     float scrollEffect = u_scroll * 0.1;

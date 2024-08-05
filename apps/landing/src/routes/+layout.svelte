@@ -13,7 +13,7 @@
 
 <Wave />
 
-<div class="container mx-auto scroll-smooth px-8 sm:px-10 lg:px-14">
+<div class="container mx-auto scroll-smooth px-6 sm:px-14 lg:px-28">
 	<Header />
 	{@render children()}
 </div>

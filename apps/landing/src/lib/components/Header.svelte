@@ -13,12 +13,12 @@
 </script>
 
 <header class="flex h-[72px] flex-row items-center justify-between">
-	<a href="/">
+	<a href="/" class="rounded-md bg-black px-2 py-1">
 		<img class="flex h-7 lg:hidden" src={Logomark} alt="logomark" />
 		<img class="hidden h-7 lg:flex" src={Lockup} alt="lockup" />
 	</a>
 	<div class="hidden items-center gap-x-2 lg:flex">
-		<Btn class="group gap-x-[5px] duration-200 ease-in-out">
+		<Btn class="group gap-x-[5px] mix-blend-lighten duration-200 ease-in-out hover:bg-white">
 			start now
 			<Arrow />
 		</Btn>
@@ -34,10 +34,12 @@
 	</div>
 	<div class="flex lg:hidden">
 		<DropdownMenu>
-			<DropdownMenuTrigger>
-				<Menu class="size-7 text-white" />
+			<DropdownMenuTrigger asChild let:builder>
+				<Btn builders={[builder]} intent="ghost" size="icon">
+					<Menu class="text-white" />
+				</Btn>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent class="w-48">
+			<DropdownMenuContent class="w-40">
 				<DropdownMenuItem>start now</DropdownMenuItem>
 				<DropdownMenuItem
 					href="https://github.com/vloe/shorter"

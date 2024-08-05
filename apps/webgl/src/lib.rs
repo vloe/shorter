@@ -46,7 +46,7 @@ impl WebGLRenderer {
         let cursor_location = context.get_uniform_location(&program, "u_cursor").unwrap();
         let scroll_location = context.get_uniform_location(&program, "u_scroll").unwrap();
 
-        let num_waves = 100;
+        let num_waves = 125;
         let points_per_wave = 200;
 
         let vertex_buffer = context.create_buffer().unwrap();
