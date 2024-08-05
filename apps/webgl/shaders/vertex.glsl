@@ -11,7 +11,7 @@ void main() {
     float y_offset = -0.5 + t * 0.5;
     float amplitude = 0.2 - t * 0.25;
     float phase = t * 3.14159 * 1.7;
-    float frequency = 2.0 + t * 0.5;
+    float frequency = 2.0 + t * 0.8;
 
     pos.y = amplitude * sin((pos.x * frequency * 6.28318) + phase) + y_offset;
 
@@ -50,7 +50,7 @@ void main() {
     rotatedPos.y = pos.x * sin(angle) + pos.y * cos(angle);
 
     // scale and position
-    rotatedPos = rotatedPos * 1.5;
+    rotatedPos = rotatedPos * 1.8;
     rotatedPos.x = rotatedPos.x * 0.6 + 0.8;
     rotatedPos.y = -rotatedPos.y * 0.6 + 0.5;
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Logomark from "$lib/assets/svgs/white-logomark.svg"
-	import Lockup from "$lib/assets/svgs/white-lockup.svg"
+	import Logomark from "$lib/assets/svgs/logomark.svg"
+	import Lockup from "$lib/assets/svgs/lockup.svg"
 	import Arrow from "$lib/icons/Arrow.svelte"
 	import Menu from "$lib/icons/Menu.svelte"
 	import { Btn } from "$lib/ui/btn"
