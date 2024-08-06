@@ -6,6 +6,6 @@
 	"quoteProps": "consistent",
 	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
 	"overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
-	"tailwindConfig": "./packages/config/src/tailwind.config.cjs",
+	"tailwindConfig": "./apps/landing/tailwind.config.js",
 	"tailwindFunctions": ["cn", "cva"]
 }

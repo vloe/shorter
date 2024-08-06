@@ -1,25 +1,45 @@
 <script lang="ts">
-	import { Button } from "@sh/ui/src/lib/components/button"
-	import { Shorten } from "@sh/ui/src/lib/components/shorten"
-	import { scrollTo } from "@sh/utils/src/scrollTo"
+	import { Btn } from "$lib/ui/btn"
+	import Arrow from "$lib/icons/Arrow.svelte"
+	import Wave from "$lib/components/Wave.svelte"
+
+	const title = "shorter | world's first domain shortener"
+	const desc = "a domain shortener tool"
 </script>
 
-<div class="pt-24 xl:pt-40">
-	<main class="flex flex-col">
-		<div class="flex flex-col items-center gap-y-6">
-			<h1 class="text-center text-7xl font-light">a domain shortener tool</h1>
-			<h2 class="max-w-xl text-center text-muted-foreground">
-				searches through thousands of tlds to find a shorter version of your domain, for
-				example linktree.com -> linktr.ee
-			</h2>
-			<Button on:click={() => scrollTo("shorten")} class="rounded-xl">start now</Button>
+<svelte:head>
+	<title>{title}</title>
+	<meta name="title" content={title} />
+	<meta name="description" content={desc} />
+</svelte:head>
+
+<Wave />
+
+<div class="pt-24">
+	<div class="flex flex-col items-center justify-center gap-6 lg:gap-10">
+		<h1
+			class="text-balance text-center font-aeonik text-5xl font-light leading-[1.1] text-white sm:text-7xl sm:leading-none xl:text-[90px]"
+		>
+			world's first <br class="hidden lg:flex" /> domain shortener
+		</h1>
+		<h3 class="max-w-xl text-center text-base font-medium text-neutral-300 lg:text-lg">
+			searches through thousands of tlds to shorten your domain, like linktree.com -->
+			linktr.ee
+		</h3>
+		<div class="flex items-center gap-x-2">
+			<Btn intent="gradient" class="group gap-x-[5px] duration-200 ease-in-out">
+				try for free
+				<Arrow />
+			</Btn>
+			<Btn
+				intent="secondary"
+				href="https://github.com/vloe/shorter"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="duration-200 ease-in-out"
+			>
+				star on github
+			</Btn>
 		</div>
-		<div class="mb-28 mt-64">
-			<div class="flex w-full flex-col items-center">
-				<div class="min-h-[450px] w-full max-w-3xl rounded-xl border border-input p-4">
-					<Shorten />
-				</div>
-			</div>
-		</div>
-	</main>
+	</div>
 </div>

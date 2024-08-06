@@ -1807,6 +1807,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "sh-webgl"
+version = "0.1.0"
+dependencies = [
+ "js-sys",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "sharded-slab"
 version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -1,17 +1,7 @@
 <script lang="ts">
 	import "../app.css"
-	import { QueryClient, QueryClientProvider } from "@tanstack/svelte-query"
-	import { browser } from "$app/environment"
-	import Header from "$lib/components/Header.svelte"
 	import type { Snippet } from "svelte"
-
-	const queryClient = new QueryClient({
-		defaultOptions: {
-			queries: {
-				enabled: browser,
-			},
-		},
-	})
+	import Header from "$lib/components/Header.svelte"
 
 	type $Props = {
 		children: Snippet
@@ -20,9 +10,7 @@
 	let { children }: $Props = $props()
 </script>
 
-<QueryClientProvider client={queryClient}>
-	<div class="container px-6">
-		<Header />
-		{@render children()}
-	</div>
-</QueryClientProvider>
+<div class="container mx-auto scroll-smooth px-4 lg:px-16 xl:px-28">
+	<Header />
+	{@render children()}
+</div>
