@@ -8,9 +8,16 @@
 	let cursorY = $state(0)
 	let innerWidth = $state(0)
 	let innerHeight = $state(0)
-	let scrollY = $state(0)
 
 	$effect(() => {
+		function animate(time = 0) {
+			if (renderer) {
+				let normalizedCursorX = cursorX / innerWidth
+				let normalizedCursorY = 1.0 - cursorY / innerHeight
+				renderer.render(time * 0.001, normalizedCursorX, normalizedCursorY)
+			}
+			animationId = requestAnimationFrame(animate)
+		}
 		async function setupWebGL() {
 			if (!canvas) return
 			await init()
@@ -23,21 +30,6 @@
 		setupWebGL()
 	})
 
-	function animate(time = 0) {
-		if (renderer) {
-			let normalizedCursorX = cursorX / innerWidth
-			let normalizedCursorY = 1.0 - cursorY / innerHeight
-			let normalizedScrollY = scrollY / (document.documentElement.scrollHeight - innerHeight)
-			renderer.render(time * 0.001, normalizedCursorX, normalizedCursorY, normalizedScrollY)
-		}
-		animationId = requestAnimationFrame(animate)
-	}
-
-	function handleMouseMove(event: MouseEvent) {
-		cursorX = event.clientX
-		cursorY = event.clientY
-	}
-
 	$effect(() => {
 		function handleResize() {
 			if (canvas && renderer) {
@@ -45,6 +37,10 @@
 				canvas.height = innerHeight
 				renderer.resize(canvas.width, canvas.height)
 			}
+		}
+		function handleMouseMove(event: MouseEvent) {
+			cursorX = event.clientX
+			cursorY = event.clientY
 		}
 
 		window.addEventListener("resize", handleResize)
@@ -58,5 +54,5 @@
 	})
 </script>
 
-<svelte:window bind:scrollY bind:innerWidth bind:innerHeight />
-<canvas bind:this={canvas} class="fixed left-0 top-0 -z-10 h-full w-full"></canvas>
+<svelte:window bind:innerWidth bind:innerHeight />
+<canvas bind:this={canvas} class="absolute left-0 top-0 -z-10 h-full w-full"></canvas>

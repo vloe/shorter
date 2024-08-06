@@ -3,7 +3,6 @@ attribute vec3 color;
 varying vec3 vColor;
 uniform float u_time;
 uniform vec2 u_cursor;
-uniform float u_scroll;
 
 void main() {
     vec2 pos = position;
@@ -18,9 +17,6 @@ void main() {
     float baseFrequency = 6.0;
     float baseAmplitude = 0.05;
     float baseWave = sin(pos.x * baseFrequency + u_time * 0.5) * baseAmplitude;
-    
-    float scrollEffect = u_scroll * 0.1;
-    float scrollWave = sin(pos.x * 3.0 - u_time * 0.3) * scrollEffect;
     
     // transform cursor position to match the wave's coordinate space
     float angle = radians(45.0);
@@ -40,7 +36,7 @@ void main() {
     
     float modifiedWave = sin(pos.x * modifiedFrequency + u_time * 0.5 + modifiedPhase) * modifiedAmplitude;
     
-    float finalWave = mix(baseWave, modifiedWave, cursorInfluence) + scrollWave;
+    float finalWave = mix(baseWave, modifiedWave, cursorInfluence);
     
     pos.y += finalWave;
 

@@ -12,7 +12,7 @@
 	<meta name="description" content={desc} />
 </svelte:head>
 
-<div class="hero-container pt-24">
+<div class="pt-24">
 	<div class="flex flex-col items-center justify-center gap-6 lg:gap-10">
 		<h1
 			class="text-balance text-center font-aeonik text-5xl font-light leading-[1.1] text-white sm:text-7xl sm:leading-none xl:text-[90px]"
@@ -40,3 +40,5 @@
 		</div>
 	</div>
 </div>
+
+<div class="h-screen w-full">test</div>

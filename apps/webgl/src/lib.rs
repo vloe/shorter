@@ -11,7 +11,6 @@ pub struct WebGLRenderer {
     program: WebGlProgram,
     time_location: WebGlUniformLocation,
     cursor_location: WebGlUniformLocation,
-    scroll_location: WebGlUniformLocation,
     vertex_buffer: WebGlBuffer,
     color_buffer: WebGlBuffer,
     num_waves: u32,
@@ -44,7 +43,6 @@ impl WebGLRenderer {
 
         let time_location = context.get_uniform_location(&program, "u_time").unwrap();
         let cursor_location = context.get_uniform_location(&program, "u_cursor").unwrap();
-        let scroll_location = context.get_uniform_location(&program, "u_scroll").unwrap();
 
         let num_waves = 125;
         let points_per_wave = 200;
@@ -57,7 +55,6 @@ impl WebGLRenderer {
             program,
             time_location,
             cursor_location,
-            scroll_location,
             vertex_buffer,
             color_buffer,
             num_waves,
@@ -116,14 +113,13 @@ impl WebGLRenderer {
         Ok(())
     }
 
-    pub fn render(&self, time: f32, cursor_x: f32, cursor_y: f32, scroll: f32) {
+    pub fn render(&self, time: f32, cursor_x: f32, cursor_y: f32) {
         self.context.clear_color(0.0, 0.0, 0.0, 0.0);
         self.context.clear(WebGlRenderingContext::COLOR_BUFFER_BIT);
 
         self.context.uniform1f(Some(&self.time_location), time);
         self.context
             .uniform2f(Some(&self.cursor_location), cursor_x, cursor_y);
-        self.context.uniform1f(Some(&self.scroll_location), scroll);
 
         let position_attribute_location =
             self.context.get_attrib_location(&self.program, "position");
