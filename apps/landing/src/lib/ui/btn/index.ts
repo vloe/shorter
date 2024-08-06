@@ -11,6 +11,7 @@ const btnVariants = cva({
 			primary: "bg-white text-black shadow hover:bg-white/85",
 			secondary: "text-white hover:text-white/85",
 			ghost: "text-white hover:bg-white/30",
+			gradient: "btn-gradient border border-shpurple text-white",
 		},
 		size: {
 			default: "px-3.5 py-1.5",

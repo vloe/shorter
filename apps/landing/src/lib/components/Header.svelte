@@ -19,7 +19,7 @@
 	</a>
 	<div class="hidden items-center gap-x-2 lg:flex">
 		<Btn class="group gap-x-[5px] mix-blend-lighten duration-200 ease-in-out hover:bg-white">
-			start now
+			try now
 			<Arrow />
 		</Btn>
 		<Btn
@@ -40,7 +40,7 @@
 				</Btn>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent class="w-40">
-				<DropdownMenuItem>start now</DropdownMenuItem>
+				<DropdownMenuItem>try now</DropdownMenuItem>
 				<DropdownMenuItem
 					href="https://github.com/vloe/shorter"
 					target="_blank"
