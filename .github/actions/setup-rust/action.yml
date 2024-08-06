@@ -16,6 +16,6 @@ runs:
               repo: cargo-lambda/cargo-lambda
 
         - name: install wasm-pack
-        - uses: jetli/wasm-pack-action@v0.4.0
+          uses: jetli/wasm-pack-action@v0.4.0
           with:
               version: "latest"
