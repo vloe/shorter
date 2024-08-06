@@ -5,7 +5,6 @@
 		"format": "prettier --write .",
 		"landing": "pnpm --filter @sh/landing -- ",
 		"core": "pnpm --filter @sh/server -- ",
-		"webgl": "pnpm --filter @sh/webgl -- ",
 		"gen:types": "typeshare ./core ./crates --lang=typescript --output-file=apps/landing/src/lib/types/bindings.ts",
 		"gen:tlds": "cd scripts && cargo run --bin gen_tlds",
 		"gen:domains": "cd scripts && cargo run --bin gen_domains"

@@ -3,8 +3,8 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "cd ../webgl && pnpm run build && cd ../landing && vite dev",
-		"build": "cd ../webgl && pnpm run build && cd ../landing && vite build",
+		"dev": "cd ../webgl && wasm-pack build --target web && cd ../landing && vite dev",
+		"build": "cd ../webgl && wasm-pack build --target web && cd ../landing && vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"

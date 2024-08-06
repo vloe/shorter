@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Btn } from "$lib/ui/btn"
 	import Arrow from "$lib/icons/Arrow.svelte"
+	import Wave from "$lib/components/Wave.svelte"
 
 	const title = "shorter | world's first domain shortener"
 	const desc = "a domain shortener tool"
@@ -11,6 +12,8 @@
 	<meta name="title" content={title} />
 	<meta name="description" content={desc} />
 </svelte:head>
+
+<Wave />
 
 <div class="pt-24">
 	<div class="flex flex-col items-center justify-center gap-6 lg:gap-10">
@@ -40,5 +43,3 @@
 		</div>
 	</div>
 </div>
-
-<div class="h-screen w-full">test</div>
