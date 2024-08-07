@@ -7,9 +7,5 @@
 	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
 	"overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
 	"tailwindConfig": "./apps/landing/tailwind.config.js",
-<<<<<<< HEAD
 	"tailwindFunctions": ["cx", "cva"]
-=======
-	"tailwindFunctions": ["cn", "cva"]
->>>>>>> 1d6c46b6adb216cc7581a242ef7bf92c418e600c
 }

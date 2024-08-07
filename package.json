@@ -1,29 +1,21 @@
 {
 	"private": true,
-	"scripts": {
-		"build": "turbo run build",
-		"format": "prettier --write .",
+    "scripts": {
 		"landing": "pnpm --filter @sh/landing -- ",
-		"core": "pnpm --filter @sh/server -- ",
-		"gen:types": "typeshare ./core ./crates --lang=typescript --output-file=apps/landing/src/lib/types/bindings.ts",
-		"gen:tlds": "cd scripts && cargo run --bin gen_tlds",
-		"gen:domains": "cd scripts && cargo run --bin gen_domains",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"lint:fix": "prettier --check . && eslint . --fix"
-	},
+    },
 	"devDependencies": {
 		"@types/eslint": "^9.6.0",
-		"eslint": "^9.8.0",
+		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-perfectionist": "^3.1.2",
-		"eslint-plugin-svelte": "^2.43.0",
-		"globals": "^15.9.0",
-		"prettier": "^3.2.5",
-		"prettier-plugin-svelte": "^3.2.2",
-		"prettier-plugin-tailwindcss": "^0.6.1",
-		"turbo": "^1.13.0",
-		"typescript-eslint": "^8.0.1"
+		"eslint-plugin-svelte": "^2.36.0",
+		"globals": "^15.0.0",
+		"prettier": "^3.1.1",
+		"prettier-plugin-svelte": "^3.1.2",
+		"prettier-plugin-tailwindcss": "^0.6.5",
+		"typescript-eslint": "^8.0.0"
 	},
 	"type": "module"
 }
