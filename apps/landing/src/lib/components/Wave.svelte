@@ -1,7 +1,11 @@
 <script lang="ts">
 	import init, { WebGLRenderer } from "../../../../webgl/pkg/sh_webgl"
 
+<<<<<<< HEAD
 	let renderer: null | WebGLRenderer = $state(null)
+=======
+	let renderer: WebGLRenderer | null = $state(null)
+>>>>>>> 1d6c46b6adb216cc7581a242ef7bf92c418e600c
 	let canvas: HTMLCanvasElement | null = $state(null)
 	let animationId = $state(0)
 	let cursorX = $state(0)
@@ -54,5 +58,9 @@
 	})
 </script>
 
+<<<<<<< HEAD
 <svelte:window bind:innerHeight bind:innerWidth />
+=======
+<svelte:window bind:innerWidth bind:innerHeight />
+>>>>>>> 1d6c46b6adb216cc7581a242ef7bf92c418e600c
 <canvas bind:this={canvas} class="absolute left-0 top-0 -z-10 h-full w-full"></canvas>

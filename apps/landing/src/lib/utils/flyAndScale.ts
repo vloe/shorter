@@ -18,7 +18,11 @@ export function styleToString(style: Record<string, number | string | undefined>
 
 export function flyAndScale(
 	node: Element,
+<<<<<<< HEAD:apps/landing/src/lib/utils/flyAndScale.ts
 	params: FlyAndScaleParams = { duration: 150, start: 0.95, x: 0, y: -8 },
+=======
+	params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 150 },
+>>>>>>> 1d6c46b6adb216cc7581a242ef7bf92c418e600c:packages/utils/src/flyAndScale.ts
 ): TransitionConfig {
 	const style = getComputedStyle(node)
 	const transform = style.transform === "none" ? "" : style.transform
@@ -38,6 +42,11 @@ export function flyAndScale(
 	}
 
 	return {
+<<<<<<< HEAD:apps/landing/src/lib/utils/flyAndScale.ts
+=======
+		duration: 100,
+		delay: 0,
+>>>>>>> 1d6c46b6adb216cc7581a242ef7bf92c418e600c:packages/utils/src/flyAndScale.ts
 		css: (t) => {
 			const y = scaleConversion(t, [0, 1], [params.y ?? 5, 0])
 			const x = scaleConversion(t, [0, 1], [params.x ?? 0, 0])

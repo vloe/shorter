@@ -11,5 +11,11 @@ export default defineConfig({
 			allow: [".."],
 		},
 		port: 3000,
+		fs: {
+			allow: [".."],
+		},
+	},
+	optimizeDeps: {
+		exclude: ["../webgl/pkg/sh_webgl"],
 	},
 })
