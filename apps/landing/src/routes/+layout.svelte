@@ -1,6 +1,7 @@
 <script lang="ts">
-	import "../app.css"
 	import type { Snippet } from "svelte"
+
+	import "../app.css"
 
 	type $Props = {
 		children: Snippet
