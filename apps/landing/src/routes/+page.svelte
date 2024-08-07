@@ -1,7 +1,13 @@
 <script lang="ts">
+<<<<<<< HEAD
+	import Wave from "$lib/components/Wave.svelte"
+	import Arrow from "$lib/icons/Arrow.svelte"
+	import { Btn } from "$lib/ui/btn"
+=======
 	import { Btn } from "$lib/ui/btn"
 	import Arrow from "$lib/icons/Arrow.svelte"
 	import Wave from "$lib/components/Wave.svelte"
+>>>>>>> 1d6c46b6adb216cc7581a242ef7bf92c418e600c
 
 	const title = "shorter | world's first domain shortener"
 	const desc = "a domain shortener tool"
@@ -9,8 +15,13 @@
 
 <svelte:head>
 	<title>{title}</title>
+<<<<<<< HEAD
+	<meta content={title} name="title" />
+	<meta content={desc} name="description" />
+=======
 	<meta name="title" content={title} />
 	<meta name="description" content={desc} />
+>>>>>>> 1d6c46b6adb216cc7581a242ef7bf92c418e600c
 </svelte:head>
 
 <Wave />
@@ -27,16 +38,28 @@
 			linktr.ee
 		</h3>
 		<div class="flex items-center gap-x-2">
+<<<<<<< HEAD
+			<Btn class="group gap-x-[5px] duration-200 ease-in-out" intent="gradient">
+=======
 			<Btn intent="gradient" class="group gap-x-[5px] duration-200 ease-in-out">
+>>>>>>> 1d6c46b6adb216cc7581a242ef7bf92c418e600c
 				try for free
 				<Arrow />
 			</Btn>
 			<Btn
+<<<<<<< HEAD
+				class="duration-200 ease-in-out"
+				href="https://github.com/vloe/shorter"
+				intent="secondary"
+				rel="noopener noreferrer"
+				target="_blank"
+=======
 				intent="secondary"
 				href="https://github.com/vloe/shorter"
 				target="_blank"
 				rel="noopener noreferrer"
 				class="duration-200 ease-in-out"
+>>>>>>> 1d6c46b6adb216cc7581a242ef7bf92c418e600c
 			>
 				star on github
 			</Btn>

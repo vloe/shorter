@@ -7,15 +7,15 @@ export interface ShortenParams {
 }
 
 export interface Tld {
-	name: string
 	category: string
 	manager: string
+	name: string
 }
 
 export interface Domain {
+	available: boolean
 	name: string
 	tld: Tld
-	available: boolean
 }
 
 export interface ShortenRes {
