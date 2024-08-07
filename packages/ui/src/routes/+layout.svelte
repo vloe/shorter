@@ -1,8 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from "svelte"
 
-	import Header from "$lib/components/Header.svelte"
-
 	import "../app.css"
 
 	type $Props = {
@@ -12,7 +10,6 @@
 	let { children }: $Props = $props()
 </script>
 
-<div class="container mx-auto scroll-smooth">
-	<Header />
+<div class="flex min-h-screen items-center justify-center">
 	{@render children()}
 </div>

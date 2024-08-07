@@ -2,6 +2,7 @@
 	"private": true,
 	"scripts": {
 		"landing": "pnpm --filter @sh/landing -- ",
+		"ui": "pnpm --filter @sh/ui -- ",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"lint:fix": "prettier --check . && eslint . --fix"
