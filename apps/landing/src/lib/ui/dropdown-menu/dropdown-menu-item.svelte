@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui"
 	import type { Snippet } from "svelte"
-	import { cx } from "$lib/utils/cva.config"
 
-	type $Props = DropdownMenuPrimitive.ItemProps & {
+	import { cx } from "$lib/utils/cva.config"
+	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui"
+
+	type $Props = {
 		children: Snippet
-	}
+	} & DropdownMenuPrimitive.ItemProps
 
 	let { children, class: className, ...props }: $Props = $props()
 </script>
@@ -16,9 +17,9 @@
 		className,
 	)}
 	on:click
-	on:keydown
 	on:focusin
 	on:focusout
+	on:keydown
 	on:pointerdown
 	on:pointerleave
 	on:pointermove

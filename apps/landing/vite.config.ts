@@ -2,14 +2,14 @@ import { sveltekit } from "@sveltejs/kit/vite"
 import { defineConfig } from "vite"
 
 export default defineConfig({
+	optimizeDeps: {
+		exclude: ["../webgl/pkg/sh_webgl"],
+	},
 	plugins: [sveltekit()],
 	server: {
-		port: 3000,
 		fs: {
 			allow: [".."],
 		},
-	},
-	optimizeDeps: {
-		exclude: ["../webgl/pkg/sh_webgl"],
+		port: 3000,
 	},
 })

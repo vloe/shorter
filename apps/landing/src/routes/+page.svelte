@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Btn } from "$lib/ui/btn"
-	import Arrow from "$lib/icons/Arrow.svelte"
 	import Wave from "$lib/components/Wave.svelte"
+	import Arrow from "$lib/icons/Arrow.svelte"
+	import { Btn } from "$lib/ui/btn"
 
 	const title = "shorter | world's first domain shortener"
 	const desc = "a domain shortener tool"
@@ -9,8 +9,8 @@
 
 <svelte:head>
 	<title>{title}</title>
-	<meta name="title" content={title} />
-	<meta name="description" content={desc} />
+	<meta content={title} name="title" />
+	<meta content={desc} name="description" />
 </svelte:head>
 
 <Wave />
@@ -27,16 +27,16 @@
 			linktr.ee
 		</h3>
 		<div class="flex items-center gap-x-2">
-			<Btn intent="gradient" class="group gap-x-[5px] duration-200 ease-in-out">
+			<Btn class="group gap-x-[5px] duration-200 ease-in-out" intent="gradient">
 				try for free
 				<Arrow />
 			</Btn>
 			<Btn
-				intent="secondary"
-				href="https://github.com/vloe/shorter"
-				target="_blank"
-				rel="noopener noreferrer"
 				class="duration-200 ease-in-out"
+				href="https://github.com/vloe/shorter"
+				intent="secondary"
+				rel="noopener noreferrer"
+				target="_blank"
 			>
 				star on github
 			</Btn>

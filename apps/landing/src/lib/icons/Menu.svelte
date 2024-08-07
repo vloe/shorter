@@ -8,8 +8,8 @@
 	let { class: className }: $Props = $props()
 </script>
 
-<svg viewBox="0 0 24 12" fill="currentColor" class={cx("size-6", className)}>
-	<rect width="24" height="2" />
-	<rect y="5" width="24" height="2" />
-	<rect y="10" width="24" height="2" />
+<svg class={cx("size-6", className)} fill="currentColor" viewBox="0 0 24 12">
+	<rect height="2" width="24" />
+	<rect height="2" width="24" y="5" />
+	<rect height="2" width="24" y="10" />
 </svg>

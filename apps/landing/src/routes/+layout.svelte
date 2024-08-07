@@ -1,7 +1,9 @@
 <script lang="ts">
-	import "../app.css"
 	import type { Snippet } from "svelte"
+
 	import Header from "$lib/components/Header.svelte"
+
+	import "../app.css"
 
 	type $Props = {
 		children: Snippet
