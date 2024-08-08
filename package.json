@@ -1,4 +1,5 @@
 {
+	"name": "@sh/monorepo",
 	"private": true,
 	"scripts": {
 		"build": "turbo build",
