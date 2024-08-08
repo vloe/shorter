@@ -43,7 +43,7 @@ module.exports = {
 				},
 			},
 			fontFamily: {
-				sans: [...fontFamily.sans],
+				sans: ["Manrope", ...fontFamily.sans],
 			},
 		},
 	},

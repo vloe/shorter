@@ -42,4 +42,11 @@
 	body {
 		@apply bg-background text-foreground;
 	}
+	@font-face {
+		font-family: "Manrope";
+		src: url("/fonts/Manrope-VariableFont_wght.ttf");
+		font-style: normal;
+		font-weight: 100 900;
+		font-display: swap;
+	}
 }

@@ -21,9 +21,13 @@
 			</Btn>
 			<Btn
 				class="!no-underline duration-200 ease-in-out hover:text-primary/85"
-				href="/login"
-				intent="link">login</Btn
+				href="https://github.com/vloe/shorter"
+				intent="link"
+				rel="noopener noreferrer"
+				target="_blank"
 			>
+				star on github
+			</Btn>
 		</div>
 	</div>
 	<div class="flex lg:hidden">
@@ -33,7 +37,13 @@
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content class="w-44">
 				<DropdownMenu.Item href="/register">start now</DropdownMenu.Item>
-				<DropdownMenu.Item href="/login">login</DropdownMenu.Item>
+				<DropdownMenu.Item
+					href="https://github.com/vloe/shorter"
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					repo
+				</DropdownMenu.Item>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	</div>
