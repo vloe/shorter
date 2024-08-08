@@ -1,0 +1,27 @@
+name: publish apps
+on: [push]
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            deployments: write
+        name: Publish
+        steps:
+            - name: checkout
+              uses: actions/checkout@v3
+
+            - name: setup pnpm
+              uses: ./.github/actions/setup-pnpm
+
+            - name: build
+              run: pnpm build
+
+            - name: publish landing to cf pages
+              uses: cloudflare/pages-action@v1
+              with:
+                  apiToken: ${{ secrets.CF_API_TOKEN }}
+                  accountId: ${{ secrets.CF_ACCOUNT_ID }}
+                  projectName: sh-landing
+                  directory: ./apps/landing/.svelte-kit/cloudflare
