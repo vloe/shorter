@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { cx } from  "@sh/utils/src/cva.config";
 	import { Button as ButtonPrimitive } from "bits-ui";
-	import { type Events, type Props, buttonVariants } from "./index.js";
-	import { cn } from "$lib/utils.js";
+
+    import { buttonVariants, type Events, type Props } from "./index.js";
 
 	type $$Props = Props;
 	type $$Events = Events;
@@ -15,7 +16,7 @@
 
 <ButtonPrimitive.Root
 	{builders}
-	class={cn(buttonVariants({ variant, size, className }))}
+	class={cx(buttonVariants({ className, size, variant }))}
 	type="button"
 	{...$$restProps}
 	on:click
