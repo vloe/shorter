@@ -50,6 +50,9 @@ importers:
       '@sh/ui':
         specifier: workspace:^
         version: link:../../packages/ui
+      '@sh/utils':
+        specifier: workspace:^
+        version: link:../../packages/utils
       '@sveltejs/adapter-cloudflare':
         specifier: ^4.7.0
         version: 4.7.0(@sveltejs/kit@2.5.4(@sveltejs/vite-plugin-svelte@3.0.2(svelte@5.0.0-next.205)(vite@5.2.6(@types/node@20.13.0)))(svelte@5.0.0-next.205)(vite@5.2.6(@types/node@20.13.0)))(wrangler@3.64.0(@cloudflare/workers-types@4.20240701.0))
@@ -100,6 +103,9 @@ importers:
       bits-ui:
         specifier: ^0.21.13
         version: 0.21.13(svelte@5.0.0-next.205)
+      svelte-radix:
+        specifier: ^1.1.0
+        version: 1.1.0(svelte@5.0.0-next.205)
     devDependencies:
       '@sh/config':
         specifier: workspace:^
@@ -2086,6 +2092,11 @@ packages:
       typescript:
         optional: true
 
+  svelte-radix@1.1.0:
+    resolution: {integrity: sha512-kyE9wZiJV937INGb+wiBkAjmGtQUUYRPkVL2Q+/gj+9Vog1Ewd2wNvNmpNMUd+c+euxoc5u5YZMuCUgky9EUPw==}
+    peerDependencies:
+      svelte: ^3.54.0 || ^4.0.0 || ^5.0.0
+
   svelte2tsx@0.7.15:
     resolution: {integrity: sha512-91RbLJI448FR1UEZqXSS3ucVMERuWo8ACOhxfkBPK1CL2ocGMOC5bwc8tzFvb/Ji8NqZ7wmSGfvRebcUsiauKA==}
     peerDependencies:
@@ -3983,6 +3994,10 @@ snapshots:
       postcss: 8.4.41
       postcss-load-config: 5.1.0(jiti@1.21.0)(postcss@8.4.41)
       typescript: 5.4.3
+
+  svelte-radix@1.1.0(svelte@5.0.0-next.205):
+    dependencies:
+      svelte: 5.0.0-next.205
 
   svelte2tsx@0.7.15(svelte@5.0.0-next.205)(typescript@5.4.3):
     dependencies:

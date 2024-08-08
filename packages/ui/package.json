@@ -24,6 +24,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"bits-ui": "^0.21.13"
+		"bits-ui": "^0.21.13",
+		"svelte-radix": "^1.1.0"
 	}
 }
