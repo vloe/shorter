@@ -2,16 +2,14 @@ import { fontFamily } from "tailwindcss/defaultTheme";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-	content: ["./src/**/*.{html,js,svelte,ts}"],
+	content: [
+        "./src/**/*.{html,js,svelte,ts}",
+        "../../packages/ui/src/**/*.{html,js,svelte,ts}"
+    ],
 	darkMode: ["class"],
 	safelist: ["dark"],
 	theme: {
 		extend: {
-			borderRadius: {
-				lg: "var(--radius)",
-				md: "calc(var(--radius) - 2px)",
-				sm: "calc(var(--radius) - 4px)"
-			},
 			colors: {
 				accent: {
 					DEFAULT: "hsl(var(--accent) / <alpha-value>)",
