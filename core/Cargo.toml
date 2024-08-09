@@ -1,0 +1,11 @@
+[package]
+name = "sh-core"
+version = "0.1.0"
+license = { workspace = true }
+repository = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+# workspace dependencies
+axum = { workspace = true }
+tokio = { workspace = true, features = ["macros"] }

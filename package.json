@@ -4,6 +4,7 @@
 	"scripts": {
 		"build": "turbo build",
 		"landing": "pnpm --filter @sh/landing -- ",
+		"core": "pnpm --filter @sh/server -- ",
 		"ui": "pnpm --filter @sh/ui -- ",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",

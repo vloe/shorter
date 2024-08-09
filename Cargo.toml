@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["apps/webgl"]
+members = ["apps/webgl", "apps/server", "core"]
 
 [workspace.package]
 license = "MIT"
@@ -8,3 +8,6 @@ edition = "2021"
 repository = "https://github.com/vloe/shorter"
 
 [workspace.dependencies]
+# third party dependencies used by two or more crates
+axum = "0.7.5"
+tokio = "1.39.2"

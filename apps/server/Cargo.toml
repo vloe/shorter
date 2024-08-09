@@ -1,0 +1,22 @@
+[package]
+name = "sh-server"
+version = "0.1.0"
+license = { workspace = true }
+repository = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+# sh-crates
+sh-core = { path = "../../core" }
+
+# workspace dependencies
+axum = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "signal"] }
+
+# specific server dependencies 
+lambda_http = { version = "0.13.0", optional = true }
+tower-http = { version = "0.5.2", features = ["cors"] }
+tower = { version = "0.4.13", features = ["limit", "buffer"] }
+
+[features]
+lambda = ["dep:lambda_http"]
