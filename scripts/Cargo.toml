@@ -1,16 +1,17 @@
 [package]
-name = "sh-core"
+name = "sh-scripts"
 version = "0.1.0"
 license = { workspace = true }
 repository = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
+# sh-crates
+sh-core = { path = "../core" }
+
 # workspace dependencies
-axum = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 
-# specific core dependencies 
-serde = { version = "1.0.152", features = ["derive"] }
-phf = { version = "0.11.2", features = ["macros"] }
-typeshare = "1.0.3"
+# specific scripts dependencies
+reqwest = "0.12.5"
+scraper = "0.20.0"

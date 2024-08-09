@@ -8,7 +8,9 @@
 		"ui": "pnpm --filter @sh/ui -- ",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"lint:fix": "prettier --check . && eslint . --fix"
+		"lint:fix": "prettier --check . && eslint . --fix",
+		"gen:bindings": "typeshare ./core --lang=typescript --output-file=packages/utils/src/bindings.ts",
+		"gen:tlds": "cd scripts && cargo run --bin gen_tlds"
 	},
 	"devDependencies": {
 		"@types/eslint": "^9.6.0",
