@@ -5,6 +5,9 @@
 			"dependsOn": ["^build"],
 			"outputs": [".svelte-kit/**"]
 		},
+		"@sh/landing#build": {
+			"dependsOn": ["@sh/webgl#build"]
+		},
 		"lint": {},
 		"dev": {
 			"cache": false
