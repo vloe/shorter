@@ -2,8 +2,7 @@
 	"name": "@sh/ui",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build"
+		"dev": "vite dev"
 	},
 	"peerDependencies": {
 		"svelte": "^5.0.0-next.1"
