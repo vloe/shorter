@@ -28,3 +28,11 @@ jobs:
                   accountId: ${{ secrets.CF_ACCOUNT_ID }}
                   projectName: sh-landing
                   directory: ./apps/landing/.svelte-kit/cloudflare
+
+            - name: publish server to aws lambda
+              run: |
+                  cargo lambda deploy --iam-role arn:aws:iam::533267168525:role/lambda --enable-function-url sh-server
+              env:
+                  AWS_DEFAULT_REGION: eu-west-2
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
