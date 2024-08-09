@@ -1,0 +1,7 @@
+{
+	"name": "@sh/webgl",
+	"private": true,
+	"scripts": {
+		"build": "wasm-pack build --target web"
+	}
+}

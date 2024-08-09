@@ -1,4 +1,5 @@
 <script lang="ts">
+	import WebGl from "$lib/components/WebGl.svelte"
 	import { Btn } from "@sh/ui/src/lib/components/btn"
 	import Arrow from "@sh/ui/src/lib/icons/Arrow.svelte"
 
@@ -11,6 +12,8 @@
 	<meta content={title} name="title" />
 	<meta content={desc} name="description" />
 </svelte:head>
+
+<WebGl />
 
 <div class="pt-44">
 	<div class="flex flex-col items-center gap-6 lg:gap-11">

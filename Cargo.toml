@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["apps/server"]
+members = ["apps/webgl"]
 
 [workspace.package]
 license = "MIT"

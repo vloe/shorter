@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "cd ../webgl && pnpm run build && cd ../landing && vite dev",
 		"build": "vite build"
 	},
 	"devDependencies": {

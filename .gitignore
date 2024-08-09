@@ -10,6 +10,7 @@
 **/build
 **/target
 **/dist
+**/pkg
 
 # env
 **/.env
