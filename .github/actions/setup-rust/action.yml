@@ -1,0 +1,8 @@
+name: setup rust
+runs:
+    using: "composite"
+    steps:
+        - name: install wasm-pack
+          uses: jetli/wasm-pack-action@v0.4.0
+          with:
+              version: "latest"

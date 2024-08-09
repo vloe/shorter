@@ -15,6 +15,9 @@ jobs:
             - name: setup pnpm
               uses: ./.github/actions/setup-pnpm
 
+            - name: setup rust
+              uses: ./.github/actions/setup-rust
+
             - name: build
               run: pnpm build
 
