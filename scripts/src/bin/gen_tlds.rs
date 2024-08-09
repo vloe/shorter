@@ -1,4 +1,3 @@
-use reqwest;
 use scraper::{Html, Selector};
 use std::{error::Error, fs::File, io::Write};
 
@@ -17,8 +16,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .user_agent("curl/7.79.1")
         .build()?;
 
-    let mut tlds = get_iana_tlds(&client).await?;
-
+    let tlds = get_iana_tlds(&client).await?;
     write_tlds(tlds)?;
 
     Ok(())
@@ -26,12 +24,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
 async fn get_iana_tlds(client: &reqwest::Client) -> Result<Vec<Tld>, Box<dyn Error>> {
     let res = client.get(IANA_URL).send().await?;
-
-    if !res.status().is_success() {
-        return Err(format!("failed to fetch iana tlds from: {}", IANA_URL).into());
-    }
-
     let text = res.text().await?;
+
     let doc = Html::parse_document(&text);
     let row_selector = Selector::parse("table#tld-table tbody tr").unwrap();
     let cell_selector = Selector::parse("td").unwrap();
