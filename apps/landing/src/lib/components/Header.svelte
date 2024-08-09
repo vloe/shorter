@@ -13,14 +13,14 @@
 	<div class="hidden lg:flex">
 		<div class="flex items-center gap-x-2">
 			<Btn
-				class="group h-8 gap-x-[5px] rounded-lg duration-200 ease-in-out hover:bg-primary/85"
+				class="group h-8 gap-x-[5px] rounded-lg transition-all duration-200 ease-in-out hover:bg-primary hover:brightness-[85%]"
 				href="/register"
 			>
 				start now
 				<Arrow />
 			</Btn>
 			<Btn
-				class="!no-underline duration-200 ease-in-out hover:text-primary/85"
+				class="!no-underline transition-all duration-200 ease-in-out hover:text-primary hover:brightness-[85%]"
 				href="https://github.com/vloe/shorter"
 				intent="link"
 				rel="noopener noreferrer"
