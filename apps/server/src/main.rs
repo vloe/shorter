@@ -1,6 +1,7 @@
 use axum::{
     error_handling::HandleErrorLayer,
     http::{header, HeaderValue, Method, StatusCode},
+    routing::get,
     BoxError, Router,
 };
 use sh_core::api::mount;
@@ -43,7 +44,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             Duration::from_secs(RATE_LIMIT_PERIOD),
         ));
 
-    let app = Router::new().merge(mount()).layer(cors).layer(rate_limit);
+    let app = Router::new()
+        .route("/health", get(|| async { "ok" }))
+        .merge(mount())
+        .layer(cors)
+        .layer(rate_limit);
 
     #[cfg(feature = "lambda")]
     run_prod(app).await?;
