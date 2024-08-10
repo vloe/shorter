@@ -16,6 +16,7 @@ const CZDS_API_URL: &str = "https://czds-api.icann.org/czds/downloads/links";
 const CZDS_API_AUTH_URL: &str = "https://account-api.icann.org/api/authenticate";
 const TMP_DIR: &str = "tmp/";
 const DOMAINS_FILE: &str = "../apps/server/data/domains.bin";
+const DOMAINS_DIR: &str = "../apps/server/data/domains/";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -28,7 +29,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let access_token = get_access_token(&client).await?;
     let zone_urls = get_zone_urls(&client, &access_token).await?;
 
+    // remove old files and create new dirs
+    fs::remove_dir_all(TMP_DIR).await?;
+    fs::remove_dir_all(DOMAINS_DIR).await?;
     fs::create_dir_all(TMP_DIR).await?;
+    fs::create_dir_all(DOMAINS_DIR).await?;
 
     let mut bits_used = 0;
     for (i, zone_url) in zone_urls.iter().enumerate() {
