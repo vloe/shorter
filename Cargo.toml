@@ -11,3 +11,4 @@ repository = "https://github.com/vloe/shorter"
 # third party dependencies used by two or more crates
 axum = "0.7.5"
 tokio = "1.39.2"
+memmap2 = "0.9.4"

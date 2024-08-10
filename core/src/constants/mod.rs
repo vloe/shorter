@@ -1,1 +1,1 @@
-pub(crate) mod tlds;
+pub mod tlds;

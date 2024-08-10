@@ -9,6 +9,7 @@ edition = { workspace = true }
 # workspace dependencies
 axum = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+memmap2 = { workspace = true }
 
 # specific core dependencies 
 serde = { version = "1.0.152", features = ["derive"] }
