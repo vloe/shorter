@@ -29,9 +29,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let access_token = get_access_token(&client).await?;
     let zone_urls = get_zone_urls(&client, &access_token).await?;
 
-    // remove old files and create new dirs
-    fs::remove_dir_all(TMP_DIR).await?;
-    fs::remove_dir_all(DOMAINS_DIR).await?;
     fs::create_dir_all(TMP_DIR).await?;
     fs::create_dir_all(DOMAINS_DIR).await?;
 
