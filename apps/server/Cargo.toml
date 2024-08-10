@@ -11,7 +11,8 @@ sh-core = { path = "../../core" }
 
 # workspace dependencies
 axum = { workspace = true }
-tokio = { workspace = true, features = ["macros", "rt-multi-thread", "signal"] }
+tokio = { workspace = true, features = ["full"] }
+memmap2 = { workspace = true }
 
 # specific server dependencies 
 lambda_http = { version = "0.13.0", optional = true }
