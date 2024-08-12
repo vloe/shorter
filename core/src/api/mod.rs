@@ -2,7 +2,7 @@ use axum::Router;
 use memmap2::Mmap;
 use std::sync::Arc;
 
-pub mod shorten;
+pub mod shorter;
 
 #[derive(Clone)]
 pub struct Ctx {
@@ -10,5 +10,7 @@ pub struct Ctx {
 }
 
 pub fn mount(ctx: Ctx) -> Router {
-    Router::new().with_state(ctx)
+    Router::new()
+        .route("/", get(shorter::mount()))
+        .with_state(ctx)
 }
