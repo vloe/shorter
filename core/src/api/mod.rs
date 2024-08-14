@@ -1,4 +1,4 @@
-use axum::Router;
+use axum::{routing::get, Router};
 use memmap2::Mmap;
 use std::sync::Arc;
 
@@ -11,6 +11,6 @@ pub struct Ctx {
 
 pub fn mount(ctx: Ctx) -> Router {
     Router::new()
-        .route("/", get(shorter::mount()))
+        .route("/", get(shorter::mount))
         .with_state(ctx)
 }

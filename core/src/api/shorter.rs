@@ -4,8 +4,8 @@ use axum::{
     extract::{Query, State},
     http::StatusCode,
     response::{IntoResponse, Response},
+    Json,
 };
-use memmap2::Mmap;
 use serde::{Deserialize, Serialize};
 use std::{
     collections::hash_map::DefaultHasher,
@@ -42,7 +42,7 @@ pub(crate) struct ShorterParams {
 }
 
 impl ShorterParams {
-    fn validate(&self) -> Result<String, ShorterErr> {
+    fn validate(&self) -> Result<(), ShorterErr> {
         let domain = self.q.trim().to_lowercase();
         if domain.len() < MIN_DOMAIN_LEN {
             return Err(ShorterErr::DomainTooShort(MIN_DOMAIN_LEN));
@@ -50,7 +50,7 @@ impl ShorterParams {
         if domain.len() > MAX_DOMAIN_LEN {
             return Err(ShorterErr::DomainTooLong(MAX_DOMAIN_LEN));
         }
-        Ok(domain)
+        Ok(())
     }
 }
 
@@ -69,13 +69,29 @@ pub(crate) struct ShorterRes {
     shorter_domains: Vec<Domain>,
 }
 
-pub(crate) fn mount(
+pub(crate) async fn mount(
     Query(params): Query<ShorterParams>,
     State(ctx): State<Ctx>,
-) -> Result<(), ShorterErr> {
-    let domain = params.validate()?;
+) -> Result<Json<ShorterRes>, ShorterErr> {
+    params.validate()?;
 
-    Ok(())
+    let domain = Domain {
+        name: "test.com".to_string(),
+        tld: TLDS.get(".com").unwrap().clone(),
+        available: false,
+    };
+
+    let shorter_domains: Vec<Domain> = vec![Domain {
+        name: "tst.com".to_string(),
+        tld: TLDS.get(".com").unwrap().clone(),
+        available: false,
+    }];
+
+    let res = ShorterRes {
+        domain,
+        shorter_domains,
+    };
+    Ok(Json(res))
 }
 
 pub fn domain_to_index(domain: &str) -> usize {
