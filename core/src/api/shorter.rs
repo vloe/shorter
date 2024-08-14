@@ -7,15 +7,9 @@ use axum::{
     Json,
 };
 use serde::{Deserialize, Serialize};
-use std::{
-    collections::hash_map::DefaultHasher,
-    hash::{Hash, Hasher},
-};
 use thiserror::Error;
 use typeshare::typeshare;
 
-pub const DOMAINS_BYTE_SIZE: usize = 20_000_000; // 20 mb
-pub const DOMAINS_BIT_SIZE: usize = DOMAINS_BYTE_SIZE * 8;
 const MIN_DOMAIN_LEN: usize = 2;
 const MAX_DOMAIN_LEN: usize = 255;
 
@@ -92,10 +86,4 @@ pub(crate) async fn mount(
         shorter_domains,
     };
     Ok(Json(res))
-}
-
-pub fn domain_to_index(domain: &str) -> usize {
-    let mut hasher = DefaultHasher::new();
-    domain.hash(&mut hasher);
-    (hasher.finish() as usize) % DOMAINS_BIT_SIZE
 }

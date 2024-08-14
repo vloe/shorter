@@ -2,11 +2,13 @@ use dotenv::dotenv;
 use flate2::read::GzDecoder;
 use memmap2::MmapOptions;
 use serde_json::{json, Value};
-use sh_core::{
-    api::shorten::{domain_to_index, DOMAINS_BIT_SIZE, DOMAINS_BYTE_SIZE},
-    constants::tlds::TLDS,
+use std::{
+    collections::hash_map::DefaultHasher,
+    env,
+    error::Error,
+    hash::{Hash, Hasher},
+    io::prelude::*,
 };
-use std::{env, error::Error, io::prelude::*};
 use tokio::{
     fs::{self, File, OpenOptions},
     io::{AsyncBufReadExt, AsyncWriteExt, BufReader},
@@ -17,6 +19,8 @@ const CZDS_API_AUTH_URL: &str = "https://account-api.icann.org/api/authenticate"
 const TMP_DIR: &str = "tmp/";
 const DOMAINS_FILE: &str = "../apps/server/data/domains.bin";
 const DOMAINS_DIR: &str = "../apps/server/data/domains/";
+const DOMAINS_BYTE_SIZE: usize = 20_000_000; // 20 mb
+const DOMAINS_BIT_SIZE: usize = DOMAINS_BYTE_SIZE * 8;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -34,19 +38,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let mut bits_used = 0;
     for (i, zone_url) in zone_urls.iter().enumerate() {
-        let (name, tld, file_path) = get_zone_data(zone_url).await?;
+        let (name, file_path) = get_zone_data(zone_url).await?;
 
         println!("{}/{} {}:", i, zone_urls.len(), name);
-
-        match TLDS.get(&tld) {
-            Some(_) => {
-                println!("found in tlds");
-            }
-            None => {
-                println!("not found in tlds");
-                continue;
-            }
-        }
 
         match download_zone(&client, &access_token, &zone_url, &file_path).await {
             Ok(_) => {
@@ -110,12 +104,11 @@ async fn get_zone_urls(
     Ok(zone_urls)
 }
 
-async fn get_zone_data(zone_url: &str) -> Result<(String, String, String), Box<dyn Error>> {
+async fn get_zone_data(zone_url: &str) -> Result<(String, String), Box<dyn Error>> {
     let name = zone_url.split('/').last().unwrap().replace(".zone", "");
-    let tld = format!(".{}", name);
     let file_path = format!("{}{}.txt", TMP_DIR, name);
 
-    Ok((name, tld, file_path))
+    Ok((name, file_path))
 }
 
 async fn download_zone(
@@ -182,4 +175,10 @@ async fn bitmap_zone(file_path: &str) -> Result<i32, Box<dyn std::error::Error>>
     mmap.flush()?;
 
     Ok(bits)
+}
+
+pub fn domain_to_index(domain: &str) -> usize {
+    let mut hasher = DefaultHasher::new();
+    domain.hash(&mut hasher);
+    (hasher.finish() as usize) % DOMAINS_BIT_SIZE
 }

@@ -6,9 +6,6 @@ repository = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
-# sh-crates
-sh-core = { path = "../core" }
-
 # workspace dependencies
 tokio = { workspace = true, features = ["full"] }
 memmap2 = { workspace = true }
