@@ -6,9 +6,6 @@ repository = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
-# sh-crates
-sh-scripts = { path = "../scripts" }
-
 # workspace dependencies
 axum = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }

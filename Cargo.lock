@@ -1615,7 +1615,6 @@ dependencies = [
  "memmap2",
  "phf 0.11.2",
  "serde",
- "sh-scripts",
  "thiserror",
  "tokio",
  "typeshare",
@@ -1631,6 +1630,7 @@ dependencies = [
  "reqwest",
  "scraper",
  "serde_json",
+ "sh-core",
  "tokio",
 ]
 

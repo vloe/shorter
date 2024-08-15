@@ -1,5 +1,8 @@
 use super::Ctx;
-use crate::constants::tlds::{Tld, TLDS};
+use crate::{
+    constants::tlds::{Tld, TLDS},
+    domain::Domain,
+};
 use axum::{
     extract::{Query, State},
     http::StatusCode,
@@ -46,14 +49,6 @@ impl ShorterParams {
         }
         Ok(())
     }
-}
-
-#[typeshare]
-#[derive(Serialize)]
-pub(crate) struct Domain {
-    name: String,
-    tld: Tld,
-    available: bool,
 }
 
 #[typeshare]
