@@ -34,7 +34,12 @@ async fn get_iana_tlds(client: &reqwest::Client) -> Result<Vec<Tld>, Box<dyn Err
     for row in doc.select(&row_selector) {
         let cells: Vec<_> = row.select(&cell_selector).collect();
         if cells.len() >= 3 {
-            let name = cells[0].text().collect::<String>().trim().to_lowercase();
+            let name = cells[0]
+                .text()
+                .collect::<String>()
+                .trim()
+                .to_lowercase()
+                .replace(".", "");
             let category = cells[1].text().collect::<String>().trim().to_lowercase();
             let manager = cells[2]
                 .text()

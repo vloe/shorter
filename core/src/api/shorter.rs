@@ -1,7 +1,7 @@
 use super::Ctx;
 use crate::{
-    constants::tlds::{Tld, TLDS},
-    domain::Domain,
+    constants::tlds::TLDS,
+    domain::{get_tld, Domain},
 };
 use axum::{
     extract::{Query, State},
@@ -40,11 +40,11 @@ pub(crate) struct ShorterParams {
 
 impl ShorterParams {
     fn validate(&self) -> Result<(), ShorterErr> {
-        let domain = self.q.trim().to_lowercase();
-        if domain.len() < MIN_DOMAIN_LEN {
+        let q = self.q.trim();
+        if q.len() < MIN_DOMAIN_LEN {
             return Err(ShorterErr::DomainTooShort(MIN_DOMAIN_LEN));
         }
-        if domain.len() > MAX_DOMAIN_LEN {
+        if q.len() > MAX_DOMAIN_LEN {
             return Err(ShorterErr::DomainTooLong(MAX_DOMAIN_LEN));
         }
         Ok(())
@@ -64,21 +64,21 @@ pub(crate) async fn mount(
 ) -> Result<Json<ShorterRes>, ShorterErr> {
     params.validate()?;
 
-    let domain = Domain {
-        name: "test.com".to_string(),
-        tld: TLDS.get(".com").unwrap().clone(),
-        available: false,
-    };
+    let domain = get_domain(&params.q);
 
-    let shorter_domains: Vec<Domain> = vec![Domain {
-        name: "tst.com".to_string(),
-        tld: TLDS.get(".com").unwrap().clone(),
-        available: false,
-    }];
+    let shorter_domains = vec![];
 
     let res = ShorterRes {
         domain,
         shorter_domains,
     };
     Ok(Json(res))
+}
+
+fn get_domain(q: &str) -> Domain {
+    Domain {
+        name: "test.com".to_string(),
+        tld: TLDS.get("com").unwrap().clone(),
+        available: false,
+    }
 }
