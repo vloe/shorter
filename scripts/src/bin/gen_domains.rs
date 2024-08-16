@@ -1,9 +1,10 @@
 use dotenv::dotenv;
 use flate2::read::GzDecoder;
+use futures::StreamExt;
 use memmap2::MmapOptions;
 use serde_json::{json, Value};
 use sh_core::domain::{domain_to_index, DOMAINS_BIT_SIZE, DOMAINS_BYTE_SIZE};
-use std::{env, error::Error, io::prelude::*};
+use std::{env, error::Error, io::Read};
 use tokio::{
     fs::{self, File, OpenOptions},
     io::{AsyncBufReadExt, AsyncWriteExt, BufReader},
@@ -116,15 +117,18 @@ async fn download_zone(
         .send()
         .await?;
 
-    // decompress
-    let bytes = res.bytes().await?;
-    let mut gz = GzDecoder::new(&bytes[..]);
-    let mut s = String::new();
-    gz.read_to_string(&mut s)?;
+    let mut compressed_data = Vec::new();
+    let mut stream = res.bytes_stream();
+    while let Some(chunk) = stream.next().await {
+        compressed_data.extend_from_slice(&chunk?);
+    }
 
-    // write to file
-    let mut file = File::create(&file_path).await?;
-    file.write_all(s.as_bytes()).await?;
+    let mut gz = GzDecoder::new(&compressed_data[..]);
+    let mut decompressed_data = String::new();
+    gz.read_to_string(&mut decompressed_data)?;
+
+    let mut file = File::create(file_path).await?;
+    file.write_all(decompressed_data.as_bytes()).await?;
 
     Ok(())
 }
