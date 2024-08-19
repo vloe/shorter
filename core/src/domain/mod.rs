@@ -1,4 +1,5 @@
 use crate::constants::tlds::{Tld, TLDS};
+use memmap2::Mmap;
 use serde::Serialize;
 use std::{
     collections::hash_map::DefaultHasher,
@@ -18,9 +19,9 @@ pub struct Domain {
 }
 
 impl Domain {
-    pub fn new(name: String) -> Option<Self> {
-        let tld = get_tld(&name)?;
-        let available = Self::is_available(&name);
+    pub fn new(name: String, domains: &Mmap) -> Option<Self> {
+        let tld = Self::get_tld(&name)?;
+        let available = Self::is_available(&name, domains);
 
         let domain = Domain {
             name,
@@ -30,21 +31,25 @@ impl Domain {
         Some(domain)
     }
 
-    pub fn is_available(name: &str) -> bool {
-        false
+    fn get_tld(name: &str) -> Option<Tld> {
+        let parts: Vec<&str> = name.split('.').collect();
+
+        if parts.len() != 2 {
+            return None;
+        }
+
+        match TLDS.get(parts[1]) {
+            Some(tld) => Some(tld.clone()),
+            None => None,
+        }
     }
-}
 
-pub fn get_tld(name: &str) -> Option<Tld> {
-    let parts: Vec<&str> = name.split('.').collect();
+    fn is_available(name: &str, domains: &Mmap) -> bool {
+        let index = domain_to_index(name);
+        let byte_index = index / 8;
+        let bit_index = index % 8;
 
-    if parts.len() != 2 {
-        return None;
-    }
-
-    match TLDS.get(parts[1]) {
-        Some(tld) => Some(tld.clone()),
-        None => None,
+        domains[byte_index] & (1 << bit_index) == 0
     }
 }
 

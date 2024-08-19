@@ -1,8 +1,5 @@
 use super::Ctx;
-use crate::{
-    constants::tlds::TLDS,
-    domain::{get_tld, Domain},
-};
+use crate::{constants::tlds::TLDS, domain::Domain};
 use axum::{
     extract::{Query, State},
     http::StatusCode,
