@@ -24,6 +24,7 @@ const TMP_DOMAINS_FILE: &str = "tmp/domains.bin";
 const TMP_DIR: &str = "tmp/";
 const MAX_RETRIES: usize = 3;
 const RETRY_DELAY: u64 = 5; // secs
+const CHUNK_SIZE: usize = 1024 * 1024; // 1 mb
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -210,6 +211,7 @@ fn bitmap_zone(file_path: &str, mmap: &mut MmapMut) -> Result<usize, Box<dyn Err
     let file = File::open(file_path)?;
     let gz = GzDecoder::new(file);
     let reader = BufReader::new(gz);
+    let mut buffer = Vec::new();
 
     let mut bits = 0;
     for line in reader.lines() {
@@ -220,14 +222,30 @@ fn bitmap_zone(file_path: &str, mmap: &mut MmapMut) -> Result<usize, Box<dyn Err
 
         let parts: Vec<&str> = line.split_whitespace().collect();
         let domain = parts[0].trim_end_matches('.');
+
         if !domain.is_empty() {
             let index = domain_to_index(domain);
-            let byte_index = index / 8;
-            let bit_index = index % 8;
-            mmap[byte_index] |= 1 << bit_index;
+            buffer.push(index);
             bits += 1;
+        }
+
+        if buffer.len() >= CHUNK_SIZE {
+            update_bitmap(mmap, &buffer);
+            buffer.clear();
         }
     }
 
+    if !buffer.is_empty() {
+        update_bitmap(mmap, &buffer);
+    }
+
     Ok(bits)
+}
+
+fn update_bitmap(mmap: &mut MmapMut, indices: &Vec<usize>) {
+    for &index in indices {
+        let byte_index = index / 8;
+        let bit_index = index % 8;
+        mmap[byte_index] |= 1 << bit_index;
+    }
 }
