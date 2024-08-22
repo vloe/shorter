@@ -61,7 +61,7 @@ pub(crate) async fn mount(
 ) -> Result<Json<ShorterRes>, ShorterErr> {
     params.validate()?;
 
-    let domain = get_domain(&params.q);
+    let domain = Domain::new(params.q, &ctx.domains).unwrap();
     let shorter_domains = vec![];
 
     let res = ShorterRes {
@@ -69,12 +69,4 @@ pub(crate) async fn mount(
         shorter_domains,
     };
     Ok(Json(res))
-}
-
-fn get_domain(q: &str) -> Domain {
-    Domain {
-        name: "test.com".to_string(),
-        tld: TLDS.get("com").unwrap().clone(),
-        available: false,
-    }
 }
