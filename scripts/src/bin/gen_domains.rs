@@ -24,7 +24,7 @@ const TMP_DOMAINS_FILE: &str = "tmp/domains.bin";
 const TMP_DIR: &str = "tmp/";
 const MAX_RETRIES: usize = 3;
 const RETRY_DELAY: u64 = 5; // secs
-const CHUNK_SIZE: usize = 1024 * 1024; // 1 mb
+const CHUNK_SIZE: usize = 4 * 1024 * 1024; // 4 mb
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {

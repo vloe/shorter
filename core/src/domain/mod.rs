@@ -7,7 +7,7 @@ use std::{
 };
 use typeshare::typeshare;
 
-pub const DOMAINS_BYTE_SIZE: usize = 50_000_000; // 50 mb
+pub const DOMAINS_BYTE_SIZE: usize = 75_000_000; // 75 mb
 pub const DOMAINS_BIT_SIZE: usize = DOMAINS_BYTE_SIZE * 8;
 
 #[typeshare]
