@@ -20,7 +20,8 @@ pub struct Domain {
 }
 
 impl Domain {
-    pub fn new(name: String, domains: &Mmap) -> Option<Self> {
+    pub fn new(name: &str, domains: &Mmap) -> Option<Self> {
+        let name = name.to_string();
         let tld = Self::get_tld(&name)?;
         let available = Self::is_available(&name, domains);
 
