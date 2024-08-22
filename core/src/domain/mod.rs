@@ -7,8 +7,9 @@ use std::{
 };
 use typeshare::typeshare;
 
-pub const DOMAINS_BYTE_SIZE: usize = 75_000_000; // 75 mb
+pub const DOMAINS_BYTE_SIZE: usize = 200_000_000; // 200 mb
 pub const DOMAINS_BIT_SIZE: usize = DOMAINS_BYTE_SIZE * 8;
+pub const NUM_HASH_FUNCTIONS: usize = 3;
 
 #[typeshare]
 #[derive(Serialize)]
@@ -45,16 +46,22 @@ impl Domain {
     }
 
     fn is_available(name: &str, domains: &Mmap) -> bool {
-        let index = domain_to_index(name);
-        let byte_index = index / 8;
-        let bit_index = index % 8;
-
-        domains[byte_index] & (1 << bit_index) == 0
+        let indices = domain_to_indices(name);
+        indices.iter().all(|&index| {
+            let byte_index = index / 8;
+            let bit_index = index % 8;
+            domains[byte_index] & (1 << bit_index) == 0
+        })
     }
 }
 
-pub fn domain_to_index(domain: &str) -> usize {
-    let mut hasher = DefaultHasher::new();
-    domain.hash(&mut hasher);
-    (hasher.finish() as usize) % DOMAINS_BIT_SIZE
+pub fn domain_to_indices(domain: &str) -> [usize; NUM_HASH_FUNCTIONS] {
+    let mut indices = [0; NUM_HASH_FUNCTIONS];
+    for i in 0..NUM_HASH_FUNCTIONS {
+        let mut hasher = DefaultHasher::new();
+        domain.hash(&mut hasher);
+        i.hash(&mut hasher);
+        indices[i] = (hasher.finish() as usize) % DOMAINS_BIT_SIZE;
+    }
+    indices
 }

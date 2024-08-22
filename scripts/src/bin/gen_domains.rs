@@ -3,7 +3,7 @@ use flate2::read::GzDecoder;
 use futures::StreamExt;
 use memmap2::{MmapMut, MmapOptions};
 use serde_json::{json, Value};
-use sh_core::domain::{domain_to_index, DOMAINS_BIT_SIZE, DOMAINS_BYTE_SIZE};
+use sh_core::domain::{domain_to_indices, DOMAINS_BIT_SIZE, DOMAINS_BYTE_SIZE, NUM_HASH_FUNCTIONS};
 use std::{
     env,
     error::Error,
@@ -224,12 +224,12 @@ fn bitmap_zone(file_path: &str, mmap: &mut MmapMut) -> Result<usize, Box<dyn Err
         let domain = parts[0].trim_end_matches('.');
 
         if !domain.is_empty() {
-            let index = domain_to_index(domain);
-            buffer.push(index);
+            let indices = domain_to_indices(domain);
+            buffer.push(indices);
             bits += 1;
         }
 
-        if buffer.len() >= CHUNK_SIZE {
+        if buffer.len() >= CHUNK_SIZE / NUM_HASH_FUNCTIONS {
             update_bitmap(mmap, &buffer);
             buffer.clear();
         }
@@ -242,10 +242,12 @@ fn bitmap_zone(file_path: &str, mmap: &mut MmapMut) -> Result<usize, Box<dyn Err
     Ok(bits)
 }
 
-fn update_bitmap(mmap: &mut MmapMut, indices: &Vec<usize>) {
-    for &index in indices {
-        let byte_index = index / 8;
-        let bit_index = index % 8;
-        mmap[byte_index] |= 1 << bit_index;
+fn update_bitmap(mmap: &mut MmapMut, domain_indices: &Vec<[usize; NUM_HASH_FUNCTIONS]>) {
+    for indices in domain_indices {
+        for &index in indices {
+            let byte_index = index / 8;
+            let bit_index = index % 8;
+            mmap[byte_index] |= 1 << bit_index;
+        }
     }
 }
