@@ -62,7 +62,6 @@ pub(crate) async fn mount(
     params.validate()?;
 
     let domain = get_domain(&params.q);
-
     let shorter_domains = vec![];
 
     let res = ShorterRes {
