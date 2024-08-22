@@ -48,11 +48,16 @@ impl Domain {
 
     fn is_available(name: &str, domains: &Mmap) -> bool {
         let indices = domain_to_indices(name);
-        indices.iter().all(|&index| {
-            let byte_index = index / 8;
-            let bit_index = index % 8;
-            domains[byte_index] & (1 << bit_index) == 0
-        })
+        let matched_count = indices
+            .iter()
+            .filter(|&&index| {
+                let byte_index = index / 8;
+                let bit_index = index % 8;
+                domains[byte_index] & (1 << bit_index) != 0
+            })
+            .count();
+
+        matched_count < NUM_HASH_FUNCTIONS
     }
 }
 
