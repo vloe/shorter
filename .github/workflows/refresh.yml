@@ -7,13 +7,12 @@ on:
 jobs:
     refresh:
         runs-on: ubuntu-latest
-        timeout-minutes: 120 # 2 hrs
+        timeout-minutes: 180 # 3 hrs
         steps:
             - name: checkout
               uses: actions/checkout@v3
               with:
                   token: ${{ secrets.GH_PAT }}
-                  lfs: true
 
             - name: setup pnpm
               uses: ./.github/actions/setup-pnpm
@@ -25,12 +24,6 @@ jobs:
               run: |
                   pnpm gen:tlds
                   pnpm gen:domains
-
-            - name: configure git lfs
-              run: |
-                  git lfs install
-                  git lfs track "apps/server/data/domains.bin"
-                  git add .gitattributes
 
             - name: commit and push changes
               run: |
