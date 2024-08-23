@@ -1,5 +1,4 @@
 <script lang="ts">
-	import WebGl from "$lib/components/WebGl.svelte"
 	import { Btn } from "@sh/ui/src/lib/components/btn"
 	import Arrow from "@sh/ui/src/lib/icons/Arrow.svelte"
 
@@ -12,8 +11,6 @@
 	<meta content={title} name="title" />
 	<meta content={desc} name="description" />
 </svelte:head>
-
-<WebGl />
 
 <div class="pt-44">
 	<div class="flex flex-col items-center gap-6 lg:gap-11">
@@ -30,15 +27,15 @@
 		</h2>
 		<div class="flex items-center gap-x-1.5">
 			<Btn
-				class="group h-8 gap-x-[5px] rounded-lg duration-200 ease-in-out hover:bg-primary/85"
-				href="/register"
+				class="group h-8 gap-x-[5px] rounded-lg transition-all duration-200 ease-in-out hover:bg-primary/85"
+				href="/"
 			>
 				start now
 				<Arrow />
 			</Btn>
 			<Btn
-				class="!no-underline duration-200 ease-in-out hover:text-primary/85"
-				href="/login"
+				class="disabled !no-underline transition-all duration-200 ease-in-out hover:text-white/85"
+				href="/"
 				intent="link"
 			>
 				login

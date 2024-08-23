@@ -3,10 +3,7 @@
 	"tasks": {
 		"build": {
 			"dependsOn": ["^build"],
-			"outputs": [".svelte-kit/**"]
-		},
-		"@sh/landing#build": {
-			"dependsOn": ["@sh/webgl#build"]
+			"outputs": ["build/**"]
 		},
 		"lint": {},
 		"dev": {

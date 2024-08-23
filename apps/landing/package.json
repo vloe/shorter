@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "cd ../webgl && pnpm run build && cd ../landing && vite dev",
+		"dev": "vite dev",
 		"build": "vite build"
 	},
 	"devDependencies": {
@@ -11,7 +11,7 @@
 		"@sh/config": "workspace:^",
 		"@sh/ui": "workspace:^",
 		"@sh/utils": "workspace:^",
-		"@sveltejs/adapter-cloudflare": "^4.7.0",
+		"@sveltejs/adapter-static": "^3.0.4",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.2",
 		"svelte": "^5.0.0-next.1",
