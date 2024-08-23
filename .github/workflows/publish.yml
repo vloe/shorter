@@ -31,6 +31,10 @@ jobs:
 
             - name: publish server to aws lambda
               run: |
+                  # upload data to s3
+                  aws s3 cp apps/server/data s3://sh-server/data --recursive
+
+                  # deploy lambda
                   cargo lambda deploy -v --s3-bucket sh-server --iam-role arn:aws:iam::533267168525:role/lambda --enable-function-url --include apps/server/data sh-server
               env:
                   AWS_DEFAULT_REGION: eu-west-2
