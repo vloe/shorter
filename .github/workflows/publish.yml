@@ -31,7 +31,7 @@ jobs:
 
             - name: publish server to aws lambda
               run: |
-                  cargo lambda deploy --iam-role arn:aws:iam::533267168525:role/lambda --enable-function-url --include apps/server/data sh-server
+                  cargo lambda deploy --s3-bucket sh-server --iam-role arn:aws:iam::533267168525:role/lambda --enable-function-url --include apps/server/data sh-server
               env:
                   AWS_DEFAULT_REGION: eu-west-2
                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
