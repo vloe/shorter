@@ -18,6 +18,32 @@ jobs:
             - name: build
               run: pnpm build
 
+            - name: configure aws credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+
+            - name: login to amazon ecr
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v1
+
+            - name: build, tag, and push image to amazon ecr
+              env:
+                  ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                  ECR_REPOSITORY: sh-server
+                  IMAGE_TAG: ${{ github.sha }}
+              run: |
+                  docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+                  docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+            - name: update lambda function
+              run: |
+                  aws lambda update-function-code \
+                    --function-name sh-server \ 
+                    --image-uri ${{ steps.login-ecr.outputs.registry }}/sh-server:${{ github.sha }}
+
             - name: publish landing to cf pages
               uses: cloudflare/pages-action@v1
               with:
