@@ -4,6 +4,7 @@
 	import * as DropdownMenu from "@sh/ui/src/lib/components/dropdown-menu"
 	import Arrow from "@sh/ui/src/lib/icons/Arrow.svelte"
 	import Menu from "@sh/ui/src/lib/icons/Menu.svelte"
+	import { smoothScrollTo } from "@sh/utils/src/smoothScrollTo"
 </script>
 
 <header class="flex h-16 items-center justify-between">
@@ -14,7 +15,7 @@
 		<div class="flex items-center gap-x-1.5">
 			<Btn
 				class="group h-8 gap-x-[5px] rounded-lg transition-all duration-200 ease-in-out hover:bg-primary/85"
-				href="/"
+				on:click={() => smoothScrollTo("shorter")}
 			>
 				start now
 				<Arrow />
@@ -34,8 +35,10 @@
 				<Menu />
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content class="w-44">
-				<DropdownMenu.Item href="/">start now</DropdownMenu.Item>
-				<DropdownMenu.Item disabled href="login">login</DropdownMenu.Item>
+				<DropdownMenu.Item on:click={() => smoothScrollTo("shorter")}>
+					start now
+				</DropdownMenu.Item>
+				<DropdownMenu.Item disabled href="/login">login</DropdownMenu.Item>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	</div>

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { Btn } from "@sh/ui/src/lib/components/btn"
+	import { Shorter } from "@sh/ui/src/lib/components/shorter"
 	import Arrow from "@sh/ui/src/lib/icons/Arrow.svelte"
+	import { smoothScrollTo } from "@sh/utils/src/smoothScrollTo"
 
 	const title = "shorter | world's first domain shortener"
 	const desc = "a domain shortener tool"
@@ -28,9 +30,9 @@
 		<div class="flex items-center gap-x-1.5">
 			<Btn
 				class="group h-8 gap-x-[5px] rounded-lg transition-all duration-200 ease-in-out hover:bg-primary/85"
-				href="/"
+				on:click={() => smoothScrollTo("shorter")}
 			>
-				start now
+				try for free
 				<Arrow />
 			</Btn>
 			<Btn
@@ -41,5 +43,10 @@
 				login
 			</Btn>
 		</div>
+	</div>
+</div>
+<div class="pb-24 pt-40">
+	<div class="h-[80vh] min-h-[620px] w-full rounded-md border p-5">
+		<Shorter />
 	</div>
 </div>
