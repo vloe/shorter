@@ -3,6 +3,7 @@
 **/build
 **/target
 **/dist
+**/pkg
 
 # package managers
 **/package-lock.json

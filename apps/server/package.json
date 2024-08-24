@@ -2,6 +2,7 @@
 	"name": "@sh/server",
 	"private": true,
 	"scripts": {
-		"dev": "cargo watch -x 'run -p sh-server'"
+		"dev": "cargo watch -x 'run -p sh-server'",
+		"build": "docker build -t sh-server ."
 	}
 }

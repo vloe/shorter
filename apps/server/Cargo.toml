@@ -1,11 +1,14 @@
 [package]
 name = "sh-server"
 version = "0.1.0"
-license = { workspace = true }
-repository = { workspace = true }
-edition = { workspace = true }
+license = "MIT"
+edition = "2021"
+repository = "https://github.com/vloe/shorter"
 
 [dependencies]
-# workspace dependencies
-axum = { workspace = true }
-tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+axum = "0.7.5"
+tokio = { version = "1.39.2", features = [
+  "macros",
+  "rt-multi-thread",
+  "signal",
+] }
