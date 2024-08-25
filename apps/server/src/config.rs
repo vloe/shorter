@@ -31,7 +31,42 @@ pub fn ctx(domains_file: &str) -> Result<Ctx, Box<dyn Error>> {
     }
 
     // check if it's a dota dir and read that
-    let dota_dir = std::fs::read_dir("data/")?;
+    let dota_dir = std::fs::read_dir("var/")?;
+    for entry in dota_dir {
+        let entry = entry?;
+        println!("{:?}", entry.path());
+    }
+
+    // check if it's a dota dir and read that
+    let dota_dir = std::fs::read_dir("var/task/")?;
+    for entry in dota_dir {
+        let entry = entry?;
+        println!("{:?}", entry.path());
+    }
+
+    // check if it's a dota dir and read that
+    let dota_dir = std::fs::read_dir("usr/")?;
+    for entry in dota_dir {
+        let entry = entry?;
+        println!("{:?}", entry.path());
+    }
+
+    // check if it's a dota dir and read that
+    let dota_dir = std::fs::read_dir("usr/local/")?;
+    for entry in dota_dir {
+        let entry = entry?;
+        println!("{:?}", entry.path());
+    }
+
+    // check if it's a dota dir and read that
+    let dota_dir = std::fs::read_dir("usr/local/bin/")?;
+    for entry in dota_dir {
+        let entry = entry?;
+        println!("{:?}", entry.path());
+    }
+
+    // check if it's a dota dir and read that
+    let dota_dir = std::fs::read_dir("usr/local/bin/data/")?;
     for entry in dota_dir {
         let entry = entry?;
         println!("data: {:?}", entry.path());
