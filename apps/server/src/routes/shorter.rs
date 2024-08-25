@@ -1,9 +1,13 @@
 use crate::error::AppError;
 use crate::{
+    config::Ctx,
     constants::tlds::TLDS,
     models::domain::{get_sld_tld, Domain},
 };
-use axum::{extract::Query, Json};
+use axum::{
+    extract::{Query, State},
+    Json,
+};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -44,11 +48,12 @@ pub(crate) struct ShorterRes {
 
 pub(crate) async fn mount(
     Query(params): Query<ShorterParams>,
+    State(ctx): State<Ctx>,
 ) -> Result<Json<ShorterRes>, AppError> {
     params.validate()?;
 
     let domain = sanitize_domain(&params.q)?;
-    let mut domains = vec![Domain::new(&domain)];
+    let mut domains = vec![Domain::new(&domain, &ctx.domains)];
 
     let (sld, _) = get_sld_tld(&domain);
     for perm in vowel_perms(&sld) {
@@ -56,7 +61,7 @@ pub(crate) async fn mount(
             let potential_domain = add_char_at(&perm, '.', i);
             let (_, potential_tld) = get_sld_tld(&potential_domain);
             if TLDS.get(&potential_tld).is_some() {
-                domains.push(Domain::new(&potential_domain));
+                domains.push(Domain::new(&potential_domain, &ctx.domains));
             }
             if domains.len() >= MAX_DOMAINS {
                 break;
