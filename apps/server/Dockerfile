@@ -23,9 +23,11 @@ COPY --from=build /app/target/release/${APP_NAME} /usr/local/bin/bootstrap
 
 # create data dir 
 RUN mkdir /usr/local/bin/data/
+RUN mkdir /var/task/data/
 
 # copy the bitmap to data dir
 COPY data/domains.bin /usr/local/bin/data
+COPY data/domains.bin /var/task/data/domains.bin
 
 # set the entrypoint to the lambda runtime
 ENTRYPOINT ["/usr/local/bin/bootstrap"]
