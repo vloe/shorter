@@ -37,8 +37,7 @@ pub(crate) struct Domain {
 #[typeshare]
 #[derive(Serialize)]
 pub(crate) struct ShorterRes {
-    domain: Domain,
-    shorter_domains: Vec<Domain>,
+    domains: Vec<Domain>,
 }
 
 pub(crate) async fn mount(
@@ -46,12 +45,7 @@ pub(crate) async fn mount(
 ) -> Result<Json<ShorterRes>, AppError> {
     params.validate()?;
 
-    let domain = Domain {
-        name: "example.com".to_string(),
-        tld: TLDS.get("com").unwrap().clone(),
-        available: false,
-    };
-    let shorter_domains = vec![
+    let domains = vec![
         Domain {
             name: "example1.com".to_string(),
             tld: TLDS.get("com").unwrap().clone(),
@@ -69,9 +63,6 @@ pub(crate) async fn mount(
         },
     ];
 
-    let res = ShorterRes {
-        domain,
-        shorter_domains,
-    };
+    let res = ShorterRes { domains };
     Ok(Json(res))
 }
