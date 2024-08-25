@@ -8,15 +8,17 @@ export interface Tld {
 	manager: string
 }
 
-export interface Domain {
-	name: string
-	available: boolean
-}
-
 export interface ShorterParams {
 	q: string
 }
 
+export interface Domain {
+	name: string
+	tld: Tld
+	available: boolean
+}
+
 export interface ShorterRes {
-	q: string
+	domain: Domain
+	shorter_domains: Domain[]
 }

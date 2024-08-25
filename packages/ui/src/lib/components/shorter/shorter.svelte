@@ -11,10 +11,11 @@
 		q: "",
 	})
 
+	let url = $derived(`${dev ? API_URL_DEV : API_URL_PROD}/shorter?q=${params.q}`)
+
 	let query = $state(
 		createQuery<ShorterRes, Error>(() => ({
 			queryFn: async () => {
-				let url = `${dev ? API_URL_DEV : API_URL_PROD}/shorter?q=${params.q}`
 				const res = await fetch(url, {
 					headers: {
 						"Content-Type": "application/json",
