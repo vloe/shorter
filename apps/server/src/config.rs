@@ -1,5 +1,7 @@
 use axum::http::{header, HeaderValue, Method};
 use memmap2::{Mmap, MmapOptions};
+use std::fs;
+use std::path::Path;
 use std::{error::Error, fs::File, sync::Arc, time::Duration};
 use tokio::signal;
 use tower_http::cors::CorsLayer;
@@ -23,54 +25,16 @@ pub fn cors(max_age: u64) -> CorsLayer {
 }
 
 pub fn ctx(domains_file: &str) -> Result<Ctx, Box<dyn Error>> {
-    // print all files in the directory
-    let dir = std::fs::read_dir(".")?;
-    for entry in dir {
-        let entry = entry?;
-        println!("{:?}", entry.path());
-    }
+    let directories = [
+        ".",
+        "var",
+        "usr",
+        "usr/local",
+        "usr/local/bin",
+        "usr/local/bin/data",
+    ];
 
-    // check if it's a dota dir and read that
-    let dota_dir = std::fs::read_dir("var/")?;
-    for entry in dota_dir {
-        let entry = entry?;
-        println!("{:?}", entry.path());
-    }
-
-    // check if it's a dota dir and read that
-    let dota_dir = std::fs::read_dir("var/task/")?;
-    for entry in dota_dir {
-        let entry = entry?;
-        println!("{:?}", entry.path());
-    }
-
-    // check if it's a dota dir and read that
-    let dota_dir = std::fs::read_dir("usr/")?;
-    for entry in dota_dir {
-        let entry = entry?;
-        println!("{:?}", entry.path());
-    }
-
-    // check if it's a dota dir and read that
-    let dota_dir = std::fs::read_dir("usr/local/")?;
-    for entry in dota_dir {
-        let entry = entry?;
-        println!("{:?}", entry.path());
-    }
-
-    // check if it's a dota dir and read that
-    let dota_dir = std::fs::read_dir("usr/local/bin/")?;
-    for entry in dota_dir {
-        let entry = entry?;
-        println!("{:?}", entry.path());
-    }
-
-    // check if it's a dota dir and read that
-    let dota_dir = std::fs::read_dir("usr/local/bin/data/")?;
-    for entry in dota_dir {
-        let entry = entry?;
-        println!("data: {:?}", entry.path());
-    }
+    list_files_in_directories(&directories);
 
     let domains = {
         let file = File::open(domains_file)?;
@@ -88,4 +52,21 @@ pub(crate) async fn shutdown_signal() {
         .expect("failed to install ctrl+c handler");
 
     println!("\ngracefully shutting down...\n");
+}
+
+fn list_files_in_directories(directories: &[&str]) {
+    for dir in directories {
+        println!("Listing files in {}:", dir);
+        match fs::read_dir(dir) {
+            Ok(entries) => {
+                for entry in entries.flatten() {
+                    if let Ok(path) = entry.path().canonicalize() {
+                        println!("  {:?}", path);
+                    }
+                }
+            }
+            Err(e) => println!("  Error reading directory {}: {}", dir, e),
+        }
+        println!();
+    }
 }
