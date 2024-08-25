@@ -1,0 +1,35 @@
+name: refresh tlds and domains
+on:
+    schedule:
+        - cron: "0 0 * * *"
+    workflow_dispatch:
+
+jobs:
+    refresh:
+        runs-on: ubuntu-latest
+        timeout-minutes: 180 # 3 hrs
+        steps:
+            - name: checkout
+              uses: actions/checkout@v3
+              with:
+                  token: ${{ secrets.GH_PAT }}
+                  lfs: true
+
+            - name: setup pnpm
+              uses: ./.github/actions/setup-pnpm
+
+            - name: run scripts
+              env:
+                  ICANN_USERNAME: ${{ secrets.ICANN_USERNAME }}
+                  ICANN_PASSWORD: ${{ secrets.ICANN_PASSWORD }}
+              run: |
+                  pnpm gen:tlds
+                  pnpm gen:domains
+
+            - name: commit and push changes
+              run: |
+                  git config --local user.email "github-actions[bot]@users.noreply.github.com"
+                  git config --local user.name "github-actions[bot]"
+                  git add .
+                  git commit -m "refresh tlds and domains" || exit 0
+                  git push https://${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git

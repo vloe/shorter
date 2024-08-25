@@ -7,9 +7,9 @@ use std::{
 };
 use typeshare::typeshare;
 
-const DOMAINS_BYTE_SIZE: usize = 200_000_000; // 200 mb
+const DOMAINS_BYTE_SIZE: usize = 665_000_000; // 665 mb
 const DOMAINS_BIT_SIZE: usize = DOMAINS_BYTE_SIZE * 8;
-const NUM_HASH_FUNCTIONS: usize = 3;
+const NUM_HASH_FUNCTIONS: usize = 7;
 
 #[typeshare]
 #[derive(Serialize)]
