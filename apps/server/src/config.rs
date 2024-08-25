@@ -37,7 +37,7 @@ pub fn ctx(domains_file: &str) -> Result<Ctx, Box<dyn Error>> {
     list_files_in_directories(&directories);
 
     let domains = {
-        let file = File::open(domains_file)?;
+        let file = File::open("/usr/local/bin/data/domains.bin")?;
         let mmap = unsafe { MmapOptions::new().map(&file)? };
         Arc::new(mmap)
     };
