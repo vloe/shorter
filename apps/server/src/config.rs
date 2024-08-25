@@ -23,6 +23,28 @@ pub fn cors(max_age: u64) -> CorsLayer {
 }
 
 pub fn ctx(domains_file: &str) -> Result<Ctx, Box<dyn Error>> {
+    // print stuff files in the domains dir
+    let dir = std::fs::read_dir(domains_file)?;
+    for entry in dir {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_file() {
+            println!("file: {:?}", path);
+        }
+    }
+
+    // also print deaper stuff
+    let dir = std::fs::read_dir(domains_file)?;
+    for entry in dir {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_file() {
+            println!("file: {:?}", path);
+        } else if path.is_dir() {
+            println!("dir: {:?}", path);
+        }
+    }
+
     let domains = {
         let file = File::open(domains_file)?;
         let mmap = unsafe { MmapOptions::new().map(&file)? };
