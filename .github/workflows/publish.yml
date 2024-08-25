@@ -38,6 +38,14 @@ jobs:
                   docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f apps/server/Dockerfile apps/server
                   docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+            - name: Verify Docker image contents
+              env:
+                  ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                  ECR_REPOSITORY: sh-server
+                  IMAGE_TAG: ${{ github.sha }}-${{ github.run_number }}
+              run: |
+                  docker run --rm $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ls -R /usr/local/bin
+
             - name: update lambda function
               env:
                   ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
