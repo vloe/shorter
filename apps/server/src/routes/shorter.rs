@@ -7,7 +7,7 @@ use typeshare::typeshare;
 
 const DEFAULT_TLD: &str = "com";
 const MIN_SLD_LEN: usize = 2;
-const MIN_DOMAIN_LEN: usize = 4;
+const MIN_DOMAIN_LEN: usize = 3;
 const MAX_DOMAIN_LEN: usize = 253;
 
 #[typeshare]
