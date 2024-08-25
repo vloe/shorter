@@ -11,6 +11,8 @@ jobs:
         steps:
             - name: checkout
               uses: actions/checkout@v3
+              with:
+                  lfs: true
 
             - name: setup pnpm
               uses: ./.github/actions/setup-pnpm
@@ -46,6 +48,7 @@ jobs:
               run: |
                   aws lambda update-function-code \
                     --function-name sh-server \
+                    --memory-size 1024 \
                     --image-uri "${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
 
             - name: publish landing to cf pages
