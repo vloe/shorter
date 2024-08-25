@@ -6,12 +6,14 @@ use crate::{
 use axum::{extract::Query, Json};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use typeshare::typeshare;
 
 const DEFAULT_TLD: &str = "com";
 const MIN_SLD_LEN: usize = 2;
 const MIN_DOMAIN_LEN: usize = 3;
 const MAX_DOMAIN_LEN: usize = 253;
+const MAX_DOMAINS: usize = 10;
 
 #[typeshare]
 #[derive(Deserialize)]
@@ -23,7 +25,7 @@ impl ShorterParams {
     fn validate(&self) -> Result<(), AppError> {
         let q = self.q.trim().to_lowercase();
 
-        if q.len() < MIN_DOMAIN_LEN {
+        if q.len() < MIN_SLD_LEN {
             return Err(AppError::DomainTooShort(MIN_DOMAIN_LEN));
         }
         if q.len() > MAX_DOMAIN_LEN {
@@ -46,8 +48,24 @@ pub(crate) async fn mount(
     params.validate()?;
 
     let domain = sanitize_domain(&params.q)?;
+    let mut domains = vec![Domain::new(&domain)];
 
-    let domains = vec![Domain::new(&domain)];
+    let (sld, _) = get_sld_tld(&domain);
+    for perm in vowel_perms(&sld) {
+        for i in (MIN_SLD_LEN..perm.len() - 1).rev() {
+            let potential_domain = add_char_at(&perm, '.', i);
+            let (_, potential_tld) = get_sld_tld(&potential_domain);
+            if TLDS.get(&potential_tld).is_some() {
+                domains.push(Domain::new(&potential_domain));
+            }
+            if domains.len() >= MAX_DOMAINS {
+                break;
+            }
+        }
+        if domains.len() >= MAX_DOMAINS {
+            break;
+        }
+    }
 
     let res = ShorterRes { domains };
     Ok(Json(res))
@@ -79,4 +97,58 @@ fn sanitize_domain(q: &str) -> Result<String, AppError> {
     }
 
     Ok(domain)
+}
+
+fn vowel_perms(word: &str) -> Vec<String> {
+    let mut res = vec![word.to_string()];
+    let mut vowels: Vec<char> = vec![];
+    let mut vowels_pos: HashMap<usize, usize> = HashMap::new();
+
+    for (i, char) in word.chars().enumerate() {
+        if ['a', 'e', 'i', 'o', 'u'].contains(&char) {
+            vowels_pos.insert(vowels.len(), i);
+            vowels.push(char);
+        }
+    }
+
+    for i in (0..vowels.len()).rev() {
+        let remove_i = remove_char_at(word, vowels_pos[&i]);
+        if remove_i.len() >= MIN_DOMAIN_LEN {
+            res.push(remove_i.clone());
+        }
+        if res.len() >= MAX_DOMAINS {
+            break;
+        }
+
+        for j in (i + 1..vowels.len()).rev() {
+            let remove_ij = remove_char_at(&remove_i, vowels_pos[&j] - 1);
+            if remove_ij.len() >= MIN_DOMAIN_LEN {
+                res.push(remove_ij);
+            }
+            if res.len() >= MAX_DOMAINS {
+                break;
+            }
+        }
+    }
+
+    res
+}
+
+fn remove_char_at(s: &str, pos: usize) -> String {
+    s.chars()
+        .enumerate()
+        .filter(|&(i, _)| i != pos)
+        .map(|(_, char)| char)
+        .collect()
+}
+
+fn add_char_at(s: &str, char: char, pos: usize) -> String {
+    let mut res = String::with_capacity(s.len() + 1);
+    for (i, c) in s.char_indices() {
+        if i == pos {
+            res.push(char);
+        }
+        res.push(c);
+    }
+    res
 }
