@@ -23,6 +23,20 @@ pub fn cors(max_age: u64) -> CorsLayer {
 }
 
 pub fn ctx(domains_file: &str) -> Result<Ctx, Box<dyn Error>> {
+    // print all files in the directory
+    let dir = std::fs::read_dir(".")?;
+    for entry in dir {
+        let entry = entry?;
+        println!("{:?}", entry.path());
+    }
+
+    // check if it's a dota dir and read that
+    let dota_dir = std::fs::read_dir("data/")?;
+    for entry in dota_dir {
+        let entry = entry?;
+        println!("data: {:?}", entry.path());
+    }
+
     let domains = {
         let file = File::open(domains_file)?;
         let mmap = unsafe { MmapOptions::new().map(&file)? };
