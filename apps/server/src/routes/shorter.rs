@@ -1,5 +1,8 @@
-use crate::constants::tlds::{Tld, TLDS};
 use crate::error::AppError;
+use crate::{
+    constants::tlds::TLDS,
+    models::domain::{get_sld_tld, Domain},
+};
 use axum::{extract::Query, Json};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
@@ -17,8 +20,8 @@ pub(crate) struct ShorterParams {
 }
 
 impl ShorterParams {
-    fn validate(&self) -> Result<Self, AppError> {
-        let mut q = self.q.trim().to_lowercase();
+    fn validate(&self) -> Result<(), AppError> {
+        let q = self.q.trim().to_lowercase();
 
         if q.len() < MIN_DOMAIN_LEN {
             return Err(AppError::DomainTooShort(MIN_DOMAIN_LEN));
@@ -27,39 +30,8 @@ impl ShorterParams {
             return Err(AppError::DomainTooLong(MAX_DOMAIN_LEN));
         }
 
-        // remove invalid characters
-        let re = Regex::new(r"[^a-z0-9.-]").unwrap();
-        q = re.replace_all(&q, "").to_string();
-        q = q.trim_matches(|c| c == '-' || c == '.').to_string();
-
-        // ensure domain structure is: sld dot tld
-        let parts: Vec<&str> = q.split('.').collect();
-        let sld = parts[0];
-        if sld.len() < MIN_SLD_LEN {
-            return Err(AppError::DomainTooShort(MIN_SLD_LEN));
-        }
-        let tld = parts
-            .iter()
-            .skip(1)
-            .find(|&part| TLDS.get(part).is_some())
-            .unwrap_or(&DEFAULT_TLD);
-        q = format!("{}.{}", sld, tld);
-
-        if q.len() < MIN_DOMAIN_LEN {
-            return Err(AppError::DomainTooShort(MIN_DOMAIN_LEN));
-        }
-
-        let params = Self { q };
-        Ok(params)
+        Ok(())
     }
-}
-
-#[typeshare]
-#[derive(Serialize)]
-pub(crate) struct Domain {
-    name: String,
-    tld: Tld,
-    available: bool,
 }
 
 #[typeshare]
@@ -71,26 +43,40 @@ pub(crate) struct ShorterRes {
 pub(crate) async fn mount(
     Query(params): Query<ShorterParams>,
 ) -> Result<Json<ShorterRes>, AppError> {
-    let params = params.validate()?;
+    params.validate()?;
 
-    let domains = vec![
-        Domain {
-            name: params.q.to_string(),
-            tld: TLDS.get("com").unwrap().clone(),
-            available: false,
-        },
-        Domain {
-            name: "example2.com".to_string(),
-            tld: TLDS.get("com").unwrap().clone(),
-            available: false,
-        },
-        Domain {
-            name: "example3.com".to_string(),
-            tld: TLDS.get("com").unwrap().clone(),
-            available: false,
-        },
-    ];
+    let domain = sanitize_domain(&params.q)?;
+
+    let domains = vec![Domain::new(&domain)];
 
     let res = ShorterRes { domains };
     Ok(Json(res))
+}
+
+fn sanitize_domain(q: &str) -> Result<String, AppError> {
+    let mut domain = q.trim().to_lowercase();
+
+    // remove invalid characters
+    let re = Regex::new(r"[^a-z0-9.-]").unwrap();
+    domain = re.replace_all(&domain, "").to_string();
+    domain = domain.trim_matches(|c| c == '-' || c == '.').to_string();
+
+    // ensure domain structure is: sld dot tld
+    let parts: Vec<&str> = domain.split('.').collect();
+    let sld = parts[0];
+    if sld.len() < MIN_SLD_LEN {
+        return Err(AppError::DomainTooShort(MIN_SLD_LEN));
+    }
+    let tld = parts
+        .iter()
+        .skip(1)
+        .find(|&part| TLDS.get(part).is_some())
+        .unwrap_or(&DEFAULT_TLD);
+    domain = format!("{}.{}", sld, tld);
+
+    if domain.len() < MIN_DOMAIN_LEN {
+        return Err(AppError::DomainTooShort(MIN_DOMAIN_LEN));
+    }
+
+    Ok(domain)
 }

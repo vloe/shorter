@@ -4,6 +4,7 @@ use std::error::Error;
 mod config;
 mod constants;
 mod error;
+mod models;
 mod routes;
 
 const ADDR: &str = "127.0.0.1:9000";
