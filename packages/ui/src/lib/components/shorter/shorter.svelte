@@ -33,7 +33,7 @@
 	)
 </script>
 
-<div class="flex h-full flex-col gap-5" id="shorter">
+<div class="flex h-full flex-col gap-3" id="shorter">
 	<Input
 		bind:value={params.q}
 		class="focus-visible:ring-0"
@@ -42,7 +42,7 @@
 	/>
 
 	{#if query.isSuccess && query.data}
-		<Table.Root class="rounded-xl border">
+		<Table.Root>
 			<Table.Header>
 				<Table.Row>
 					<Table.Head>#</Table.Head>

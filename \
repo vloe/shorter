@@ -46,7 +46,7 @@
 	</div>
 </div>
 <div class="pb-24 pt-40">
-	<div class="h-[80vh] min-h-[620px] w-full rounded-md border p-2 sm:p-5">
+	<div class="h-[80vh] min-h-[620px] w-full rounded-md border p-1 sm:p-5">
 		<Shorter />
 	</div>
 </div>
