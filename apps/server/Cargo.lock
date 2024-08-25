@@ -910,6 +910,7 @@ dependencies = [
  "axum",
  "lambda_http",
  "phf",
+ "regex",
  "serde",
  "thiserror",
  "tokio",
