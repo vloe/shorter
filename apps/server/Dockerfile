@@ -21,5 +21,11 @@ ARG APP_NAME=sh-server
 # copy the binary from the build stage
 COPY --from=build /app/target/release/${APP_NAME} /usr/local/bin/bootstrap
 
+# create a directory for the data file
+RUN mkdir -p /app/data
+
+# copy the bitmap file
+COPY data/domains.bin /app/data/domains.bin
+
 # set the entrypoint to the lambda runtime
 ENTRYPOINT ["/usr/local/bin/bootstrap"]
