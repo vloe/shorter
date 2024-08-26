@@ -1,4 +1,5 @@
 use axum::{routing::get, Router};
+use dotenv::dotenv;
 use sh_core::routes::mount;
 use std::error::Error;
 
@@ -9,8 +10,10 @@ const ADDR: &str = "127.0.0.1:9000";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    dotenv().ok();
+
     let cors = config::cors(MAX_AGE);
-    let ctx = config::ctx();
+    let ctx = config::ctx().await;
 
     let app = Router::new()
         .route("/", get(|| async { "sh-server(:" }))

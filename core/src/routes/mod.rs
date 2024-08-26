@@ -1,9 +1,10 @@
 use axum::{routing::get, Router};
+use sqlx::PgPool;
 use std::sync::Arc;
 
 #[derive(Clone)]
 pub struct Ctx {
-    pub msg: Arc<String>,
+    pub db: Arc<PgPool>,
 }
 
 pub fn mount(ctx: Ctx) -> Router {

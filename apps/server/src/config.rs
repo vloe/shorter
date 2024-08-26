@@ -1,5 +1,7 @@
 use axum::http::{header, HeaderValue, Method};
 use sh_core::routes::Ctx;
+use sqlx::postgres::PgPoolOptions;
+use std::env;
 use std::{sync::Arc, time::Duration};
 use tokio::signal;
 use tower_http::cors::CorsLayer;
@@ -17,9 +19,18 @@ pub fn cors(max_age: u64) -> CorsLayer {
         .max_age(Duration::from_secs(max_age))
 }
 
-pub fn ctx() -> Ctx {
-    let msg = Arc::new("test".to_string());
-    Ctx { msg }
+pub async fn ctx() -> Ctx {
+    let db = {
+        let db_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+        let pool = PgPoolOptions::new()
+            .max_connections(5)
+            .connect(&db_url)
+            .await
+            .expect("failed to create pool");
+        Arc::new(pool)
+    };
+
+    Ctx { db }
 }
 
 pub(crate) async fn shutdown_signal() {

@@ -9,7 +9,9 @@
 		"ui": "pnpm --filter @sh/ui -- ",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"lint:fix": "prettier --check . && eslint . --fix"
+		"lint:fix": "prettier --check . && eslint . --fix",
+		"migrate:add": "cd core/db && cargo sqlx migrate add",
+		"migrate:run": "cd core/db && cargo sqlx migrate run"
 	},
 	"devDependencies": {
 		"@types/eslint": "^9.6.0",
