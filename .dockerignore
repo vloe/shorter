@@ -1,0 +1,12 @@
+# ignore everything by default
+*
+
+# allow rust files and dirs
+!Cargo.toml
+!Cargo.lock
+!**/*.rs
+!apps/
+!core/
+
+# ignore rust build
+**/target/
