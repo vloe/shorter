@@ -19,7 +19,7 @@
 		<h1
 			class="text-center text-5xl font-light leading-[1.1] tracking-[-0.9px] sm:text-7xl sm:leading-none xl:text-[89px]"
 		>
-			world's first domain shortener
+			world's first domain <br class="hidden lg:flex" /> shortener
 		</h1>
 		<h2
 			class="max-w-xl text-center text-base font-medium leading-normal text-primary/70 md:w-11/12 lg:text-lg"
