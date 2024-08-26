@@ -10,7 +10,7 @@
 		"lint": "prettier --check . && eslint .",
 		"lint:fix": "prettier --check . && eslint . --fix",
 		"gen:bindings": "typeshare ./apps/server --lang=typescript --output-file=packages/utils/src/bindings.ts",
-		"gen:tlds": "cd scripts && cargo run --bin gen_tlds",
+		"gen:tld_info": "cd scripts && cargo run --bin gen_tld_info",
 		"gen:domains": "cd scripts && cargo run --bin gen_domains"
 	},
 	"devDependencies": {

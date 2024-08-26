@@ -1,7 +1,5 @@
 use axum::http::{header, HeaderValue, Method};
 use memmap2::{Mmap, MmapOptions};
-use std::fs;
-use std::path::Path;
 use std::{error::Error, fs::File, sync::Arc, time::Duration};
 use tokio::signal;
 use tower_http::cors::CorsLayer;
@@ -25,19 +23,11 @@ pub fn cors(max_age: u64) -> CorsLayer {
 }
 
 pub fn ctx(domains_file: &str) -> Result<Ctx, Box<dyn Error>> {
-    let directories = [
-        ".",
-        "var",
-        "usr",
-        "usr/local",
-        "usr/local/bin",
-        "usr/local/bin/data",
-    ];
-
-    list_files_in_directories(&directories);
-
     let domains = {
-        let file = File::open("/usr/local/bin/data/domains.bin")?;
+        let file = match File::open("/usr/local/bin/data/domains.bin") {
+            Ok(file) => file,
+            Err(_) => File::open(domains_file)?,
+        };
         let mmap = unsafe { MmapOptions::new().map(&file)? };
         Arc::new(mmap)
     };
@@ -52,21 +42,4 @@ pub(crate) async fn shutdown_signal() {
         .expect("failed to install ctrl+c handler");
 
     println!("\ngracefully shutting down...\n");
-}
-
-fn list_files_in_directories(directories: &[&str]) {
-    for dir in directories {
-        println!("Listing files in {}:", dir);
-        match fs::read_dir(dir) {
-            Ok(entries) => {
-                for entry in entries.flatten() {
-                    if let Ok(path) = entry.path().canonicalize() {
-                        println!("  {:?}", path);
-                    }
-                }
-            }
-            Err(e) => println!("  Error reading directory {}: {}", dir, e),
-        }
-        println!();
-    }
 }

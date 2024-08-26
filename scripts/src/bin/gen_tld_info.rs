@@ -5,15 +5,15 @@ use std::{
     io::Write,
 };
 
-struct Tld {
+struct TldInfo {
     name: String,
     category: String,
     manager: String,
 }
 
 const IANA_TLDS_URL: &str = "https://www.iana.org/domains/root/db";
-const TLDS_FILE: &str = "../apps/server/src/constants/tlds.rs";
-const TMP_TLDS_FILE: &str = "tmp/tlds.rs";
+const TLD_INFO_FILE: &str = "../apps/server/src/constants/tld_info.rs";
+const TMP_TLD_INFO_FILE: &str = "tmp/tld_info.rs";
 const TMP_DIR: &str = "tmp/";
 
 #[tokio::main]
@@ -24,16 +24,16 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     fs::create_dir_all(TMP_DIR)?;
 
-    let tlds = get_iana_tlds(&client).await?;
-    write_tlds(tlds)?;
+    let tld_info = get_iana_tld_info(&client).await?;
+    write_tld_info(tld_info)?;
 
-    fs::rename(TMP_TLDS_FILE, TLDS_FILE)?; // swap tmp file w the real one
+    fs::rename(TMP_TLD_INFO_FILE, TLD_INFO_FILE)?; // swap tmp file w the real one
     fs::remove_dir_all(TMP_DIR)?;
 
     Ok(())
 }
 
-async fn get_iana_tlds(client: &reqwest::Client) -> Result<Vec<Tld>, Box<dyn Error>> {
+async fn get_iana_tld_info(client: &reqwest::Client) -> Result<Vec<TldInfo>, Box<dyn Error>> {
     let res = client
         .get(IANA_TLDS_URL)
         .send()
@@ -54,7 +54,7 @@ async fn get_iana_tlds(client: &reqwest::Client) -> Result<Vec<Tld>, Box<dyn Err
     let row_selector = Selector::parse("table#tld-table tbody tr")?;
     let cell_selector = Selector::parse("td")?;
 
-    let mut tlds = Vec::new();
+    let mut tld_info = Vec::new();
     for row in doc.select(&row_selector) {
         let cells: Vec<_> = row.select(&cell_selector).collect();
         if cells.len() < 3 {
@@ -80,25 +80,25 @@ async fn get_iana_tlds(client: &reqwest::Client) -> Result<Vec<Tld>, Box<dyn Err
             continue;
         }
 
-        let tld = Tld {
+        let tld = TldInfo {
             name,
             category,
             manager,
         };
-        tlds.push(tld);
+        tld_info.push(tld);
     }
 
-    if tlds.is_empty() {
+    if tld_info.is_empty() {
         return Err(
             "failed to get iana tlds, mby the website is down or changed structure?".into(),
         );
     }
 
-    Ok(tlds)
+    Ok(tld_info)
 }
 
-fn write_tlds(tlds: Vec<Tld>) -> Result<(), Box<dyn Error>> {
-    let mut file = File::create(TMP_TLDS_FILE)?;
+fn write_tld_info(tld_info: Vec<TldInfo>) -> Result<(), Box<dyn Error>> {
+    let mut file = File::create(TMP_TLD_INFO_FILE)?;
 
     writeln!(file, "// don't edit this file, it's auto-generated")?;
     writeln!(file, "use phf::{{phf_map, Map}};")?;
@@ -108,18 +108,18 @@ fn write_tlds(tlds: Vec<Tld>) -> Result<(), Box<dyn Error>> {
     writeln!(file)?;
     writeln!(file, "#[typeshare]")?;
     writeln!(file, "#[derive(Serialize, Clone)]")?;
-    writeln!(file, "pub struct Tld {{")?;
+    writeln!(file, "pub struct TldInfo {{")?;
     writeln!(file, "    pub name: &'static str,")?;
     writeln!(file, "    pub category: &'static str,")?;
     writeln!(file, "    pub manager: &'static str,")?;
     writeln!(file, "}}")?;
     writeln!(file)?;
-    writeln!(file, "pub static TLDS: Map<&str, Tld> = phf_map!(")?;
+    writeln!(file, "pub static TLD_INFO: Map<&str, Tld> = phf_map!(")?;
 
-    for tld in tlds {
+    for tld in tld_info {
         writeln!(
             file,
-            "    \"{}\" => Tld {{ name: \"{}\", category: \"{}\", manager: \"{}\" }},",
+            "    \"{}\" => TldInfo {{ name: \"{}\", category: \"{}\", manager: \"{}\" }},",
             tld.name, tld.name, tld.category, tld.manager
         )?;
     }

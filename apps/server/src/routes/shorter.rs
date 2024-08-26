@@ -1,13 +1,14 @@
 use crate::error::AppError;
 use crate::{
     config::Ctx,
-    constants::tlds::TLDS,
-    models::domain::{get_sld_tld, Domain},
+    constants::tld_info::TLD_INFO,
+    models::domain::{extract_sld_tld, Domain},
 };
 use axum::{
     extract::{Query, State},
     Json,
 };
+use memmap2::Mmap;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -52,16 +53,16 @@ pub(crate) async fn mount(
 ) -> Result<Json<ShorterRes>, AppError> {
     params.validate()?;
 
-    let domain = sanitize_domain(&params.q)?;
-    let mut domains = vec![Domain::new(&domain, &ctx.domains)];
+    let domain = sanitize_domain(&params.q, &ctx.domains)?;
+    let mut domains = vec![domain];
 
-    let (sld, _) = get_sld_tld(&domain);
+    let (sld, _) = extract_sld_tld(&domain);
     for perm in vowel_perms(&sld) {
         for i in (MIN_SLD_LEN..perm.len() - 1).rev() {
-            let potential_domain = add_char_at(&perm, '.', i);
-            let (_, potential_tld) = get_sld_tld(&potential_domain);
-            if TLDS.get(&potential_tld).is_some() {
-                domains.push(Domain::new(&potential_domain, &ctx.domains));
+            let name = add_char_at(&perm, '.', i);
+            let potential_domain = Domain::new(&name, &ctx.domains);
+            if potential_domain.is_some() {
+                domains.push(potential_domain.unwrap());
             }
             if domains.len() >= MAX_DOMAINS {
                 break;
@@ -76,7 +77,7 @@ pub(crate) async fn mount(
     Ok(Json(res))
 }
 
-fn sanitize_domain(q: &str) -> Result<String, AppError> {
+fn sanitize_domain(q: &str, domains: &Mmap) -> Result<Domain, AppError> {
     let mut domain = q.trim().to_lowercase();
 
     // remove invalid characters
@@ -93,15 +94,16 @@ fn sanitize_domain(q: &str) -> Result<String, AppError> {
     let tld = parts
         .iter()
         .skip(1)
-        .find(|&part| TLDS.get(part).is_some())
+        .find(|&part| TLD_INFO.get(part).is_some())
         .unwrap_or(&DEFAULT_TLD);
-    domain = format!("{}.{}", sld, tld);
+    let name = format!("{}.{}", sld, tld);
 
-    if domain.len() < MIN_DOMAIN_LEN {
+    if name.len() < MIN_DOMAIN_LEN {
         return Err(AppError::DomainTooShort(MIN_DOMAIN_LEN));
     }
 
-    Ok(domain)
+    let d = Domain::new(&name, domains).unwrap();
+    Ok(d)
 }
 
 fn vowel_perms(word: &str) -> Vec<String> {

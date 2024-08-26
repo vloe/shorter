@@ -5,7 +5,11 @@
 	import { API_URL_DEV, API_URL_PROD } from "@sh/utils/src/constants"
 	import { createQuery } from "@tanstack/svelte-query"
 
+	import Info from "../../icons/Info.svelte"
+	import { Btn } from "../btn"
+	import * as Command from "../command"
 	import { Input } from "../input"
+	import * as Popover from "../popover"
 	import * as Table from "../table"
 
 	let params: ShorterParams = $state({
@@ -14,32 +18,63 @@
 
 	let url = $derived(`${dev ? API_URL_DEV : API_URL_PROD}/shorter?q=${params.q}`)
 
-	let query = $state(
-		createQuery<ShorterRes, Error>(() => ({
-			queryFn: async () => {
-				const res = await fetch(url, {
-					headers: {
-						"Content-Type": "application/json",
+	//let query = $state(
+	//	createQuery<ShorterRes, Error>(() => ({
+	//		queryFn: async () => {
+	//			const res = await fetch(url, {
+	//				headers: {
+	//					"Content-Type": "application/json",
+	//				},
+	//				method: "GET",
+	//			})
+	//			if (!res.ok) throw new Error(await res.text())
+	//			const data = await res.json()
+	//			return data
+	//		},
+	//		queryKey: ["shorter", params],
+	//		retry: false,
+	//	})),
+	//)
+
+	// fake data for now
+	let query = {
+		data: {
+			domains: [
+				{
+					available: true,
+					name: "example.com",
+					tld: {
+						category: "generic",
+						manager: "verisign global registry services",
+						name: "com",
 					},
-					method: "GET",
-				})
-				if (!res.ok) throw new Error(await res.text())
-				const data = await res.json()
-				return data
-			},
-			queryKey: ["shorter", params],
-			retry: false,
-		})),
-	)
+				},
+				{
+					available: false,
+					name: "example1.com",
+					tld: {
+						category: "generic",
+						manager: "verisign global registry services",
+						name: "com",
+					},
+				},
+				{
+					available: true,
+					name: "example2.com",
+					tld: {
+						category: "generic",
+						manager: "verisign global registry services",
+						name: "com",
+					},
+				},
+			],
+		},
+		isSuccess: true,
+	}
 </script>
 
 <div class="flex h-full flex-col gap-3" id="shorter">
-	<Input
-		bind:value={params.q}
-		class="focus-visible:ring-0"
-		on:input={() => query.refetch()}
-		placeholder="example.com"
-	/>
+	<Input bind:value={params.q} class="focus-visible:ring-0" placeholder="example.com" />
 
 	{#if query.isSuccess && query.data}
 		<Table.Root>
@@ -54,7 +89,15 @@
 				{#each query.data.domains as domain, i (i)}
 					<Table.Row>
 						<Table.Cell class="font-medium">{i + 1}</Table.Cell>
-						<Table.Cell>{domain.name}</Table.Cell>
+						<Table.Cell>
+							{domain.name}
+							<Popover.Root>
+								<Popover.Trigger><Info class="size-3 pb-0.5" /></Popover.Trigger>
+								<Popover.Content
+									>Place content for the popover here.</Popover.Content
+								>
+							</Popover.Root>
+						</Table.Cell>
 						<Table.Cell>
 							{#if domain.available}
 								<p class="text-green-400">available</p>
