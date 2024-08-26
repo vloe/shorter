@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { dev } from "$app/environment"
 	import { Btn } from "@sh/ui/src/lib/components/btn"
 	import Arrow from "@sh/ui/src/lib/icons/Arrow.svelte"
+	import { webUrl } from "@sh/utils/src/urls"
 
 	const title = "shorter | world's first domain shortener"
 	const desc = "a domain shortener tool"
@@ -28,14 +30,14 @@
 		<div class="flex items-center gap-x-1.5">
 			<Btn
 				class="group h-8 gap-x-[5px] rounded-lg transition-all duration-200 ease-in-out hover:bg-primary/85"
-				href="/register"
+				href={`${webUrl(dev)}/register`}
 			>
 				try for free
 				<Arrow />
 			</Btn>
 			<Btn
 				class="disabled !no-underline transition-all duration-200 ease-in-out hover:text-white/85"
-				href="/login"
+				href={`${webUrl(dev)}/login`}
 				intent="link"
 			>
 				login
