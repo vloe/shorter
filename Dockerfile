@@ -1,10 +1,13 @@
-ARG RUST_VERSION=1.80.1
 ARG APP_NAME=sh-server
 
 # build stage
-FROM rust:${RUST_VERSION} AS builder
+FROM public.ecr.aws/lambda/provided:al2 as builder
 
 ARG APP_NAME
+
+RUN yum install -y gcc gcc-c++ openssl-devel
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 WORKDIR /usr/src/app
 COPY . .
