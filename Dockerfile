@@ -7,7 +7,7 @@ FROM rust:${RUST_VERSION}-alpine AS build
 WORKDIR /usr/src/app
 COPY . .
 
-RUN cargo build --release --bin ${APP_NAME} --features lambda
+RUN cargo build --release --bin "${APP_NAME}" --features lambda
 
 # runtime stage
 FROM public.ecr.aws/lambda/provided:al2
