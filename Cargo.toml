@@ -1,0 +1,12 @@
+[workspace]
+members = ["apps/server", "core"]
+
+[workspace.package]
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/vloe/shorter"
+
+[workspace.dependencies]
+# third party dependencies used by two or more crates
+axum = "0.7.5"
+tokio = "1.39.2"

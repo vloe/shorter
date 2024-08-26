@@ -1,27 +1,21 @@
 use axum::{routing::get, Router};
+use sh_core::routes::mount;
 use std::error::Error;
 
 mod config;
-mod constants;
-mod error;
-mod models;
-mod routes;
 
 const MAX_AGE: u64 = 3600;
-const DOMAINS_FILE: &str = "data/domains.bin";
 const ADDR: &str = "127.0.0.1:9000";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     let cors = config::cors(MAX_AGE);
-    let ctx = config::ctx(DOMAINS_FILE)?;
+    let ctx = config::ctx();
 
     let app = Router::new()
         .route("/", get(|| async { "sh-server(:" }))
-        .route("/health", get(|| async { "ok" }))
-        .route("/shorter", get(routes::shorter::mount))
-        .layer(cors)
-        .with_state(ctx);
+        .merge(mount(ctx))
+        .layer(cors);
 
     #[cfg(feature = "lambda")]
     run_lambda(app).await?;
