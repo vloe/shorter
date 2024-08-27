@@ -11,7 +11,6 @@ pub fn cors(max_age: u64) -> CorsLayer {
         .allow_origin([
             "http://localhost:3000".parse::<HeaderValue>().unwrap(),
             "http://localhost:3001".parse::<HeaderValue>().unwrap(),
-            "http://localhost:3002".parse::<HeaderValue>().unwrap(),
             "https://shorter.dev".parse::<HeaderValue>().unwrap(),
         ])
         .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE])
