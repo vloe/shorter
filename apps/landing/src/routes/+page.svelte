@@ -16,15 +16,14 @@
 <div class="pt-44">
 	<div class="flex flex-col items-center gap-6 lg:gap-11">
 		<h1
-			class="text-center text-5xl font-light leading-[1.1] tracking-[-0.9px] sm:text-7xl sm:leading-none xl:text-[89px]"
+			class="text-nowrap text-center text-5xl font-light leading-[1.1] tracking-[-0.9px] sm:text-7xl sm:leading-none xl:text-[89px]"
 		>
-			world's first <br class="lg:hidden" /> domain <br class="hidden lg:flex" /> shortener
+			world's first <br class="flex sm:hidden" /> domain <br class="hidden sm:flex" /> shortener
 		</h1>
 		<h2
-			class="max-w-xl text-center text-base font-medium leading-normal text-primary/70 md:w-11/12 lg:text-lg"
+			class="max-w-lg text-center text-base font-medium leading-normal text-primary/70 md:w-11/12 lg:text-lg"
 		>
-			searches through thousands of tlds to shorten your domain, for example linktree.com ->
-			linktr.ee
+			searches through thousands of tlds to shorten your domain like linktree.com -> linktr.ee
 		</h2>
 		<div class="flex items-center gap-x-1.5">
 			<Btn
