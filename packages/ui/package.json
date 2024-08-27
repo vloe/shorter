@@ -8,6 +8,7 @@
 		"svelte": "^5.0.0-next.1"
 	},
 	"devDependencies": {
+		"@sh/assets": "workspace:^",
 		"@sh/config": "workspace:^",
 		"@sh/utils": "workspace:^",
 		"@sveltejs/adapter-auto": "^3.0.0",
