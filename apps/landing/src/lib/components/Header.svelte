@@ -1,27 +1,23 @@
 <script lang="ts">
 	import LockupWhite from "@sh/assets/svgs/lockup-white.svg"
 	import LogomarkWhite from "@sh/assets/svgs/logomark-white.svg"
+	import { ArrowBtn } from "@sh/ui/src/lib/components/arrow-btn"
 	import { Btn } from "@sh/ui/src/lib/components/btn"
 	import * as DropdownMenu from "@sh/ui/src/lib/components/dropdown-menu"
-	import Arrow from "@sh/ui/src/lib/icons/Arrow.svelte"
 	import Menu from "@sh/ui/src/lib/icons/Menu.svelte"
 </script>
 
-<header class="flex h-20 items-center justify-between">
+<header class="flex h-16 items-center justify-between lg:h-20">
 	<a href="/">
 		<img alt="lockup" class="hidden h-7 lg:flex" src={LockupWhite} />
 		<img alt="lockup" class="flex h-7 lg:hidden" src={LogomarkWhite} />
 	</a>
 	<div class="hidden items-center gap-x-1.5 lg:flex">
-		<Btn
-			class="group h-8 gap-x-[5px] rounded-lg transition-all duration-200 ease-in-out hover:bg-primary/85"
-			disabled
-		>
+		<ArrowBtn class="h-8 rounded-lg duration-200 ease-in-out hover:bg-primary/85" disabled>
 			start now
-			<Arrow />
-		</Btn>
+		</ArrowBtn>
 		<Btn
-			class="disabled !no-underline transition-all duration-200 ease-in-out hover:text-white/85"
+			class="!no-underline duration-200 ease-in-out hover:text-primary/85"
 			disabled
 			intent="link"
 		>
