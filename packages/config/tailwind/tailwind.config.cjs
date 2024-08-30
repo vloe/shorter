@@ -45,6 +45,9 @@ module.exports = {
 			fontFamily: {
 				sans: ["Manrope", ...fontFamily.sans],
 			},
+			screens: {
+				xs: "480px",
+			},
 		},
 	},
 }
