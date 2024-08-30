@@ -40,7 +40,7 @@
 		@apply border-border;
 	}
 	body {
-		@apply bg-background text-foreground;
+		@apply bg-background font-manrope text-foreground;
 	}
 	@font-face {
 		font-family: "Manrope";
