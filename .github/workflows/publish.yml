@@ -54,4 +54,4 @@ jobs:
                   apiToken: ${{ secrets.CF_API_TOKEN }}
                   accountId: ${{ secrets.CF_ACCOUNT_ID }}
                   projectName: sh-landing
-                  directory: ./apps/landing/.svelte-kit/cloudflare
+                  directory: ./apps/landing/build
