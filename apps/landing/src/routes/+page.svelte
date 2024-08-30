@@ -24,7 +24,7 @@
 			linktree.com -> linktr.ee
 		</h2>
 		<Input
-			class="h-10 w-full max-w-sm focus-visible:ring-primary/25 lg:h-11"
+			class="h-10 w-11/12 max-w-sm focus-visible:ring-primary/25 lg:h-11"
 			placeholder="type any domain..."
 		/>
 	</div>
