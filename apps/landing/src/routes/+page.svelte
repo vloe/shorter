@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { dev } from "$app/environment"
 	import { ArrowBtn } from "@sh/ui/src/lib/components/arrow-btn"
 	import { Btn } from "@sh/ui/src/lib/components/btn"
+	import { webUrl } from "@sh/utils/src/urls"
 
 	const title = "shorter | world's first domain shortener"
 	const desc = "a domain shortener tool"
@@ -25,12 +27,15 @@
 			linktree.com -> linktr.ee
 		</h2>
 		<div class="flex items-center gap-x-1.5">
-			<ArrowBtn class="h-8 rounded-lg duration-200 ease-in-out hover:bg-primary/85" disabled>
+			<ArrowBtn
+				class="h-8 rounded-lg duration-200 ease-in-out hover:bg-primary/85"
+				href={`${webUrl(dev)}/register`}
+			>
 				start now
 			</ArrowBtn>
 			<Btn
 				class="!no-underline duration-200 ease-in-out hover:text-primary/85"
-				disabled
+				href={`${webUrl(dev)}/login`}
 				intent="link"
 			>
 				login

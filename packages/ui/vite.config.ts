@@ -4,6 +4,6 @@ import baseConfig from "../config/vite/base"
 
 export default mergeConfig(baseConfig, {
 	server: {
-		port: 3001,
+		port: 3002,
 	},
 })
