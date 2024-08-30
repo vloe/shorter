@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { Input } from "@sh/ui/src/lib/components/input"
+	import { goto } from "$app/navigation"
+	import { page } from "$app/stores"
+	import Shorter from "$lib/components/Shorter.svelte"
 
 	const title = "shorter | world's first domain shortener"
 	const desc = "a domain shortener tool"
@@ -23,9 +25,6 @@
 			<br class="hidden xs:flex" />
 			linktree.com -> linktr.ee
 		</h2>
-		<Input
-			class="h-10 w-11/12 max-w-sm focus-visible:ring-primary/25 lg:h-11"
-			placeholder="type any domain..."
-		/>
+		<Shorter />
 	</div>
 </div>
