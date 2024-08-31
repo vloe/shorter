@@ -1,11 +1,11 @@
 use axum::{routing::get, Router};
 use dotenv::dotenv;
-use sh_core::routes::mount;
 use std::error::Error;
 
 mod config;
 
 const MAX_AGE: u64 = 3600;
+const MAX_CONN: u32 = 5;
 const ADDR: &str = "127.0.0.1:9000";
 
 #[tokio::main]
@@ -13,12 +13,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
     dotenv().ok();
 
     let cors = config::cors(MAX_AGE);
-    let ctx = config::ctx().await;
+    let ctx = config::ctx(MAX_CONN).await;
 
     let app = Router::new()
         .route("/", get(|| async { "sh-server(:" }))
-        .merge(mount(ctx))
-        .layer(cors);
+        .route("/health", get(|| async { "ok" }))
+        .layer(cors)
+        .with_state(ctx);
 
     #[cfg(feature = "lambda")]
     run_lambda(app).await?;
