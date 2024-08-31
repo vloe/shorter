@@ -5,7 +5,6 @@ use std::error::Error;
 mod config;
 
 const MAX_AGE: u64 = 3600;
-const MAX_CONN: u32 = 5;
 const ADDR: &str = "127.0.0.1:9000";
 
 #[tokio::main]
@@ -13,7 +12,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     dotenv().ok();
 
     let cors = config::cors(MAX_AGE);
-    let ctx = config::ctx(MAX_CONN).await;
+    let ctx = config::ctx();
 
     let app = Router::new()
         .route("/", get(|| async { "sh-server(:" }))
