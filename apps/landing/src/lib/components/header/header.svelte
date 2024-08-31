@@ -16,13 +16,13 @@
 	<div class="hidden items-center gap-x-1.5 lg:flex">
 		<ArrowButton
 			class="h-8 rounded-lg duration-200 ease-in-out hover:bg-primary/85"
-			href={`${webUrl}/register`}
+			href={`${webUrl}/`}
 		>
 			start now
 		</ArrowButton>
 		<Button
 			class="!no-underline duration-200 ease-in-out hover:text-primary/85"
-			href={`${webUrl}/login`}
+			disabled
 			variant="link"
 		>
 			login
@@ -34,8 +34,8 @@
 				<img alt="menu" class="size-6" src={Menu} />
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content class="w-44">
-				<DropdownMenu.Item href={`${webUrl}/register`}>start now</DropdownMenu.Item>
-				<DropdownMenu.Item href={`${webUrl}/login`}>login</DropdownMenu.Item>
+				<DropdownMenu.Item href={`${webUrl}/`}>start now</DropdownMenu.Item>
+				<DropdownMenu.Item disabled href={`${webUrl}/login`}>login</DropdownMenu.Item>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	</div>
