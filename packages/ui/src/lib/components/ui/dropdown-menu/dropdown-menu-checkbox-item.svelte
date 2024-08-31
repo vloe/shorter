@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui"
 	import Check from "svelte-radix/Check.svelte"
+
 	import { cn } from "../../../utils"
 
 	type $$Props = DropdownMenuPrimitive.CheckboxItemProps
@@ -19,9 +20,9 @@
 	)}
 	{...$$restProps}
 	on:click
-	on:keydown
 	on:focusin
 	on:focusout
+	on:keydown
 	on:pointerdown
 	on:pointerleave
 	on:pointermove
