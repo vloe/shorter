@@ -144,6 +144,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      svelte-radix:
+        specifier: ^1.1.1
+        version: 1.1.1(svelte@4.2.19)
       tailwind-merge:
         specifier: ^2.5.2
         version: 2.5.2
@@ -1650,6 +1653,11 @@ packages:
         optional: true
       typescript:
         optional: true
+
+  svelte-radix@1.1.1:
+    resolution: {integrity: sha512-TCbV7fzlJ2aEUB0nu2EodVA+r1eYj526IYpmGUTV32Z0bIrCUvx3K8xX3tcxR5dDFA5ZBU1Hxr4RYC4TDFEQ4A==}
+    peerDependencies:
+      svelte: ^3.54.0 || ^4.0.0 || ^5.0.0 || ^5.0.0-next.1
 
   svelte@4.2.19:
     resolution: {integrity: sha512-IY1rnGr6izd10B0A8LqsBfmlT5OILVuZ7XsI0vdGPEvuonFV7NYEUK4dAkm9Zg2q0Um92kYjTpS1CAP3Nh/KWw==}
@@ -3291,6 +3299,10 @@ snapshots:
       postcss: 8.4.41
       postcss-load-config: 5.1.0(jiti@1.21.0)(postcss@8.4.41)
       typescript: 5.4.3
+
+  svelte-radix@1.1.1(svelte@4.2.19):
+    dependencies:
+      svelte: 4.2.19
 
   svelte@4.2.19:
     dependencies:
