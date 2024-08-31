@@ -5,6 +5,7 @@
 		"build": "turbo build",
 		"landing": "pnpm --filter @sh/landing -- ",
 		"web": "pnpm --filter @sh/web -- ",
+		"ui": "pnpm --filter @sh/ui -- ",
 		"core": "pnpm --filter @sh/server -- ",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
