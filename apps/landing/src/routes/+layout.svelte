@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from "svelte"
 
-	import Header from "$lib/components/Header.svelte"
+	import { Header } from "$lib/components/header"
 
 	import "../app.css"
 

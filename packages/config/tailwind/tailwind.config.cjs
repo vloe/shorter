@@ -3,8 +3,6 @@ import { fontFamily } from "tailwindcss/defaultTheme"
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	content: ["./src/**/*.{html,js,svelte,ts}", "../../packages/ui/src/**/*.{html,js,svelte,ts}"],
-	darkMode: ["class"],
-	safelist: ["dark"],
 	theme: {
 		extend: {
 			colors: {

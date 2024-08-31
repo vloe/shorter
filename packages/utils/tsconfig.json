@@ -1,3 +1,0 @@
-{
-	"extends": ["@sh/config/typescript/base.json"]
-}
