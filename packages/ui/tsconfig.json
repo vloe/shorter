@@ -1,3 +1,9 @@
 {
-	"extends": ["@sh/config/typescript/base.json"]
+	"extends": ["@sh/config/typescript/base.json"],
+	"compilerOptions": {
+		"paths": {
+			"$lib": ["./src/lib"],
+			"$lib/*": ["./src/lib/*"]
+		}
+	}
 }

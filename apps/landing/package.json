@@ -9,6 +9,7 @@
 	"devDependencies": {
 		"@sh/assets": "workspace:^",
 		"@sh/config": "workspace:^",
+		"@sh/ui": "workspace:^",
 		"@sveltejs/adapter-static": "^3.0.4",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.2",
