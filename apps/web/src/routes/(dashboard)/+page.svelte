@@ -1,5 +1,5 @@
 <script lang="ts">
-	const title = "shorter | search"
+	const title = "search | shorter"
 </script>
 
 <svelte:head>
