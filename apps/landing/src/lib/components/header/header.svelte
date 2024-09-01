@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { webUrl } from "$lib/utils/webUrl"
-	import Lockup from "@sh/assets/svgs/lockup.svg"
-	import Logomark from "@sh/assets/svgs/logomark.svg"
-	import Menu from "@sh/assets/svgs/menu.svg"
+	import { Lockup } from "@sh/ui/src/lib/components/icons/lockup"
+	import { Logomark } from "@sh/ui/src/lib/components/icons/logomark"
+	import { Menu } from "@sh/ui/src/lib/components/icons/menu"
 	import { ArrowButton } from "@sh/ui/src/lib/components/ui/arrow-button"
 	import { Button } from "@sh/ui/src/lib/components/ui/button"
 	import * as DropdownMenu from "@sh/ui/src/lib/components/ui/dropdown-menu"
@@ -10,8 +10,8 @@
 
 <header class="flex h-16 items-center justify-between lg:h-20">
 	<a href="/">
-		<img alt="lockup" class="hidden h-7 lg:flex" src={Lockup} />
-		<img alt="logomark" class="flex h-7 lg:hidden" src={Logomark} />
+		<Lockup class="hidden lg:flex" />
+		<Logomark class="flex lg:hidden" />
 	</a>
 	<div class="hidden items-center gap-x-1.5 lg:flex">
 		<ArrowButton
@@ -31,7 +31,7 @@
 	<div class="flex lg:hidden">
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>
-				<img alt="menu" class="size-6" src={Menu} />
+				<Menu />
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content class="w-44">
 				<DropdownMenu.Item href={`${webUrl}/`}>start now</DropdownMenu.Item>

@@ -7,7 +7,6 @@
 		"build": "vite build"
 	},
 	"devDependencies": {
-		"@sh/assets": "workspace:^",
 		"@sh/config": "workspace:^",
 		"@sh/ui": "workspace:^",
 		"@sveltejs/adapter-static": "^3.0.4",
