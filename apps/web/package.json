@@ -11,9 +11,12 @@
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0-next.6",
 		"autoprefixer": "^10.4.20",
+		"bits-ui": "^0.21.13",
+		"cva": "1.0.0-beta.1",
 		"postcss": "^8.4.43",
 		"svelte": "^5.0.0-next.1",
 		"svelte-check": "^3.6.0",
+		"tailwind-merge": "^2.5.2",
 		"tailwindcss": "^3.4.10",
 		"typescript": "^5.0.0",
 		"vite": "^5.0.3"

@@ -8,5 +8,3 @@
 	<meta content={title} name="title" />
 	<meta content={desc} name="description" />
 </svelte:head>
-
-sh-web
