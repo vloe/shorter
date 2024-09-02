@@ -22,11 +22,12 @@
 			discover a shorter version of your domain, for example linktree.com -> linktr.ee
 		</h2>
 		<div
-			class="flex h-10 w-full max-w-sm items-center justify-center gap-2 rounded-full border border-white/25 px-3 py-1 shadow-sm"
+			class="flex h-10 w-full max-w-sm items-center justify-center gap-2 rounded-full border border-white/25 py-1 pl-3.5 pr-4 shadow-sm lg:h-11"
 		>
-			<Search class="text-white/50" />
+			<Search class="text-white/50 lg:size-4" />
 			<input
-				class="h-full w-full bg-transparent text-sm outline-none placeholder:text-white/50"
+				autofocus
+				class="h-full w-full bg-transparent text-sm outline-none placeholder:text-white/50 lg:text-base"
 				placeholder="type any domain..."
 			/>
 		</div>
