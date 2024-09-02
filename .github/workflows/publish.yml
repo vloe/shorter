@@ -1,4 +1,4 @@
-name: publish apps
+name: publish server
 on: [push]
 
 jobs:
@@ -11,9 +11,6 @@ jobs:
         steps:
             - name: checkout
               uses: actions/checkout@v3
-
-            - name: setup pnpm
-              uses: ./.github/actions/setup-pnpm
 
             - name: configure aws credentials
               uses: aws-actions/configure-aws-credentials@v1
@@ -44,22 +41,3 @@ jobs:
                   aws lambda update-function-code \
                     --function-name sh-server \
                     --image-uri "${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
-
-            - name: build
-              run: pnpm build
-
-            - name: publish landing to cf pages
-              uses: cloudflare/pages-action@v1
-              with:
-                  apiToken: ${{ secrets.CF_API_TOKEN }}
-                  accountId: ${{ secrets.CF_ACCOUNT_ID }}
-                  projectName: sh-landing
-                  directory: ./apps/landing/build
-
-            - name: publish web to cf pages
-              uses: cloudflare/pages-action@v1
-              with:
-                  apiToken: ${{ secrets.CF_API_TOKEN }}
-                  accountId: ${{ secrets.CF_ACCOUNT_ID }}
-                  projectName: sh-web
-                  directory: ./apps/web/build

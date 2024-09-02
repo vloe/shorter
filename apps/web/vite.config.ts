@@ -1,9 +1,6 @@
-import { mergeConfig } from "vite"
+import { sveltekit } from '@sveltejs/kit/vite';
+import { defineConfig } from 'vite';
 
-import baseConfig from "../../packages/config/vite/base"
-
-export default mergeConfig(baseConfig, {
-	server: {
-		port: 3001,
-	},
-})
+export default defineConfig({
+	plugins: [sveltekit()]
+});
