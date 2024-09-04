@@ -6,7 +6,8 @@
 		"core": "pnpm --filter @sh/server -- ",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"lint:fix": "prettier --check . && eslint . --fix"
+		"lint:fix": "prettier --check . && eslint . --fix",
+		"gen:tld-info": "cd scripts && cargo run --bin gen_tld_info"
 	},
 	"devDependencies": {
 		"@types/eslint": "^9.6.0",
