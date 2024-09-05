@@ -1,5 +1,18 @@
 <script lang="ts">
+	import type { SearchParams } from "$lib/utils/bindings"
+
+	import { goto } from "$app/navigation"
+	import { page } from "$app/stores"
 	import { Search } from "$lib/components/icons/search"
+
+	let params: SearchParams = $state({
+		q: $page.url.searchParams.get("q") || "",
+	})
+
+	$effect(() => {
+		$page.url.searchParams.set("q", params.q)
+		goto($page.url, { replaceState: true })
+	})
 
 	const title = "search | shorter"
 </script>
@@ -15,6 +28,7 @@
 	<Search class="text-white/50 lg:size-4" />
 	<input
 		autofocus
+		bind:value={params.q}
 		class="h-full w-full bg-transparent text-sm outline-none placeholder:text-white/50 lg:text-base"
 		placeholder="type any domain..."
 	/>
