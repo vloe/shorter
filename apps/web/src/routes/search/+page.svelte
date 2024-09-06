@@ -11,15 +11,10 @@
 	})
 
 	$effect(() => {
-		if (!browser) return
-
-		if (params.q) {
+		if (browser) {
 			$page.url.searchParams.set("q", params.q)
-		} else {
-			$page.url.searchParams.delete("q")
+			goto($page.url, { replaceState: true })
 		}
-
-		goto($page.url, { replaceState: true })
 	})
 
 	const title = "search | shorter"
