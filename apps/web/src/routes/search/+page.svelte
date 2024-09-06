@@ -1,16 +1,24 @@
 <script lang="ts">
 	import type { SearchParams } from "$lib/utils/bindings"
 
+	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
 	import { Search } from "$lib/components/icons/search"
 
-	let params: SearchParams = $state({
-		q: $page.url.searchParams.get("q") || "",
+	let params = $state<SearchParams>({
+		q: (browser && $page.url.searchParams.get("q")) || "",
 	})
 
 	$effect(() => {
-		$page.url.searchParams.set("q", params.q)
+		if (!browser) return
+
+		if (params.q) {
+			$page.url.searchParams.set("q", params.q)
+		} else {
+			$page.url.searchParams.delete("q")
+		}
+
 		goto($page.url, { replaceState: true })
 	})
 

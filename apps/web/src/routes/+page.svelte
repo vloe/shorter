@@ -2,7 +2,6 @@
 	import type { SearchParams } from "$lib/utils/bindings"
 
 	import { goto } from "$app/navigation"
-	import { page } from "$app/stores"
 	import { Feedback } from "$lib/components/icons/feedback"
 	import { Lockup } from "$lib/components/icons/lockup"
 	import { Logomark } from "$lib/components/icons/logomark"
@@ -10,12 +9,14 @@
 	import { Btn } from "$lib/components/ui/btn"
 	import * as Popover from "$lib/components/ui/popover"
 
-	let params: SearchParams = $state({
-		q: $page.url.searchParams.get("q") || "",
+	let searchParams = $state<SearchParams>({
+		q: "",
 	})
 
+	let searchUrl = $derived(`/search?q=${searchParams.q}`)
+
 	$effect(() => {
-		params.q && goto(`/search?q=${params.q}`)
+		searchParams.q && goto(searchUrl)
 	})
 
 	const title = "shorter | world's first domain shortener"
@@ -60,7 +61,7 @@
 			<Search class="text-white/50 lg:size-4" />
 			<input
 				autofocus
-				bind:value={params.q}
+				bind:value={searchParams.q}
 				class="h-full w-full bg-transparent text-sm outline-none placeholder:text-white/50 lg:text-base"
 				placeholder="type any domain..."
 			/>
