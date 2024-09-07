@@ -3,14 +3,13 @@
 
 	import { cx } from "$lib/utils/cva.config"
 	import { flyAndScale } from "$lib/utils/flyAndScale"
-	import { Popover as PopoverPrimitive } from "bits-ui"
+	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui"
 
 	type $Props = {
 		children: Snippet
-	} & PopoverPrimitive.ContentProps
+	} & DropdownMenuPrimitive.ContentProps
 
 	let {
-		align = "center",
 		children,
 		class: className,
 		sideOffset = 4,
@@ -20,13 +19,16 @@
 	}: $Props = $props()
 </script>
 
-<PopoverPrimitive.Content
-	{align}
+<DropdownMenuPrimitive.Content
+	class={cx(
+		"z-50 min-w-[8rem] rounded-lg border bg-black p-1 shadow-md focus:outline-none",
+		className,
+	)}
 	{sideOffset}
 	{transition}
 	{transitionConfig}
 	{...props}
-	class={cx("z-50 w-60 rounded-md border p-4 shadow-md outline-none", className)}
+	on:keydown
 >
 	{@render children()}
-</PopoverPrimitive.Content>
+</DropdownMenuPrimitive.Content>

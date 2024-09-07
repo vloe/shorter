@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+	* {
+		@apply border-white/25;
+	}
 	body {
 		@apply bg-black text-white;
 	}
@@ -12,5 +15,11 @@
 		font-style: normal;
 		font-weight: 100 900;
 		font-display: swap;
+	}
+}
+
+@layer components {
+	.container {
+		@apply mx-auto px-6;
 	}
 }

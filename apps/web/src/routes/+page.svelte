@@ -3,16 +3,15 @@
 
 	import { goto } from "$app/navigation"
 	import { Search } from "$lib/components/icons/search"
-	import { Header } from "$lib/components/ui/header"
 
 	let searchParams = $state<SearchParams>({
 		q: "",
 	})
 
-	let searchUrl = $derived(`/search?q=${searchParams.q}`)
-
 	$effect(() => {
-		searchParams.q && goto(searchUrl)
+		if (searchParams.q) {
+			goto("/search?q=" + searchParams.q)
+		}
 	})
 
 	const title = "shorter | world's first domain shortener"
@@ -25,28 +24,30 @@
 	<meta content={desc} name="description" />
 </svelte:head>
 
-<Header />
-
-<div class="pt-28 lg:pt-40">
-	<div class="flex flex-col items-center gap-6 lg:gap-10">
-		<h1
-			class="text-center text-5xl font-thin tracking-[-0.9px] sm:text-6xl lg:text-7xl xl:text-[90px]"
-		>
-			world's first domain <br class="hidden sm:flex" /> shortener
-		</h1>
-		<h2 class="max-w-md text-center text-white/70 lg:text-lg">
-			discover a shorter version of your domain, for example linktree.com -> linktr.ee
-		</h2>
-		<div
-			class="flex h-10 w-full max-w-sm items-center justify-center gap-2 rounded-full border border-white/25 px-3.5 py-1 shadow-sm lg:h-[46px]"
-		>
-			<Search class="text-white/50 lg:size-4" />
-			<input
-				autofocus
-				bind:value={searchParams.q}
-				class="h-full w-full bg-transparent text-sm outline-none placeholder:text-white/50 lg:text-base"
-				placeholder="type any domain..."
-			/>
+<div class="pt-40 lg:pt-56">
+	<div class="container">
+		<div class="flex flex-col items-center gap-6 lg:gap-10">
+			<h1
+				class="text-center text-5xl font-thin tracking-[-0.9px] sm:text-6xl lg:text-7xl xl:text-[90px]"
+			>
+				world's first domain <br class="hidden sm:flex" /> shortener
+			</h1>
+			<h2 class="max-w-md text-center text-white/70 lg:text-lg">
+				discover a shorter version of your domain, for example linktree.com -> linktr.ee
+			</h2>
+			<div
+				class="flex h-10 w-full max-w-sm items-center justify-center gap-2 rounded-full border px-3.5 py-1 shadow-sm lg:h-[46px]"
+			>
+				<Search class="text-white/50 lg:size-4" />
+				<input
+					autocomplete="off"
+					autofocus
+					bind:value={searchParams.q}
+					class="h-full w-full bg-transparent text-sm outline-none placeholder:text-white/50 lg:text-base"
+					placeholder="type any domain..."
+				/>
+			</div>
 		</div>
 	</div>
 </div>
+<div class="h-screen"></div>
