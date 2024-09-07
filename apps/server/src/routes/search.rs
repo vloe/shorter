@@ -1,3 +1,5 @@
+use std::env::remove_var;
+
 use crate::constants::tld_info::{TldInfo, TLD_INFO};
 use axum::{
     extract::Query,
@@ -42,7 +44,6 @@ impl SearchParams {
         if q.len() > MAX_DOMAIN_LEN {
             return Err(SearchErr::DomainTooLong(MAX_DOMAIN_LEN));
         }
-
         Ok(())
     }
 }
@@ -58,7 +59,7 @@ pub enum Status {
 #[typeshare]
 #[derive(Serialize)]
 pub struct Domain {
-    domain: String,
+    name: String,
     sld: String,
     tld: String,
     tld_info: TldInfo,
@@ -67,23 +68,18 @@ pub struct Domain {
 
 impl Domain {
     pub fn new(domain: &str) -> Self {
-        let domain = domain.to_string();
-        let (sld, tld) = Self::get_sld_tld(&domain);
+        let name = domain.to_string();
+        let (sld, tld) = get_sld_tld(&domain);
         let tld_info = Self::get_tld_info(&tld);
-        let status = Self::get_status(&domain);
+        let status = Self::get_status(&name);
 
         Domain {
-            domain,
+            name,
             sld,
             tld,
             tld_info,
             status,
         }
-    }
-
-    fn get_sld_tld(domain: &str) -> (String, String) {
-        let parts: Vec<&str> = domain.split('.').collect();
-        (parts[0].to_string(), parts[1].to_string())
     }
 
     fn get_tld_info(tld: &str) -> TldInfo {
@@ -105,7 +101,18 @@ pub async fn mount(Query(params): Query<SearchParams>) -> Result<Json<SearchRes>
     params.validate()?;
 
     let domain = sanitize_domain(&params.q)?;
-    let domains = vec![Domain::new(&domain)];
+    let mut domains = vec![Domain::new(&domain)];
+
+    let (sld, _) = get_sld_tld(&domain);
+    for perm in vowel_removal_perms(&sld) {
+        for i in 1..perm.len() - 1 {
+            let (potential_sld, potential_tld) = perm.split_at(i);
+            let potential_domain = format!("{}.{}", potential_sld, potential_tld);
+            if TLD_INFO.get(&potential_tld).is_some() {
+                domains.push(Domain::new(&potential_domain));
+            }
+        }
+    }
 
     let res = SearchRes { domains };
     Ok(Json(res))
@@ -113,8 +120,6 @@ pub async fn mount(Query(params): Query<SearchParams>) -> Result<Json<SearchRes>
 
 fn sanitize_domain(q: &str) -> Result<String, SearchErr> {
     let mut s = q.trim().to_lowercase();
-
-    // remove chars that's not supposed to be in a domain
     s.retain(|c| c.is_ascii_alphanumeric() || c == '-' || c == '.');
     s.trim_matches(|c| c == '.' || c == '-').to_string();
 
@@ -133,4 +138,31 @@ fn sanitize_domain(q: &str) -> Result<String, SearchErr> {
     }
 
     Ok(domain)
+}
+
+fn get_sld_tld(domain: &str) -> (String, String) {
+    let parts: Vec<&str> = domain.split('.').collect();
+    (parts[0].to_string(), parts[1].to_string())
+}
+
+fn vowel_removal_perms(s: &str) -> Vec<String> {
+    let mut res = vec![s.to_string()];
+    let vowels_pos: Vec<usize> = s
+        .chars()
+        .enumerate()
+        .filter(|&(_, c)| "aeiou".contains(c))
+        .map(|(i, _)| i)
+        .collect();
+
+    for i in (0..vowels_pos.len()).rev() {
+        let mut remove = s.to_string();
+        remove.remove(vowels_pos[i]);
+        res.push(remove.clone());
+        for j in (i + 1..vowels_pos.len()).rev() {
+            remove.remove(vowels_pos[j] - 1);
+            res.push(remove.clone());
+        }
+    }
+
+    res
 }
