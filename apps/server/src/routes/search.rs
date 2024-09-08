@@ -1,5 +1,3 @@
-use std::env::remove_var;
-
 use crate::constants::tld_info::{TldInfo, TLD_INFO};
 use axum::{
     extract::Query,

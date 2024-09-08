@@ -3,12 +3,12 @@
 */
 
 export interface TldInfo {
-	category: string
-	manager: string
+	category: string;
+	manager: string;
 }
 
 export interface SearchParams {
-	q: string
+	q: string;
 }
 
 export enum Status {
@@ -18,13 +18,14 @@ export enum Status {
 }
 
 export interface Domain {
-	domain: string
-	sld: string
-	tld: string
-	tld_info: TldInfo
-	status: Status
+	name: string;
+	sld: string;
+	tld: string;
+	tld_info: TldInfo;
+	status: Status;
 }
 
 export interface SearchRes {
-	domains: Domain[]
+	domains: Domain[];
 }
+

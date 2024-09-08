@@ -17,9 +17,3 @@
 		font-display: swap;
 	}
 }
-
-@layer components {
-	.container {
-		@apply mx-auto px-6;
-	}
-}

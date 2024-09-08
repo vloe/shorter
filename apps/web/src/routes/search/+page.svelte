@@ -25,20 +25,19 @@
 	<meta content={title} name="title" />
 </svelte:head>
 
-<div class="fixed bottom-0 z-50 w-full pb-6 lg:pb-14">
-	<div class="container">
-		<div
-			class="flex h-10 w-full items-center justify-center gap-2 rounded-full border px-3.5 py-1 shadow-sm lg:h-[46px]"
-		>
-			<Search class="text-white/50 lg:size-4" />
-			<input
-				autocomplete="off"
-				autofocus
-				bind:value={params.q}
-				class="h-full w-full bg-transparent text-sm outline-none placeholder:text-white/50 lg:text-base"
-				placeholder="type any domain..."
-			/>
-		</div>
+<div class="sticky top-[90%] z-50 w-full pb-6 lg:pb-14">
+	<div
+		class="flex h-10 w-full items-center justify-center gap-2 rounded-full border px-3.5 py-1 shadow-sm lg:h-[46px]"
+	>
+		<Search class="text-white/50 lg:size-4" />
+		<input
+			autocomplete="off"
+			autofocus
+			bind:value={params.q}
+			class="h-full w-full bg-transparent text-sm outline-none placeholder:text-white/50 lg:text-base"
+			placeholder="type any domain..."
+		/>
 	</div>
 </div>
+<div class="h-screen"></div>
 <div class="h-screen"></div>
