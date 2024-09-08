@@ -13,18 +13,29 @@
 			<Lockup class="hidden lg:flex" />
 			<Logomark class="flex lg:hidden" />
 		</a>
-		<div class="hidden items-center gap-x-1.5 lg:flex">
-			<ArrowBtn class="h-8 rounded-lg duration-200 ease-in-out" href="/register">
+		<nav class="hidden lg:flex">
+			<ul class="flex items-center gap-x-4">
+				<li><Btn disabled intent="minimal">pricing</Btn></li>
+				<li><Btn disabled intent="minimal">bookmarks</Btn></li>
+				<li><Btn disabled intent="minimal">links</Btn></li>
+			</ul>
+		</nav>
+		<nav class="hidden items-center gap-x-1.5 lg:flex">
+			<ArrowBtn class="h-8 rounded-lg duration-200 ease-in-out" href="/search">
 				start now
 			</ArrowBtn>
-			<Btn class="duration-200 ease-in-out" href="/login" intent="minimal">login</Btn>
-		</div>
+			<Btn class="duration-200 ease-in-out" disabled intent="minimal">login</Btn>
+		</nav>
 		<div class="flex lg:hidden">
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger><Menu /></DropdownMenu.Trigger>
 				<DropdownMenu.Content class="w-48">
-					<DropdownMenu.Item href="/register">start now</DropdownMenu.Item>
-					<DropdownMenu.Item href="/login">login</DropdownMenu.Item>
+					<DropdownMenu.Item href="/search">start now</DropdownMenu.Item>
+					<DropdownMenu.Item disabled>login</DropdownMenu.Item>
+					<DropdownMenu.Separator />
+					<DropdownMenu.Item disabled>pricing</DropdownMenu.Item>
+					<DropdownMenu.Item disabled>bookmarks</DropdownMenu.Item>
+					<DropdownMenu.Item disabled>links</DropdownMenu.Item>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</div>
