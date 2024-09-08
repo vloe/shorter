@@ -13,7 +13,7 @@
 	$effect(() => {
 		if (browser) {
 			$page.url.searchParams.set("q", params.q)
-			goto($page.url, { replaceState: true })
+			goto($page.url, { keepFocus: true, noScroll: true, replaceState: true })
 		}
 	})
 
@@ -25,9 +25,9 @@
 	<meta content={title} name="title" />
 </svelte:head>
 
-<div class="sticky top-[90%] z-50 w-full pb-6 lg:pb-14">
+<div class="sticky top-[90%] z-50 w-full">
 	<div
-		class="flex h-10 w-full items-center justify-center gap-2 rounded-full border px-3.5 py-1 shadow-sm lg:h-[46px]"
+		class="flex h-10 w-full items-center justify-center gap-2 rounded-full border bg-black px-3.5 py-1 shadow-sm lg:h-[46px]"
 	>
 		<Search class="text-white/50 lg:size-4" />
 		<input

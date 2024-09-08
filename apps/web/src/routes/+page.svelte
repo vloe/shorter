@@ -35,7 +35,7 @@
 			discover a shorter version of your domain, for example linktree.com -> linktr.ee
 		</h2>
 		<div
-			class="flex h-10 w-full max-w-sm items-center justify-center gap-2 rounded-full border px-3.5 py-1 shadow-sm lg:h-[46px]"
+			class="flex h-10 w-full max-w-sm items-center justify-center gap-2 rounded-full border bg-black px-3.5 py-1 shadow-sm lg:h-[46px]"
 		>
 			<Search class="text-white/50 lg:size-4" />
 			<input
