@@ -23,7 +23,7 @@
 </script>
 
 <QueryClientProvider client={queryClient}>
-	<div class="container relative mx-auto min-h-screen scroll-smooth px-6">
+	<div class="container mx-auto scroll-smooth px-6">
 		<Header />
 		{@render children()}
 	</div>

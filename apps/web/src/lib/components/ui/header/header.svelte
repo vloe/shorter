@@ -8,7 +8,7 @@
 </script>
 
 <header class="sticky top-0 z-50 w-full backdrop-blur-lg">
-	<div class="relative flex h-16 items-center justify-between">
+	<div class="relative flex h-16 items-center justify-between lg:h-[72px]">
 		<a href="/">
 			<Lockup class="hidden lg:flex" />
 			<Logomark class="flex lg:hidden" />
@@ -28,9 +28,8 @@
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</div>
-		<div class="absolute bottom-0 flex w-full">
-			<div class="h-px w-1/2 bg-gradient-to-r from-transparent to-white/10"></div>
-			<div class="h-px w-1/2 bg-gradient-to-l from-transparent to-white/10"></div>
-		</div>
+		<hr
+			class="absolute bottom-0 h-px w-full border-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-10"
+		/>
 	</div>
 </header>

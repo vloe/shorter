@@ -43,7 +43,9 @@
 	<meta content={title} name="title" />
 </svelte:head>
 
-<div class="sticky top-[90%] z-50 w-full">
+<div class="h-screen"></div>
+<div class="h-screen"></div>
+<div class="sticky bottom-6 z-50 w-full lg:bottom-14">
 	<div
 		class="flex h-10 w-full items-center justify-center gap-2 rounded-full border bg-black px-3.5 py-1 shadow-sm lg:h-[46px]"
 	>
@@ -58,5 +60,3 @@
 		/>
 	</div>
 </div>
-<div class="h-screen"></div>
-<div class="h-screen"></div>
