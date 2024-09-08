@@ -3,6 +3,8 @@ use std::{error::Error, time::Duration};
 use tower_http::cors::{Any, CorsLayer};
 
 mod constants;
+mod error;
+mod models;
 mod routes;
 
 const MAX_AGE: u64 = 300; // 5 min

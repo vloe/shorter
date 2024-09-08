@@ -3,29 +3,23 @@
 */
 
 export interface TldInfo {
-	category: string;
-	manager: string;
-}
-
-export interface SearchParams {
-	q: string;
-}
-
-export enum Status {
-	Available = "Available",
-	Unavailable = "Unavailable",
-	NotSureYet = "NotSureYet",
+	category: string
+	manager: string
 }
 
 export interface Domain {
-	name: string;
-	sld: string;
-	tld: string;
-	tld_info: TldInfo;
-	status: Status;
+	isRegistered: boolean
+	name: string
+	sld: string
+	tld: string
+	tldInfo: TldInfo
+	tldWithDot: string
+}
+
+export interface SearchParams {
+	q: string
 }
 
 export interface SearchRes {
-	domains: Domain[];
+	domains: Domain[]
 }
-
