@@ -5,7 +5,7 @@ use tower_http::cors::{Any, CorsLayer};
 mod constants;
 mod routes;
 
-const MAX_AGE: u64 = 3600; // 1 hour
+const MAX_AGE: u64 = 300; // 5 min
 const ADDR: &str = "127.0.0.1:9000";
 
 #[tokio::main]

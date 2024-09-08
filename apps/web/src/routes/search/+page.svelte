@@ -1,21 +1,39 @@
 <script lang="ts">
-	import type { SearchParams } from "$lib/utils/bindings"
+	import type { SearchParams, SearchRes } from "$lib/utils/bindings"
 
 	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
 	import { Search } from "$lib/components/icons/search"
+	import { apiUrl } from "$lib/utils/urls"
+	import { createQuery } from "@tanstack/svelte-query"
 
 	let params = $state<SearchParams>({
 		q: (browser && $page.url.searchParams.get("q")) || "",
 	})
 
-	$effect(() => {
-		if (browser) {
-			$page.url.searchParams.set("q", params.q)
-			goto($page.url, { keepFocus: true, noScroll: true, replaceState: true })
-		}
-	})
+	function handleInput() {
+		$page.url.searchParams.set("q", params.q)
+		goto($page.url, { keepFocus: true, noScroll: true, replaceState: true })
+	}
+
+	let query = createQuery<SearchRes, Error>(() => ({
+		queryFn: async () => {
+			const res = await fetch(`${apiUrl}/search${$page.url.search}`, {
+				headers: {
+					"Accept": "application/json",
+					"Cache-Control": "max-age=300",
+					"Content-Type": "application/json",
+				},
+				method: "GET",
+			})
+			if (!res.ok) throw new Error(await res.text())
+			const data = await res.json()
+			return data
+		},
+		queryKey: ["search", params],
+		retry: false,
+	}))
 
 	const title = "search | shorter"
 </script>
@@ -35,6 +53,7 @@
 			autofocus
 			bind:value={params.q}
 			class="h-full w-full bg-transparent text-sm outline-none placeholder:text-white/50 lg:text-base"
+			oninput={handleInput}
 			placeholder="type any domain..."
 		/>
 	</div>

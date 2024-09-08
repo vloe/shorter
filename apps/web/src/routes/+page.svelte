@@ -8,11 +8,9 @@
 		q: "",
 	})
 
-	$effect(() => {
-		if (searchParams.q) {
-			goto("/search?q=" + searchParams.q)
-		}
-	})
+	function handleInput() {
+		searchParams.q && goto(`/search?q=${searchParams.q}`)
+	}
 
 	const title = "shorter | world's first domain shortener"
 	const desc = "a domain shortener tool"
@@ -43,6 +41,7 @@
 				autofocus
 				bind:value={searchParams.q}
 				class="h-full w-full bg-transparent text-sm outline-none placeholder:text-white/50 lg:text-base"
+				oninput={handleInput}
 				placeholder="type any domain..."
 			/>
 		</div>
