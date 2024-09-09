@@ -4,7 +4,7 @@
 	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
-	import { Search } from "$lib/components/icons/search"
+	import { SearchInput } from "$lib/components/ui/search-input"
 	import { apiUrl } from "$lib/utils/urls"
 	import { createQuery } from "@tanstack/svelte-query"
 
@@ -44,19 +44,6 @@
 </svelte:head>
 
 <div class="h-screen"></div>
-<div class="h-screen"></div>
-<div class="sticky bottom-6 z-50 w-full lg:bottom-14">
-	<div
-		class="flex h-10 w-full items-center justify-center gap-2 rounded-full border bg-black px-3.5 py-1 shadow-sm lg:h-[46px]"
-	>
-		<Search class="text-white/50 lg:size-4" />
-		<input
-			autocomplete="off"
-			autofocus
-			bind:value={params.q}
-			class="h-full w-full bg-transparent text-sm outline-none placeholder:text-white/50 lg:text-base"
-			oninput={handleInput}
-			placeholder="type any domain..."
-		/>
-	</div>
+<div class="sticky bottom-0 z-50 flex w-full py-6 lg:py-8">
+	<SearchInput bind:value={params.q} oninput={handleInput} />
 </div>

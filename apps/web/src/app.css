@@ -4,7 +4,7 @@
 
 @layer base {
 	* {
-		@apply border-white/25;
+		@apply border-white/20;
 	}
 	body {
 		@apply bg-black text-white;
