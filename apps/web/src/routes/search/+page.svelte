@@ -43,6 +43,22 @@
 	<meta content={title} name="title" />
 </svelte:head>
 
+<main class="pb-20 pt-[72px] lg:pb-24 lg:pt-20">
+	<div class="container">
+		{#if query.isSuccess && query.data}
+			<div
+				class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
+			>
+				{#each query.data.domains as domain}
+					<div class="flex h-24 items-center justify-center rounded-lg border">
+						<span class="text-center text-lg font-medium">{domain.name}</span>
+					</div>
+				{/each}
+			</div>
+		{/if}
+	</div>
+</main>
+
 <div class="fixed bottom-0 z-50 w-full pb-6 lg:pb-8">
 	<div class="container">
 		<SearchInput bind:value={params.q} oninput={handleInput} />
