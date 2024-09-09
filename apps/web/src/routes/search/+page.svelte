@@ -45,6 +45,6 @@
 
 <div class="fixed bottom-0 z-50 w-full pb-6 lg:pb-8">
 	<div class="container">
-		<SearchInput bind:value={params.q} on:input={handleInput} />
+		<SearchInput bind:value={params.q} oninput={handleInput} />
 	</div>
 </div>
