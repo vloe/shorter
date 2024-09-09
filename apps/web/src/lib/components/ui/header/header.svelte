@@ -7,27 +7,30 @@
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu"
 </script>
 
-<header class="sticky top-0 z-50 w-full backdrop-blur-xl">
-	<div class="relative flex h-14 items-center justify-between">
-		<a href="/">
-			<Lockup class="hidden lg:flex" />
-			<Logomark class="flex lg:hidden" />
-		</a>
-		<nav class="hidden items-center gap-x-1.5 lg:flex">
-			<ArrowBtn class="duration-200 ease-in-out" href="/search">start now</ArrowBtn>
-			<Btn class="duration-200 ease-in-out" disabled intent="minimal">login</Btn>
-		</nav>
-		<div class="flex lg:hidden">
-			<DropdownMenu.Root>
-				<DropdownMenu.Trigger><Menu /></DropdownMenu.Trigger>
-				<DropdownMenu.Content class="w-48">
-					<DropdownMenu.Item href="/search">start now</DropdownMenu.Item>
-					<DropdownMenu.Item disabled>login</DropdownMenu.Item>
-				</DropdownMenu.Content>
-			</DropdownMenu.Root>
+<header class="fixed z-50 h-14 w-full backdrop-blur-lg">
+	<div class="container h-full">
+		<div class="flex h-full items-center justify-between">
+			<a href="/">
+				<Lockup class="hidden lg:flex" />
+				<Logomark class="flex lg:hidden" />
+			</a>
+			<nav class="hidden items-center gap-x-1.5 lg:flex">
+				<ArrowBtn class="duration-200 ease-in-out" href="/search">start now</ArrowBtn>
+				<Btn class="duration-200 ease-in-out" disabled intent="minimal">login</Btn>
+			</nav>
+			<div class="flex lg:hidden">
+				<DropdownMenu.Root>
+					<DropdownMenu.Trigger><Menu /></DropdownMenu.Trigger>
+					<DropdownMenu.Content class="w-48">
+						<DropdownMenu.Item href="/search">start now</DropdownMenu.Item>
+						<DropdownMenu.Item disabled>login</DropdownMenu.Item>
+					</DropdownMenu.Content>
+				</DropdownMenu.Root>
+			</div>
 		</div>
-		<hr
-			class="absolute bottom-0 h-px w-full border-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-10"
-		/>
 	</div>
+	<hr
+		class="absolute bottom-0 h-px w-full border-0 opacity-10"
+		style="background-image:linear-gradient(270deg, rgba(255, 255, 255, 0.00) 0%, #FFF 52.07%, rgba(255, 255, 255, 0.00) 100%)"
+	/>
 </header>

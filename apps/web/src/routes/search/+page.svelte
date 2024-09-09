@@ -43,7 +43,8 @@
 	<meta content={title} name="title" />
 </svelte:head>
 
-<div class="h-screen"></div>
-<div class="sticky bottom-0 z-50 flex w-full py-6 lg:py-8">
-	<SearchInput bind:value={params.q} oninput={handleInput} />
+<div class="fixed bottom-0 z-50 w-full pb-6 lg:pb-8">
+	<div class="container">
+		<SearchInput bind:value={params.q} on:input={handleInput} />
+	</div>
 </div>
