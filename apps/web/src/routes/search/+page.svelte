@@ -4,6 +4,9 @@
 	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
+	import { Info } from "$lib/components/icons/info"
+	import { Btn } from "$lib/components/ui/btn"
+	import * as Popover from "$lib/components/ui/popover"
 	import { SearchInput } from "$lib/components/ui/search-input"
 	import { apiUrl } from "$lib/utils/urls"
 	import { createQuery } from "@tanstack/svelte-query"
@@ -14,7 +17,7 @@
 
 	function handleInput() {
 		$page.url.searchParams.set("q", params.q)
-		goto($page.url, { keepFocus: true, noScroll: true, replaceState: true })
+		goto($page.url, { keepFocus: true, replaceState: true })
 	}
 
 	let query = createQuery<SearchRes, Error>(() => ({
@@ -28,8 +31,7 @@
 				method: "GET",
 			})
 			if (!res.ok) throw new Error(await res.text())
-			const data = await res.json()
-			return data
+			return await res.json()
 		},
 		queryKey: ["search", params],
 		retry: false,
@@ -46,12 +48,32 @@
 <main class="pb-20 pt-[72px] lg:pb-24 lg:pt-20">
 	<div class="container">
 		{#if query.isSuccess && query.data}
-			<div
-				class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
-			>
+			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 				{#each query.data.domains as domain}
-					<div class="flex h-24 items-center justify-center rounded-lg border">
-						<span class="text-center text-lg font-medium">{domain.name}</span>
+					<div
+						class="flex h-24 select-none items-center justify-between rounded-lg border p-6"
+					>
+						<h3 class="flex items-center">
+							{domain.sld}
+							<span class="flex gap-x-px text-white/75">
+								{domain.tldWithDot}
+								<Popover.Root>
+									<Popover.Trigger>
+										<Info class="mb-1.5" />
+									</Popover.Trigger>
+									<Popover.Content class="flex flex-col space-y-2 p-3 text-sm">
+										<p>
+											<span class="font-semibold">type:</span>
+											{domain.tldInfo.category}
+										</p>
+										<p>
+											<span class="font-semibold">manager:</span>
+											{domain.tldInfo.manager}
+										</p>
+									</Popover.Content>
+								</Popover.Root>
+							</span>
+						</h3>
 					</div>
 				{/each}
 			</div>
