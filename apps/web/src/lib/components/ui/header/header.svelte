@@ -1,8 +1,8 @@
 <script lang="ts">
+	import { Feedback } from "$lib/components/icons/feedback"
 	import { Lockup } from "$lib/components/icons/lockup"
 	import { Logomark } from "$lib/components/icons/logomark"
 	import { Menu } from "$lib/components/icons/menu"
-	import { ArrowBtn } from "$lib/components/ui/arrow-btn"
 	import { Btn } from "$lib/components/ui/btn"
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu"
 </script>
@@ -14,16 +14,15 @@
 				<Lockup class="hidden lg:flex" />
 				<Logomark class="flex lg:hidden" />
 			</a>
-			<nav class="hidden items-center gap-x-1.5 lg:flex">
-				<ArrowBtn class="duration-200 ease-in-out" href="/search">start now</ArrowBtn>
-				<Btn class="duration-200 ease-in-out" disabled intent="minimal">login</Btn>
-			</nav>
+			<Btn class="hidden gap-x-1 duration-200 ease-in-out lg:flex" disabled>
+				<Feedback />
+				feedback
+			</Btn>
 			<div class="flex lg:hidden">
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger><Menu /></DropdownMenu.Trigger>
 					<DropdownMenu.Content class="w-48">
-						<DropdownMenu.Item href="/search">start now</DropdownMenu.Item>
-						<DropdownMenu.Item disabled>login</DropdownMenu.Item>
+						<DropdownMenu.Item disabled>feedback</DropdownMenu.Item>
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>
 			</div>
