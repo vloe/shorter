@@ -1,4 +1,5 @@
 use axum::{http::HeaderValue, routing::get, Router};
+use hickory_resolver::TokioAsyncResolver;
 use std::{error::Error, time::Duration};
 use tower_http::cors::{Any, CorsLayer};
 
@@ -9,6 +10,11 @@ mod routes;
 
 const MAX_AGE: u64 = 300; // 5 min
 const ADDR: &str = "127.0.0.1:9000";
+
+#[derive(Clone)]
+struct Ctx {
+    resolver: TokioAsyncResolver,
+}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -21,11 +27,20 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .allow_headers(Any)
         .max_age(Duration::from_secs(MAX_AGE));
 
+    let resolver = {
+        let (cfg, opts) = hickory_resolver::system_conf::read_system_conf()?;
+        TokioAsyncResolver::tokio(cfg, opts)
+    };
+
+    let ctx = Ctx { resolver };
+
     let app = Router::new()
         .route("/", get(|| async { "sh-server(:" }))
         .route("/health", get(|| async { "ok" }))
         .route("/search", get(routes::search::mount))
-        .layer(cors);
+        .route("/dns-lookup", get(routes::dns_lookup::mount))
+        .layer(cors)
+        .with_state(ctx);
 
     cfg_if::cfg_if! {
         if #[cfg(feature = "lambda")] {

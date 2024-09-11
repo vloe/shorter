@@ -1,5 +1,4 @@
-use crate::error::AppError;
-use crate::{constants::tld_info::TLD_INFO, models::domain::Domain};
+use crate::{constants::tld_info::TLD_INFO, error::AppError, models::domain::Domain};
 use axum::{extract::Query, Json};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
