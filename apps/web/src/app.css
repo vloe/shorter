@@ -20,6 +20,6 @@
 
 @layer components {
 	.container {
-		@apply mx-auto px-6 lg:px-16;
+		@apply mx-auto px-6 lg:px-14;
 	}
 }
