@@ -16,13 +16,17 @@ export interface Domain {
 	isRegistered: boolean;
 }
 
-export interface DnsLookupParams {
-	q: string;
+export interface DnsLookupsParams {
+	q: string[];
 }
 
-export interface DnsLookupRes {
+export interface Lookup {
 	domain: string;
 	available: boolean;
+}
+
+export interface DnsLookupsRes {
+	lookups: Lookup[];
 }
 
 export interface SearchParams {

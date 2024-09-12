@@ -11,16 +11,11 @@
 	import { apiUrl } from "$lib/utils/urls"
 	import { createQuery } from "@tanstack/svelte-query"
 
-	let params = $state<SearchParams>({
+	let searchParams = $state<SearchParams>({
 		q: (browser && $page.url.searchParams.get("q")) || "",
 	})
 
-	function handleInput() {
-		$page.url.searchParams.set("q", params.q)
-		goto($page.url, { keepFocus: true, replaceState: true })
-	}
-
-	let query = createQuery<SearchRes, Error>(() => ({
+	let searchQuery = createQuery<SearchRes, Error>(() => ({
 		queryFn: async () => {
 			const res = await fetch(`${apiUrl}/search${$page.url.search}`, {
 				headers: {
@@ -33,9 +28,14 @@
 			if (!res.ok) throw new Error(await res.text())
 			return await res.json()
 		},
-		queryKey: ["search", params],
+		queryKey: ["search", searchParams],
 		retry: false,
 	}))
+
+	function handleInput() {
+		$page.url.searchParams.set("q", searchParams.q)
+		goto($page.url, { keepFocus: true, replaceState: true })
+	}
 
 	const title = "search | shorter"
 </script>
@@ -47,9 +47,9 @@
 
 <main class="pb-20 pt-[72px] lg:pb-24 lg:pt-20">
 	<div class="container">
-		{#if query.isSuccess && query.data}
+		{#if searchQuery.isSuccess}
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-				{#each query.data.domains as domain}
+				{#each searchQuery.data.domains as domain, i}
 					<div
 						class="flex h-24 select-none items-center justify-between rounded-lg border p-6"
 					>
@@ -83,6 +83,6 @@
 
 <div class="fixed bottom-0 z-50 w-full pb-6 lg:pb-8">
 	<div class="container">
-		<SearchInput bind:value={params.q} oninput={handleInput} />
+		<SearchInput bind:value={searchParams.q} oninput={handleInput} />
 	</div>
 </div>

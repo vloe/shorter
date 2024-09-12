@@ -1,2 +1,2 @@
-pub mod dns_lookup;
+pub mod dns_lookups;
 pub mod search;
