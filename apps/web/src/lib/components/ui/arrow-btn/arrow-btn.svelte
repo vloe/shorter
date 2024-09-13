@@ -23,5 +23,5 @@
 	on:keydown
 >
 	{@render children()}
-	<Arrow class={cx("size-[10px] stroke-[1.5px]", className)} />
+	<Arrow class="size-[10px] stroke-[1.5px]" />
 </ButtonPrimitive.Root>

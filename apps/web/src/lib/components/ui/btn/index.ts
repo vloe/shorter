@@ -10,7 +10,7 @@ const btnVariants = cva({
 	base: "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50",
 	variants: {
 		intent: {
-			default: "bg-white text-black shadow hover:bg-white/85",
+			default: "bg-white text-black shadow hover:brightness-[85%]",
 		},
 		size: {
 			default: "h-7 px-4 py-2",

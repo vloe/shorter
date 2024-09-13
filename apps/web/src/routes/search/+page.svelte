@@ -45,6 +45,42 @@
 	<meta content={title} name="title" />
 </svelte:head>
 
+<main class="py-10">
+	<div class="container">
+		{#if searchQuery.isSuccess}
+			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+				{#each searchQuery.data.domains as domain}
+					<div
+						class="flex h-24 select-none items-center justify-center rounded-lg border p-6"
+					>
+						<h3 class="flex items-center">
+							{domain.sld}
+							<span class="flex gap-x-px text-white/75">
+								{domain.tldWithDot}
+								<Popover.Root>
+									<Popover.Trigger>
+										<Info class="mb-1.5" />
+									</Popover.Trigger>
+									<Popover.Content class="flex flex-col space-y-2 p-3 text-sm">
+										<p>
+											<span class="font-semibold">type:</span>
+											{domain.tldInfo.category}
+										</p>
+										<p>
+											<span class="font-semibold">manager:</span>
+											{domain.tldInfo.manager}
+										</p>
+									</Popover.Content>
+								</Popover.Root>
+							</span>
+						</h3>
+					</div>
+				{/each}
+			</div>
+		{/if}
+	</div>
+</main>
+
 <div class="fixed bottom-0 z-50 w-full pb-6 lg:pb-8">
 	<div class="container">
 		<SearchInput bind:value={searchParams.q} oninput={handleInput} />

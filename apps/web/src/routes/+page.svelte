@@ -3,6 +3,7 @@
 
 	import { goto } from "$app/navigation"
 	import { SearchInput } from "$lib/components/ui/search-input"
+	import { WaveBg } from "$lib/components/ui/wave-bg"
 
 	let searchParams = $state<SearchParams>({
 		q: "",
@@ -22,6 +23,8 @@
 	<meta content={desc} name="description" />
 </svelte:head>
 
+<WaveBg />
+
 <section class="pt-28 lg:pt-44">
 	<div class="container">
 		<div class="flex flex-col items-center gap-6 lg:gap-8">
@@ -37,3 +40,5 @@
 		</div>
 	</div>
 </section>
+<div class="h-screen"></div>
+<div class="h-screen"></div>

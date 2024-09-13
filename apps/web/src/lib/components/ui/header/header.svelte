@@ -7,12 +7,12 @@
 </script>
 
 <div class="container">
-	<header class="flex h-16 items-center justify-between">
-		<a href="/">
+	<header class="flex h-16 items-center justify-between lg:h-[72px]">
+		<a class="rounded-lg bg-black px-2.5 py-1" href="/">
 			<Lockup class="hidden lg:flex" />
 			<Logomark class="flex lg:hidden" />
 		</a>
-		<ArrowBtn class="hidden duration-200 ease-in-out lg:flex" href="/search">
+		<ArrowBtn class="hidden mix-blend-lighten duration-200 ease-in-out lg:flex" href="/search">
 			start now
 		</ArrowBtn>
 		<div class="flex lg:hidden">
