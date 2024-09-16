@@ -3,8 +3,8 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "cd ../webgl && pnpm run build && cd ../web && vite dev",
-		"build": "cd ../webgl && pnpm run build  && cd ../web && vite build"
+		"dev": "vite dev",
+		"build": "vite build"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "^3.0.4",
