@@ -1,0 +1,16 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"tasks": {
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": [".build/**", "pkg/**"]
+		},
+		"@sh/landing#build": {
+			"dependsOn": ["@sh/webgl#build"]
+		},
+		"lint": {},
+		"dev": {
+			"cache": false
+		}
+	}
+}

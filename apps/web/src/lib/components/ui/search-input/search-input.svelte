@@ -20,7 +20,7 @@
 		autocomplete="off"
 		autofocus
 		bind:value
-		class="h-full w-full bg-transparent text-sm outline-none placeholder:text-white/40"
+		class="h-full w-full bg-transparent outline-none placeholder:text-white/40"
 		placeholder="type any domain..."
 		{...props}
 	/>

@@ -1,4 +1,4 @@
-name: publish server
+name: publish
 on: [push]
 
 jobs:
@@ -7,7 +7,7 @@ jobs:
         permissions:
             contents: read
             deployments: write
-        name: Publish
+        name: publish
         steps:
             - name: checkout
               uses: actions/checkout@v3
@@ -41,3 +41,20 @@ jobs:
                   aws lambda update-function-code \
                     --function-name sh-server \
                     --image-uri "${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
+
+            - name: setup pnpm
+              uses: ./.github/actions/setup-pnpm
+
+            - name: setup rust
+              uses: ./.github/actions/setup-rust
+
+            - name: build
+              run: pnpm build
+
+            - name: publish web to cf pages
+              uses: cloudflare/pages-action@v1
+              with:
+                  apiToken: ${{ secrets.CF_API_TOKEN }}
+                  accountId: ${{ secrets.CF_ACCOUNT_ID }}
+                  projectName: shorter
+                  directory: ./apps/web/build

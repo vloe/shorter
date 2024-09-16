@@ -4,6 +4,7 @@
 	"scripts": {
 		"web": "pnpm --filter @sh/web -- ",
 		"core": "pnpm --filter @sh/server -- ",
+		"build": "turbo run build",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"lint:fix": "prettier --check . && eslint . --fix",

@@ -2,7 +2,6 @@
 	import type { Snippet } from "svelte"
 
 	import { browser } from "$app/environment"
-	import { Header } from "$lib/components/ui/header"
 	import { QueryClient, QueryClientProvider } from "@tanstack/svelte-query"
 
 	import "../app.css"
@@ -23,6 +22,5 @@
 </script>
 
 <QueryClientProvider client={queryClient}>
-	<Header />
 	{@render children()}
 </QueryClientProvider>

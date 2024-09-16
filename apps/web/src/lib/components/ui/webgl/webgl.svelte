@@ -45,14 +45,8 @@
 
 		window.addEventListener("resize", handleResize)
 		window.addEventListener("mousemove", handleMouseMove)
-
-		return () => {
-			window.removeEventListener("resize", handleResize)
-			window.removeEventListener("mousemove", handleMouseMove)
-			cancelAnimationFrame(animationId)
-		}
 	})
 </script>
 
 <svelte:window bind:innerHeight bind:innerWidth />
-<canvas bind:this={canvas} class="absolute top-0 -z-40"></canvas>
+<canvas bind:this={canvas} class="fixed -z-50"></canvas>
