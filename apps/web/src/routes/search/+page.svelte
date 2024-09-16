@@ -4,6 +4,9 @@
 	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
+	import { Info } from "$lib/components/icons/info"
+	import { Btn } from "$lib/components/ui/btn"
+	import * as Popover from "$lib/components/ui/popover"
 	import { SearchInput } from "$lib/components/ui/search-input"
 	import { apiUrl } from "$lib/utils/urls"
 	import { createQuery } from "@tanstack/svelte-query"
@@ -50,8 +53,37 @@
 			>
 				{#each searchQuery.data.domains as domain}
 					<div
-						class="flex h-24 select-none items-center justify-center rounded-md border p-6"
-					></div>
+						class="flex h-24 select-none items-center justify-between gap-x-1 rounded-md border p-6"
+					>
+						<h3 class="flex items-center">
+							{domain.sld}
+							<span class="text-white/75">
+								{domain.tldWithDot}
+							</span>
+							<Popover.Root>
+								<Popover.Trigger>
+									<Info class="mb-2 ml-px text-white/75" />
+								</Popover.Trigger>
+								<Popover.Content class="flex flex-col space-y-2 p-3 text-sm">
+									<p>
+										<span class="font-semibold">type:</span>
+										{domain.tldInfo.category}
+									</p>
+									<p>
+										<span class="font-semibold">manager:</span>
+										{domain.tldInfo.manager}
+									</p>
+								</Popover.Content>
+							</Popover.Root>
+						</h3>
+						<Btn class="rounded-full">
+							{#if domain.isRegistered}
+								<span class="text-red-500">unavailable</span>
+							{:else}
+								<span class="text-green-500">available</span>
+							{/if}
+						</Btn>
+					</div>
 				{/each}
 			</div>
 		{/if}

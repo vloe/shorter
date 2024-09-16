@@ -26,7 +26,7 @@
 	{transition}
 	{transitionConfig}
 	{...props}
-	class={cx("z-50 w-60 rounded-lg border bg-black p-4 shadow-md outline-none", className)}
+	class={cx("z-50 w-60 rounded-md border bg-black p-4 shadow-md outline-none", className)}
 >
 	{@render children()}
 </PopoverPrimitive.Content>
