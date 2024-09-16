@@ -5,7 +5,7 @@
 			"dependsOn": ["^build"],
 			"outputs": [".build/**", "pkg/**"]
 		},
-		"@sh/landing#build": {
+		"@sh/web#build": {
 			"dependsOn": ["@sh/webgl#build"]
 		},
 		"lint": {},
