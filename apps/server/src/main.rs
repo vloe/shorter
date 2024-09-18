@@ -38,6 +38,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .route("/", get(|| async { "sh-server(:" }))
         .route("/health", get(|| async { "ok" }))
         .route("/search", get(routes::search::mount))
+        .route("/test", get(routes::test::mount))
         .layer(cors)
         .with_state(ctx);
 
