@@ -4,6 +4,7 @@
 	import { Info } from "$lib/components/icons/info"
 	import { Btn } from "$lib/components/ui/btn"
 	import * as Popover from "$lib/components/ui/popover"
+	import { Skeleton } from "$lib/components/ui/skeleton"
 
 	type $Props = {
 		domain: Domain
@@ -34,7 +35,7 @@
 			</Popover.Content>
 		</Popover.Root>
 	</h3>
-	<Btn class="flex-shrink-0 rounded-full">
-		<span class="text-green-500">available</span>
+	<Btn class="w-20 flex-shrink-0 rounded-full">
+		<Skeleton class="h-4 w-full" />
 	</Btn>
 </div>
