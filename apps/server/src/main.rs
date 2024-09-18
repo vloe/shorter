@@ -56,7 +56,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 #[cfg(feature = "lambda")]
 async fn bind_lambda(app: Router) -> Result<(), Box<dyn Error>> {
     lambda_http::tracing::init_default_subscriber();
-    lambda_http::run(app).await;
+    lambda_http::run_with_streaming_response(app).await;
     Ok(())
 }
 
