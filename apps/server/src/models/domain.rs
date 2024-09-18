@@ -1,4 +1,7 @@
-use crate::constants::tld_info::{TldInfo, TLD_INFO};
+use crate::{
+    constants::tld_info::{TldInfo, TLD_INFO},
+    Ctx,
+};
 use serde::Serialize;
 use typeshare::typeshare;
 
@@ -15,11 +18,11 @@ pub struct Domain {
 }
 
 impl Domain {
-    pub fn new(domain: &str) -> Self {
+    pub async fn new(domain: &str, ctx: &Ctx) -> Self {
         let name = domain.to_string();
         let (sld, tld, tld_with_dot) = Self::get_domain_parts(&name);
         let tld_info = Self::get_tld_info(&tld);
-        let is_registered = false;
+        let is_registered = Self::lookup_domain(&name, ctx).await;
 
         Domain {
             name,
@@ -33,15 +36,20 @@ impl Domain {
 
     fn get_domain_parts(domain: &str) -> (String, String, String) {
         let parts: Vec<&str> = domain.split('.').collect();
-
         let sld = parts[0].to_string();
         let tld = parts[1].to_string();
         let tld_with_dot = format!(".{}", tld);
-
         (sld, tld, tld_with_dot)
     }
 
     fn get_tld_info(tld: &str) -> TldInfo {
         TLD_INFO.get(tld).unwrap().clone()
+    }
+
+    async fn lookup_domain(domain: &str, ctx: &Ctx) -> bool {
+        match ctx.resolver.lookup_ip(domain).await {
+            Ok(res) => res.iter().next().is_some(),
+            Err(_) => false,
+        }
     }
 }
