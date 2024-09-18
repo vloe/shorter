@@ -1,5 +1,10 @@
 <script lang="ts">
-	import type { SearchParams, SearchRes } from "$lib/utils/bindings"
+	import type {
+		DnsLookupsParams,
+		DnsLookupsRes,
+		SearchParams,
+		SearchRes,
+	} from "$lib/utils/bindings"
 
 	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
@@ -17,16 +22,11 @@
 		q: (browser && $page.url.searchParams.get("q")) || "",
 	})
 
+	let searchUrl = $derived(`${apiUrl}/search?q=${searchParams.q}`)
+
 	let searchQuery = createQuery<SearchRes, Error>(() => ({
 		queryFn: async () => {
-			const res = await fetch(`${apiUrl}/search${$page.url.search}`, {
-				headers: {
-					"Accept": "application/json",
-					"Cache-Control": "max-age=300",
-					"Content-Type": "application/json",
-				},
-				method: "GET",
-			})
+			let res = await fetch(searchUrl)
 			if (!res.ok) throw new Error(await res.text())
 			return await res.json()
 		},
@@ -34,9 +34,26 @@
 		retry: false,
 	}))
 
+	let dnsLookupsParams = $derived<DnsLookupsParams>({
+		q: searchQuery.data?.domains.map((domain) => domain.name) || [],
+	})
+
+	let dnsLookupsUrl = $derived(
+		`${apiUrl}/dns-lookups?${dnsLookupsParams.q.map((domain) => `q=${domain}`).join("&")}`,
+	)
+
+	let dnsLookupsQuery = createQuery<DnsLookupsRes, Error>(() => ({
+		queryFn: async () => {
+			let res = await fetch(dnsLookupsUrl)
+			if (!res.ok) throw new Error(await res.text())
+			return await res.json()
+		},
+		queryKey: ["dns-lookups", dnsLookupsParams],
+	}))
+
 	function handleInput() {
 		$page.url.searchParams.set("q", searchParams.q)
-		goto($page.url, { keepFocus: true, replaceState: true })
+		goto($page.url, { keepFocus: true, noScroll: true, replaceState: true })
 	}
 
 	let layout = $state((browser && localStorage.getItem("layout")) || "grid")
@@ -88,10 +105,12 @@
 							</Popover.Root>
 						</h3>
 						<Btn class="flex-shrink-0 rounded-full">
-							{#if domain.isRegistered}
-								<span class="text-red-500">unavailable</span>
-							{:else}
-								<span class="text-green-500">available</span>
+							{#if dnsLookupsQuery.isSuccess}
+								{#if dnsLookupsQuery.data.lookups[domain.name]}
+									<span class="text-green-500">available</span>
+								{:else}
+									<span class="text-red-500">unavailable</span>
+								{/if}
 							{/if}
 						</Btn>
 					</div>

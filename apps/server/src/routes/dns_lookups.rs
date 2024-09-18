@@ -3,6 +3,7 @@ use axum::{extract::State, Json};
 use axum_extra::extract::Query;
 use futures::future;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use typeshare::typeshare;
 
 #[typeshare]
@@ -13,15 +14,8 @@ pub struct DnsLookupsParams {
 
 #[typeshare]
 #[derive(Serialize)]
-pub struct Lookup {
-    domain: String,
-    available: bool,
-}
-
-#[typeshare]
-#[derive(Serialize)]
 pub struct DnsLookupsRes {
-    lookups: Vec<Lookup>,
+    lookups: HashMap<String, bool>,
 }
 
 pub async fn mount(
@@ -31,13 +25,15 @@ pub async fn mount(
     let lookups = future::join_all(params.q.into_iter().map(|domain| async {
         let lookup = ctx.resolver.lookup_ip(domain.clone()).await;
         let available = match lookup {
-            Ok(result) => result.iter().next().is_none(),
+            Ok(res) => res.iter().next().is_none(),
             Err(_) => true,
         };
-        Lookup { domain, available }
+        (domain, available)
     }))
     .await;
 
-    let res = DnsLookupsRes { lookups };
+    let res = DnsLookupsRes {
+        lookups: lookups.into_iter().collect(),
+    };
     Ok(Json(res))
 }
