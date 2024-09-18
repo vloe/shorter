@@ -5,7 +5,7 @@
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
 	import { DomainCard } from "$lib/components/ui/domain-card"
-	import { SearchInput } from "$lib/components/ui/search-input"
+	import { SearchBar } from "$lib/components/ui/search-bar"
 	import { search } from "$lib/queries/search"
 	import { createQuery } from "@tanstack/svelte-query"
 
@@ -19,7 +19,8 @@
 		retry: false,
 	}))
 
-	function handleSearchInput() {
+	function onSearchInput() {
+		if (!browser) return
 		$page.url.searchParams.set("q", searchParams.q)
 		goto($page.url, { keepFocus: true, noScroll: true, replaceState: true })
 	}
@@ -46,6 +47,6 @@
 
 <div class="fixed bottom-0 z-50 w-full pb-6 lg:pb-8">
 	<div class="container mx-auto px-3">
-		<SearchInput bind:value={searchParams.q} oninput={handleSearchInput} />
+		<SearchBar bind:searchParams {onSearchInput} />
 	</div>
 </div>

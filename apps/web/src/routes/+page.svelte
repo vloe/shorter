@@ -1,16 +1,21 @@
 <script lang="ts">
 	import type { SearchParams } from "$lib/utils/bindings"
 
+	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
-	import { SearchInput } from "$lib/components/ui/search-input"
+	import { page } from "$app/stores"
+	import { SearchBar } from "$lib/components/ui/search-bar"
 	import { WebGL } from "$lib/components/ui/webgl"
 
 	let searchParams = $state<SearchParams>({
 		q: "",
 	})
 
-	function handleInput() {
-		searchParams.q && goto(`/search?q=${searchParams.q}`)
+	function onSearchInput() {
+		if (!browser && !searchParams.q) return
+		const url = new URL(`${$page.url.origin}/search`)
+		url.searchParams.append("q", searchParams.q)
+		goto(url.toString())
 	}
 
 	const title = "shorter | world's first domain shortener"
@@ -36,7 +41,7 @@
 			<h2 class="max-w-md text-center text-white/75 lg:text-lg">
 				discover a shorter version of your domain, for example linktree.com -> linktr.ee
 			</h2>
-			<SearchInput bind:value={searchParams.q} class="max-w-xs" oninput={handleInput} />
+			<SearchBar bind:searchParams class="max-w-xs" {onSearchInput} />
 		</div>
 	</div>
 </main>
