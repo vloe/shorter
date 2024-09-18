@@ -1,68 +1,27 @@
 <script lang="ts">
-	import type {
-		DnsLookupsParams,
-		DnsLookupsRes,
-		SearchParams,
-		SearchRes,
-	} from "$lib/utils/bindings"
+	import type { SearchParams, SearchRes } from "$lib/utils/bindings"
 
 	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
-	import { Grid } from "$lib/components/icons/grid"
-	import { Info } from "$lib/components/icons/info"
-	import { List } from "$lib/components/icons/list"
-	import { Btn } from "$lib/components/ui/btn"
-	import * as Popover from "$lib/components/ui/popover"
+	import { DomainCard } from "$lib/components/ui/domain-card"
 	import { SearchInput } from "$lib/components/ui/search-input"
-	import { apiUrl } from "$lib/utils/urls"
+	import { search } from "$lib/queries/search"
 	import { createQuery } from "@tanstack/svelte-query"
 
 	let searchParams = $state<SearchParams>({
 		q: (browser && $page.url.searchParams.get("q")) || "",
 	})
 
-	let searchUrl = $derived(`${apiUrl}/search?q=${searchParams.q}`)
-
 	let searchQuery = createQuery<SearchRes, Error>(() => ({
-		queryFn: async () => {
-			let res = await fetch(searchUrl)
-			if (!res.ok) throw new Error(await res.text())
-			return await res.json()
-		},
+		queryFn: () => search(searchParams),
 		queryKey: ["search", searchParams],
 		retry: false,
 	}))
 
-	let dnsLookupsParams = $derived<DnsLookupsParams>({
-		q: searchQuery.data?.domains.map((domain) => domain.name) || [],
-	})
-
-	let dnsLookupsUrl = $derived(
-		`${apiUrl}/dns-lookups?${dnsLookupsParams.q.map((domain) => `q=${domain}`).join("&")}`,
-	)
-
-	let dnsLookupsQuery = createQuery<DnsLookupsRes, Error>(() => ({
-		queryFn: async () => {
-			let res = await fetch(dnsLookupsUrl)
-			if (!res.ok) throw new Error(await res.text())
-			return await res.json()
-		},
-		queryKey: ["dns-lookups", dnsLookupsParams],
-	}))
-
-	function handleInput() {
+	function handleSearchInput() {
 		$page.url.searchParams.set("q", searchParams.q)
 		goto($page.url, { keepFocus: true, noScroll: true, replaceState: true })
-	}
-
-	let layout = $state((browser && localStorage.getItem("layout")) || "grid")
-	let isGrid = $derived(layout === "grid")
-
-	function toggleLayout() {
-		if (!browser) return
-		layout = isGrid ? "list" : "grid"
-		localStorage.setItem("layout", layout)
 	}
 
 	const title = "search | shorter"
@@ -75,61 +34,18 @@
 
 <main class="pb-[76px] pt-3 lg:pb-[88px] lg:pt-4">
 	<div class="container mx-auto px-3">
-		{#if searchQuery.isSuccess}
-			<div
-				class={`grid grid-cols-1 gap-3 sm:gap-4 ${isGrid && "sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4"}`}
-			>
+		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
+			{#if searchQuery.isSuccess}
 				{#each searchQuery.data.domains as domain}
-					<div
-						class="flex h-24 select-none items-center justify-between gap-x-1 rounded-lg border p-6"
-					>
-						<h3 class="flex min-w-0 items-center">
-							<span class="flex min-w-0 items-center">
-								<span class="overflow-hidden">{domain.sld}</span>
-								<span class="flex-shrink-0 text-white/75">{domain.tldWithDot}</span>
-							</span>
-							<Popover.Root>
-								<Popover.Trigger>
-									<Info class="mb-2 ml-px flex-shrink-0 text-white/75" />
-								</Popover.Trigger>
-								<Popover.Content class="flex flex-col space-y-2 p-3 text-sm">
-									<p>
-										<span class="font-semibold">type:</span>
-										{domain.tldInfo.category}
-									</p>
-									<p>
-										<span class="font-semibold">manager:</span>
-										{domain.tldInfo.manager}
-									</p>
-								</Popover.Content>
-							</Popover.Root>
-						</h3>
-						<Btn class="flex-shrink-0 rounded-full">
-							{#if dnsLookupsQuery.isSuccess}
-								{#if dnsLookupsQuery.data.lookups[domain.name]}
-									<span class="text-green-500">available</span>
-								{:else}
-									<span class="text-red-500">unavailable</span>
-								{/if}
-							{/if}
-						</Btn>
-					</div>
+					<DomainCard {domain} />
 				{/each}
-			</div>
-		{/if}
+			{/if}
+		</div>
 	</div>
 </main>
 
 <div class="fixed bottom-0 z-50 w-full pb-6 lg:pb-8">
 	<div class="container mx-auto px-3">
-		<SearchInput bind:value={searchParams.q} oninput={handleInput}>
-			<Btn class="h-full rounded-l-[8rem] rounded-r-[32rem] px-1.5" onclick={toggleLayout}>
-				{#if isGrid}
-					<List />
-				{:else}
-					<Grid />
-				{/if}
-			</Btn>
-		</SearchInput>
+		<SearchInput bind:value={searchParams.q} oninput={handleSearchInput} />
 	</div>
 </div>
