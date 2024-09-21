@@ -1,10 +1,6 @@
 <p align="center">
-    <img width="100" height="100" src="apps/web/src/lib/assets/logomark.png" alt="logomark" style="padding: 50px;">
+    <img width="100" height="100" src="apps/web/src/lib/assets/logomark.png" alt="logomark" style="padding: 75px;">
 </p>
-
-## shorter
-
-a domain shortener tool. searches through thousands of tlds to discover a shorter version of your domain, for example linktree.com -> linktr.ee.
 
 ## architecture
 
