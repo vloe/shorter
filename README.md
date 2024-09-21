@@ -4,7 +4,7 @@
 
 ## shorter
 
-a domain shortener tool. searches through thousands of tlds to discover a shorter version of your domain. for example linktree.com -> linktr.ee.
+a domain shortener tool
 
 ## architecture
 
