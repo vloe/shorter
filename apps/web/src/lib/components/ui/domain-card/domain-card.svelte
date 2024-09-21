@@ -1,15 +1,19 @@
 <script lang="ts">
 	import type { Domain } from "$lib/utils/bindings"
+	import type { DnsLookupRes } from "$lib/utils/bindings"
+	import type { CreateQueryResult } from "@tanstack/svelte-query"
 
 	import { Info } from "$lib/components/icons/info"
 	import { Btn } from "$lib/components/ui/btn"
 	import * as Popover from "$lib/components/ui/popover"
+	import { Skeleton } from "$lib/components/ui/skeleton"
 
 	type $Props = {
+		dnsLookupQuery: CreateQueryResult<DnsLookupRes, Error>
 		domain: Domain
 	}
 
-	let { domain }: $Props = $props()
+	let { dnsLookupQuery, domain }: $Props = $props()
 </script>
 
 <div class="flex h-24 select-none items-center justify-between gap-x-1 rounded-lg border p-6">
@@ -35,10 +39,14 @@
 		</Popover.Root>
 	</h3>
 	<Btn class="w-20 flex-shrink-0 rounded-full">
-		{#if domain.isRegistered}
-			<span class="text-red-500">taken</span>
+		{#if dnsLookupQuery.isSuccess}
+			{#if dnsLookupQuery.data.lookup[domain.name]}
+				<span class="text-sm text-red-500">taken</span>
+			{:else}
+				<span class="text-sm text-green-500">buy</span>
+			{/if}
 		{:else}
-			<span class="text-green-500">buy</span>
+			<Skeleton class="h-4 w-full" />
 		{/if}
 	</Btn>
 </div>

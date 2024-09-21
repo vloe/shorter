@@ -13,15 +13,14 @@ export interface Domain {
 	tld: string;
 	tldWithDot: string;
 	tldInfo: TldInfo;
-	isRegistered: boolean;
 }
 
-export interface DnsLookupsParams {
+export interface DnsLookupParams {
 	q: string[];
 }
 
-export interface DnsLookupsRes {
-	lookups: Record<string, boolean>;
+export interface DnsLookupRes {
+	lookup: Record<string, boolean>;
 }
 
 export interface SearchParams {

@@ -25,7 +25,7 @@
 		autofocus
 		bind:value={searchParams.q}
 		class="h-full w-full bg-transparent outline-none placeholder:text-white/40"
-		maxlength="32"
+		maxlength="30"
 		oninput={onSearchInput}
 		placeholder="type any domain..."
 	/>

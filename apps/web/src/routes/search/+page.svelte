@@ -1,11 +1,17 @@
 <script lang="ts">
-	import type { SearchParams, SearchRes } from "$lib/utils/bindings"
+	import type {
+		DnsLookupParams,
+		DnsLookupRes,
+		SearchParams,
+		SearchRes,
+	} from "$lib/utils/bindings"
 
 	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
 	import { DomainCard } from "$lib/components/ui/domain-card"
 	import { SearchBar } from "$lib/components/ui/search-bar"
+	import { dnsLookup } from "$lib/queries/dnsLookup"
 	import { search } from "$lib/queries/search"
 	import { createQuery } from "@tanstack/svelte-query"
 
@@ -17,6 +23,16 @@
 		queryFn: () => search(searchParams),
 		queryKey: ["search", searchParams],
 		retry: false,
+	}))
+
+	let dnsLookupParams = $derived<DnsLookupParams>({
+		q: searchQuery.data?.domains.map((d) => d.name) || [],
+	})
+
+	let dnsLookupQuery = createQuery<DnsLookupRes, Error>(() => ({
+		enabled: searchQuery.isSuccess,
+		queryFn: () => dnsLookup(dnsLookupParams),
+		queryKey: ["dns-lookup", dnsLookupParams],
 	}))
 
 	function onSearchInput() {
@@ -38,7 +54,7 @@
 		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
 			{#if searchQuery.isSuccess}
 				{#each searchQuery.data.domains as domain}
-					<DomainCard {domain} />
+					<DomainCard {dnsLookupQuery} {domain} />
 				{/each}
 			{/if}
 		</div>

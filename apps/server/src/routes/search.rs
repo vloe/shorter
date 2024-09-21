@@ -1,8 +1,5 @@
-use crate::{constants::tld_info::TLD_INFO, error::AppError, models::domain::Domain, Ctx};
-use axum::{
-    extract::{Query, State},
-    Json,
-};
+use crate::{constants::tld_info::TLD_INFO, error::AppError, models::domain::Domain};
+use axum::{extract::Query, Json};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
@@ -62,13 +59,10 @@ pub struct SearchRes {
     domains: Vec<Domain>,
 }
 
-pub async fn mount(
-    Query(mut params): Query<SearchParams>,
-    State(ctx): State<Ctx>,
-) -> Result<Json<SearchRes>, AppError> {
+pub async fn mount(Query(mut params): Query<SearchParams>) -> Result<Json<SearchRes>, AppError> {
     params.validate()?.sanitize()?;
 
-    let domain = Domain::new(&params.q, &ctx).await;
+    let domain = Domain::new(&params.q);
     let mut domains = vec![domain.clone()];
 
     for perm in vowel_removal_perms(&domain.sld) {
@@ -76,7 +70,7 @@ pub async fn mount(
             let (sld, tld) = perm.split_at(i);
             if TLD_INFO.get(&tld).is_some() {
                 let name = format!("{}.{}", sld, tld);
-                domains.push(Domain::new(&name, &ctx).await);
+                domains.push(Domain::new(&name));
             }
         }
     }
