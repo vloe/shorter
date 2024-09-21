@@ -1,21 +1,23 @@
 <script lang="ts">
 	import type { SearchParams } from "$lib/utils/bindings"
+	import type { Snippet } from "svelte"
 
 	import { Search } from "$lib/components/icons/search"
 	import { cx } from "$lib/utils/cva.config"
 
 	type $Props = {
+		children?: Snippet
 		class?: string
 		onSearchInput: () => void
 		searchParams: SearchParams
 	}
 
-	let { class: className, onSearchInput, searchParams = $bindable() }: $Props = $props()
+	let { children, class: className, onSearchInput, searchParams = $bindable() }: $Props = $props()
 </script>
 
 <div
 	class={cx(
-		"flex h-10 w-full items-center gap-2 rounded-full border bg-black py-1.5 pl-3.5 pr-1.5 shadow-sm",
+		"flex h-10 w-full items-center gap-2 rounded-full border bg-black px-3.5 py-1.5 shadow-sm",
 		className,
 	)}
 >
@@ -29,4 +31,7 @@
 		oninput={onSearchInput}
 		placeholder="type any domain..."
 	/>
+	{#if children}
+		{@render children()}
+	{/if}
 </div>

@@ -9,12 +9,16 @@
 	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
+	import { Grid } from "$lib/components/icons/grid"
+	import { List } from "$lib/components/icons/list"
 	import { DomainCard } from "$lib/components/ui/domain-card"
 	import { SearchBar } from "$lib/components/ui/search-bar"
 	import { dnsLookup } from "$lib/queries/dnsLookup"
 	import { search } from "$lib/queries/search"
 	import { createQuery } from "@tanstack/svelte-query"
 
+	let layout = $state((browser && localStorage.getItem("layout")) || "grid")
+	let isGrid = $derived(layout === "grid")
 	let searchParams = $state<SearchParams>({
 		q: (browser && $page.url.searchParams.get("q")) || "",
 	})
@@ -41,6 +45,12 @@
 		goto($page.url, { keepFocus: true, noScroll: true, replaceState: true })
 	}
 
+	function toggleLayout() {
+		if (!browser) return
+		layout = isGrid ? "list" : "grid"
+		localStorage.setItem("layout", layout)
+	}
+
 	const title = "search | shorter"
 </script>
 
@@ -51,7 +61,9 @@
 
 <main class="pb-[76px] pt-3 lg:pb-[88px] lg:pt-4">
 	<div class="container mx-auto px-3">
-		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
+		<div
+			class={`grid grid-cols-1 gap-3 sm:gap-4 ${isGrid && "sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4"}`}
+		>
 			{#if searchQuery.isSuccess}
 				{#each searchQuery.data.domains as domain}
 					<DomainCard {dnsLookupQuery} {domain} />
@@ -63,6 +75,17 @@
 
 <div class="fixed bottom-0 z-50 w-full pb-6 lg:pb-8">
 	<div class="container mx-auto px-3">
-		<SearchBar bind:searchParams {onSearchInput} />
+		<SearchBar bind:searchParams {onSearchInput}>
+			<button
+				class="hidden text-white/40 hover:text-white sm:flex"
+				onclick={() => toggleLayout()}
+			>
+				{#if isGrid}
+					<List />
+				{:else}
+					<Grid />
+				{/if}
+			</button>
+		</SearchBar>
 	</div>
 </div>
