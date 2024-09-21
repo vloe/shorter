@@ -38,15 +38,13 @@
 			</Popover.Content>
 		</Popover.Root>
 	</h3>
-	<Btn class="w-20 flex-shrink-0 rounded-full">
-		{#if dnsLookupQuery.isSuccess}
-			{#if dnsLookupQuery.data.lookup[domain.name]}
-				<span class="text-sm text-red-500">taken</span>
-			{:else}
-				<span class="text-sm text-green-500">buy</span>
-			{/if}
+	{#if dnsLookupQuery.isSuccess}
+		{#if dnsLookupQuery.data.lookup[domain.name]}
+			<Btn class="flex-shrink-0 bg-red-500">taken</Btn>
 		{:else}
-			<Skeleton class="h-4 w-full" />
+			<Btn class="flex-shrink-0 bg-green-500">buy</Btn>
 		{/if}
-	</Btn>
+	{:else}
+		<Skeleton class="h-8 w-20 flex-shrink-0 rounded-full" />
+	{/if}
 </div>

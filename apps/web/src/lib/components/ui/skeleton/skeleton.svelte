@@ -8,4 +8,4 @@
 	let { class: className, ...props }: $Props = $props()
 </script>
 
-<div class={cx("animate-pulse rounded-md bg-black/10", className)} {...props}></div>
+<div class={cx("animate-pulse rounded-md bg-white/10", className)} {...props}></div>
