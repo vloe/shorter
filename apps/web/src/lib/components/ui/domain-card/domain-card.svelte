@@ -5,6 +5,7 @@
 
 	import { Info } from "$lib/components/icons/info"
 	import { Btn } from "$lib/components/ui/btn"
+	import * as DropdownMenu from "$lib/components/ui/dropdown-menu"
 	import * as Popover from "$lib/components/ui/popover"
 	import { Skeleton } from "$lib/components/ui/skeleton"
 
@@ -42,7 +43,48 @@
 		{#if dnsLookupQuery.data.lookup[domain.name]}
 			<Btn class="flex-shrink-0 bg-red-500">taken</Btn>
 		{:else}
-			<Btn class="flex-shrink-0 bg-green-500">buy</Btn>
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger asChild let:builder>
+					<Btn builders={[builder]} class="flex-shrink-0 bg-green-500">buy</Btn>
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content class="w-48">
+					<DropdownMenu.Item
+						href="https://porkbun.com/checkout/search?q={domain.name}"
+						rel="noopener noreferrer"
+						target="_blank"
+					>
+						porkbun
+					</DropdownMenu.Item>
+					<DropdownMenu.Item
+						href="https://dash.cloudflare.com/?account=domains/register"
+						rel="noopener noreferrer"
+						target="_blank"
+					>
+						cloudflare
+					</DropdownMenu.Item>
+					<DropdownMenu.Item
+						href="https://www.namecheap.com/domains/registration/results/?domain={domain.name}"
+						rel="noopener noreferrer"
+						target="_blank"
+					>
+						namecheap
+					</DropdownMenu.Item>
+					<DropdownMenu.Item
+						href="https://www.domain.com/registration/?search={domain.name}"
+						rel="noopener noreferrer"
+						target="_blank"
+					>
+						domain.com
+					</DropdownMenu.Item>
+					<DropdownMenu.Item
+						href="https://godaddy.com/domainsearch/find?domainToCheck={domain.name}"
+						rel="noopener noreferrer"
+						target="_blank"
+					>
+						godaddy
+					</DropdownMenu.Item>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
 		{/if}
 	{:else}
 		<Skeleton class="h-8 w-20 flex-shrink-0 rounded-full" />
