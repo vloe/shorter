@@ -29,7 +29,7 @@
 </script>
 
 <div
-	class={`flex h-24 select-none items-center justify-between gap-x-1 rounded-lg border p-6 shadow ${shadowClass}`}
+	class={`flex h-24 select-none items-center justify-between gap-x-1 rounded-lg border p-6 shadow-sm ${shadowClass}`}
 >
 	<h3 class="flex min-w-0 items-center">
 		<span class="flex min-w-0 items-center">
