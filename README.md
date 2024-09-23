@@ -9,5 +9,5 @@
 
 ## credits
 
--   design inspo: [scale](https://scale.com).
+-   design inspo: [scale](https://scale.com) and [panelsdesu](https://panelsdesu.com).
 -   domain status help: [dirkjan ochtman](https://github.com/djc).
