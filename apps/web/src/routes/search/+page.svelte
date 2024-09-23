@@ -76,10 +76,7 @@
 <div class="fixed bottom-0 z-50 w-full pb-6 lg:pb-8">
 	<div class="container mx-auto px-3">
 		<SearchBar bind:searchParams {onSearchInput}>
-			<button
-				class="hidden text-white/40 hover:text-white sm:flex"
-				onclick={() => toggleLayout()}
-			>
+			<button class="hidden hover:text-white sm:flex" onclick={() => toggleLayout()}>
 				{#if isGrid}
 					<List />
 				{:else}

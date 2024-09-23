@@ -14,7 +14,7 @@
 <ButtonPrimitive.Root
 	{builders}
 	class={cx(
-		"inline-flex h-7 w-20 items-center justify-center whitespace-nowrap rounded-full text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50",
+		"inline-flex h-7 items-center justify-center whitespace-nowrap rounded-full bg-white px-4 py-2 text-sm font-medium text-black shadow transition-colors hover:bg-white/85 disabled:pointer-events-none disabled:opacity-50",
 		className,
 	)}
 	{...props}

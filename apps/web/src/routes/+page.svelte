@@ -18,7 +18,7 @@
 		goto(url.toString())
 	}
 
-	const title = "shorter | world's first domain shortener"
+	const title = "shorter | a domain shortener tool"
 	const desc = "a domain shortener tool"
 </script>
 
@@ -34,9 +34,9 @@
 	<div class="container mx-auto px-6">
 		<div class="flex flex-col items-center gap-6 lg:gap-8">
 			<h1
-				class="text-center text-5xl leading-[1.1] tracking-[-1px] sm:text-6xl sm:leading-none lg:text-7xl"
+				class="text-center text-5xl leading-[1.1] tracking-[-0.8px] sm:text-6xl sm:leading-none lg:text-7xl"
 			>
-				world's first domain <br class="hidden sm:flex" /> shortener
+				shorten your own <br class="hidden min-[400px]:flex" /> domain
 			</h1>
 			<h2 class="max-w-md text-center text-white/75 lg:text-lg">
 				discover a shorter version of your domain, for example linktree.com -> linktr.ee

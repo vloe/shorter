@@ -21,7 +21,7 @@
 		className,
 	)}
 >
-	<Search class="text-white/40" />
+	<Search />
 	<input
 		autocomplete="off"
 		autofocus
