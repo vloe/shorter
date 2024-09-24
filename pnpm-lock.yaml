@@ -35,9 +35,6 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.6.5
         version: 0.6.5(prettier-plugin-svelte@3.2.6(prettier@3.3.3)(svelte@5.0.0-next.205))(prettier@3.3.3)
-      turbo:
-        specifier: ^2.1.2
-        version: 2.1.2
       typescript-eslint:
         specifier: ^8.0.0
         version: 8.0.1(eslint@9.8.0)(typescript@5.4.3)
@@ -45,6 +42,10 @@ importers:
   apps/server: {}
 
   apps/web:
+    dependencies:
+      svelte-radix:
+        specifier: ^1.1.1
+        version: 1.1.1(svelte@5.0.0-next.205)
     devDependencies:
       '@sveltejs/adapter-static':
         specifier: ^3.0.4
@@ -1541,6 +1542,11 @@ packages:
       typescript:
         optional: true
 
+  svelte-radix@1.1.1:
+    resolution: {integrity: sha512-TCbV7fzlJ2aEUB0nu2EodVA+r1eYj526IYpmGUTV32Z0bIrCUvx3K8xX3tcxR5dDFA5ZBU1Hxr4RYC4TDFEQ4A==}
+    peerDependencies:
+      svelte: ^3.54.0 || ^4.0.0 || ^5.0.0 || ^5.0.0-next.1
+
   svelte@5.0.0-next.205:
     resolution: {integrity: sha512-W0kamGCNps93QRlTxq43qfEaa3Mf1Km99+XcGXF27Ji1e/MykpWyUMhJf3JwvL3XHbyRekJiSEMBRmSJYqsPUQ==}
     engines: {node: '>=18'}
@@ -1588,40 +1594,6 @@ packages:
 
   tslib@2.7.0:
     resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
-
-  turbo-darwin-64@2.1.2:
-    resolution: {integrity: sha512-3TEBxHWh99h2yIzkuIigMEOXt/ItYQp0aPiJjPd1xN4oDcsKK5AxiFKPH9pdtfIBzYsY59kQhZiFj0ELnSP7Bw==}
-    cpu: [x64]
-    os: [darwin]
-
-  turbo-darwin-arm64@2.1.2:
-    resolution: {integrity: sha512-he0miWNq2WxJzsH82jS2Z4MXpnkzn9SH8a79iPXiJkq25QREImucscM4RPasXm8wARp91pyysJMq6aasD45CeA==}
-    cpu: [arm64]
-    os: [darwin]
-
-  turbo-linux-64@2.1.2:
-    resolution: {integrity: sha512-fKUBcc0rK8Vdqv5a/E3CSpMBLG1bzwv+Q0Q83F8fG2ZfNCNKGbcEYABdonNZkkx141Rj03cZQFCgxu3MVEGU+A==}
-    cpu: [x64]
-    os: [linux]
-
-  turbo-linux-arm64@2.1.2:
-    resolution: {integrity: sha512-sV8Bpmm0WiuxgbhxymcC7wSsuxfBBieI98GegSwbr/bs1ANAgzCg93urIrdKdQ3/b31zZxQwcaP4FBF1wx1Qdg==}
-    cpu: [arm64]
-    os: [linux]
-
-  turbo-windows-64@2.1.2:
-    resolution: {integrity: sha512-wcmIJZI9ORT9ykHGliFE6kWRQrlH930QGSjSgWC8uFChFFuOyUlvC7ttcxuSvU9VqC7NF4C+GVAcFJQ8lTjN7g==}
-    cpu: [x64]
-    os: [win32]
-
-  turbo-windows-arm64@2.1.2:
-    resolution: {integrity: sha512-zdnXjrhk7YO6CP+Q5wPueEvOCLH4lDa6C4rrwiakcWcPgcQGbVozJlo4uaQ6awo8HLWQEvOwu84RkWTdLAc/Hw==}
-    cpu: [arm64]
-    os: [win32]
-
-  turbo@2.1.2:
-    resolution: {integrity: sha512-Jb0rbU4iHEVQ18An/YfakdIv9rKnd3zUfSE117EngrfWXFHo3RndVH96US3GsT8VHpwTncPePDBT2t06PaFLrw==}
-    hasBin: true
 
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
@@ -3032,6 +3004,10 @@ snapshots:
       postcss-load-config: 5.1.0(jiti@1.21.0)(postcss@8.4.43)
       typescript: 5.4.3
 
+  svelte-radix@1.1.1(svelte@5.0.0-next.205):
+    dependencies:
+      svelte: 5.0.0-next.205
+
   svelte@5.0.0-next.205:
     dependencies:
       '@ampproject/remapping': 2.3.0
@@ -3107,33 +3083,6 @@ snapshots:
   ts-interface-checker@0.1.13: {}
 
   tslib@2.7.0: {}
-
-  turbo-darwin-64@2.1.2:
-    optional: true
-
-  turbo-darwin-arm64@2.1.2:
-    optional: true
-
-  turbo-linux-64@2.1.2:
-    optional: true
-
-  turbo-linux-arm64@2.1.2:
-    optional: true
-
-  turbo-windows-64@2.1.2:
-    optional: true
-
-  turbo-windows-arm64@2.1.2:
-    optional: true
-
-  turbo@2.1.2:
-    optionalDependencies:
-      turbo-darwin-64: 2.1.2
-      turbo-darwin-arm64: 2.1.2
-      turbo-linux-64: 2.1.2
-      turbo-linux-arm64: 2.1.2
-      turbo-windows-64: 2.1.2
-      turbo-windows-arm64: 2.1.2
 
   type-check@0.4.0:
     dependencies:

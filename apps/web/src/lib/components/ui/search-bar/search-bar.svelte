@@ -17,7 +17,7 @@
 
 <div
 	class={cx(
-		"flex h-10 w-full items-center gap-2 rounded-full border bg-black px-3.5 py-1.5 shadow-sm",
+		"flex h-10 w-full items-center gap-2 rounded-full border bg-popover px-3.5 py-1 shadow-sm",
 		className,
 	)}
 >
@@ -26,10 +26,10 @@
 		autocomplete="off"
 		autofocus
 		bind:value={searchParams.q}
-		class="h-full w-full bg-transparent outline-none placeholder:text-white/40"
+		class="flex h-full w-full rounded-md bg-transparent py-3 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
 		maxlength="30"
 		oninput={onSearchInput}
-		placeholder="type any domain..."
+		placeholder="try any domain..."
 	/>
 	{#if children}
 		{@render children()}

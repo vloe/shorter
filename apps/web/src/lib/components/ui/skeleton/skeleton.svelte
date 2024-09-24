@@ -3,9 +3,10 @@
 
 	import { cx } from "$lib/utils/cva.config"
 
-	type $Props = HTMLAttributes<HTMLDivElement>
+	type $$Props = HTMLAttributes<HTMLDivElement>
 
-	let { class: className, ...props }: $Props = $props()
+	let className: $$Props["class"] = undefined
+	export { className as class }
 </script>
 
-<div class={cx("animate-pulse rounded-md bg-white/10", className)} {...props}></div>
+<div class={cx("animate-pulse rounded-md bg-primary/10", className)} {...$$restProps}></div>

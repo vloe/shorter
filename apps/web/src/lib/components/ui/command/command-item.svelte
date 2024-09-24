@@ -1,22 +1,24 @@
 <script lang="ts">
-	import type { Snippet } from "svelte"
-
 	import { cx } from "$lib/utils/cva.config"
 	import { Command as CommandPrimitive } from "cmdk-sv"
 
-	type $Props = {
-		children: Snippet
-	} & CommandPrimitive.CommandProps
+	type $$Props = CommandPrimitive.ItemProps
 
-	let { children, class: className, ...props }: $Props = $props()
+	export let asChild = false
+
+	let className: null | string | undefined = undefined
+	export { className as class }
 </script>
 
 <CommandPrimitive.Item
+	{asChild}
 	class={cx(
-		"relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-white/15 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+		"relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
 		className,
 	)}
-	{...props}
+	{...$$restProps}
+	let:action
+	let:attrs
 >
-	{@render children()}
+	<slot {action} {attrs} />
 </CommandPrimitive.Item>

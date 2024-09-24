@@ -1,23 +1,16 @@
 <script lang="ts">
-	import type { Snippet } from "svelte"
-
 	import { cx } from "$lib/utils/cva.config"
 	import { flyAndScale } from "$lib/utils/flyAndScale"
 	import { Popover as PopoverPrimitive } from "bits-ui"
 
-	type $Props = {
-		children: Snippet
-	} & PopoverPrimitive.ContentProps
+	type $$Props = PopoverPrimitive.ContentProps
 
-	let {
-		align = "center",
-		children,
-		class: className,
-		sideOffset = 4,
-		transition = flyAndScale,
-		transitionConfig,
-		...props
-	}: $Props = $props()
+	let className: $$Props["class"] = undefined
+	export let transition: $$Props["transition"] = flyAndScale
+	export let transitionConfig: $$Props["transitionConfig"] = undefined
+	export let align: $$Props["align"] = "center"
+	export let sideOffset: $$Props["sideOffset"] = 4
+	export { className as class }
 </script>
 
 <PopoverPrimitive.Content
@@ -25,8 +18,11 @@
 	{sideOffset}
 	{transition}
 	{transitionConfig}
-	{...props}
-	class={cx("z-50 w-60 rounded-md border bg-black p-4 shadow-md outline-none", className)}
+	{...$$restProps}
+	class={cx(
+		"z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none",
+		className,
+	)}
 >
-	{@render children()}
+	<slot />
 </PopoverPrimitive.Content>

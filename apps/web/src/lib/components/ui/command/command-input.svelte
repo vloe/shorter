@@ -1,19 +1,23 @@
 <script lang="ts">
 	import { cx } from "$lib/utils/cva.config"
 	import { Command as CommandPrimitive } from "cmdk-sv"
+	import MagnifyingGlass from "svelte-radix/MagnifyingGlass.svelte"
 
-	type $Props = CommandPrimitive.InputProps
+	type $$Props = CommandPrimitive.InputProps
 
-	let { children, class: className, value = $bindable(""), ...props }: $Props = $props()
+	let className: null | string | undefined = undefined
+	export { className as class }
+	export let value: string = ""
 </script>
 
 <div class="flex items-center border-b px-3" data-cmdk-input-wrapper="">
+	<MagnifyingGlass class="mr-2 h-4 w-4 shrink-0 opacity-50" />
 	<CommandPrimitive.Input
 		class={cx(
-			"flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-white/40 disabled:cursor-not-allowed disabled:opacity-50",
+			"flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
 			className,
 		)}
-		{...props}
+		{...$$restProps}
 		bind:value
 	/>
 </div>

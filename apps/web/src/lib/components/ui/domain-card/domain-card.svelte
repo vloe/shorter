@@ -3,12 +3,16 @@
 	import type { DnsLookupRes } from "$lib/utils/bindings"
 	import type { CreateQueryResult } from "@tanstack/svelte-query"
 
+	import { goto } from "$app/navigation"
 	import { Info } from "$lib/components/icons/info"
 	import { Select } from "$lib/components/icons/select"
-	import { Btn } from "$lib/components/ui/btn"
-	import * as DropdownMenu from "$lib/components/ui/dropdown-menu"
+	import { Button } from "$lib/components/ui/button"
+	import * as Command from "$lib/components/ui/command"
 	import * as Popover from "$lib/components/ui/popover"
 	import { Skeleton } from "$lib/components/ui/skeleton"
+	import { tick } from "svelte"
+
+	let search = $state("")
 
 	type $Props = {
 		dnsLookupQuery: CreateQueryResult<DnsLookupRes, Error>
@@ -17,19 +21,28 @@
 
 	let { dnsLookupQuery, domain }: $Props = $props()
 
-	let shadowClass = $derived.by(() => {
-		if (!dnsLookupQuery.isSuccess) return ""
-
-		if (dnsLookupQuery.data.lookup[domain.name]) {
-			return "shadow-red-500/50"
-		} else {
-			return "shadow-green-500"
-		}
-	})
+	let links = [
+		{
+			href: "https://porkbun.com/checkout/search?q=",
+			label: "porkbun",
+		},
+		{
+			href: "https://www.namecheap.com/domains/registration/results/?domain=",
+			label: "namecheap",
+		},
+		{
+			href: "https://www.domain.com/registration/?search=",
+			label: "domain.com",
+		},
+		{
+			href: "https://godaddy.com/domainsearch/find?domainToCheck=",
+			label: "godaddy",
+		},
+	]
 </script>
 
 <div
-	class={`flex h-24 select-none items-center justify-between gap-x-1 rounded-lg border p-6 shadow-sm ${shadowClass}`}
+	class="flex h-24 select-none items-center justify-between gap-x-1 rounded-lg border p-6 shadow-sm"
 >
 	<h3 class="flex min-w-0 items-center">
 		<span class="flex min-w-0 items-center">
@@ -53,55 +66,43 @@
 		</Popover.Root>
 	</h3>
 	{#if dnsLookupQuery.isSuccess}
-		<DropdownMenu.Root>
-			<DropdownMenu.Trigger asChild let:builder>
-				<Btn
+		<Popover.Root>
+			<Popover.Trigger asChild let:builder>
+				<Button
 					builders={[builder]}
-					class="flex-shrink-0 gap-x-1"
+					class="h-7 flex-shrink-0 gap-x-0.5 rounded-full"
 					disabled={dnsLookupQuery.data.lookup[domain.name]}
 				>
 					buy
 					<Select />
-				</Btn>
-			</DropdownMenu.Trigger>
-			<DropdownMenu.Content class="w-60">
-				<DropdownMenu.Item
-					href="https://porkbun.com/checkout/search?q={domain.name}"
-					rel="noopener noreferrer"
-					target="_blank"
-				>
-					porkbun
-				</DropdownMenu.Item>
-				<DropdownMenu.Item
-					href="https://dash.cloudflare.com/?account=domains/register"
-					rel="noopener noreferrer"
-					target="_blank"
-				>
-					cloudflare
-				</DropdownMenu.Item>
-				<DropdownMenu.Item
-					href="https://www.namecheap.com/domains/registration/results/?domain={domain.name}"
-					rel="noopener noreferrer"
-					target="_blank"
-				>
-					namecheap
-				</DropdownMenu.Item>
-				<DropdownMenu.Item
-					href="https://www.domain.com/registration/?search={domain.name}"
-					rel="noopener noreferrer"
-					target="_blank"
-				>
-					domain.com
-				</DropdownMenu.Item>
-				<DropdownMenu.Item
-					href="https://godaddy.com/domainsearch/find?domainToCheck={domain.name}"
-					rel="noopener noreferrer"
-					target="_blank"
-				>
-					godaddy
-				</DropdownMenu.Item>
-			</DropdownMenu.Content>
-		</DropdownMenu.Root>
+				</Button>
+			</Popover.Trigger>
+			<Popover.Content class="p-0">
+				<Command.Root>
+					<Command.Input
+						bind:value={search}
+						class="h-9"
+						placeholder="search domain registrars..."
+					/>
+					{#key search}
+						<Command.Group>
+							{#each links as { href, label }}
+								<Command.Item value={label}>
+									<a
+										class="h-full w-full"
+										{href}
+										rel="noopener noreferrer"
+										target="_blank"
+									>
+										{label}
+									</a>
+								</Command.Item>
+							{/each}
+						</Command.Group>
+					{/key}
+				</Command.Root>
+			</Popover.Content>
+		</Popover.Root>
 	{:else}
 		<Skeleton class="h-7 w-[72px] flex-shrink-0 rounded-full" />
 	{/if}
