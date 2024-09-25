@@ -77,7 +77,7 @@
 			<Popover.Trigger asChild let:builder>
 				<Button
 					builders={[builder]}
-					class="h-7 flex-shrink-0 gap-x-0.5 rounded-full px-3.5"
+					class="h-7 flex-shrink-0 gap-x-0.5 rounded-full"
 					disabled={dnsLookupQuery.data.lookup[domain.name]}
 				>
 					buy
