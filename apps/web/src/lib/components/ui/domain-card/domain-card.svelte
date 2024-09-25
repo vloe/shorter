@@ -3,14 +3,12 @@
 	import type { DnsLookupRes } from "$lib/utils/bindings"
 	import type { CreateQueryResult } from "@tanstack/svelte-query"
 
-	import { goto } from "$app/navigation"
 	import { Info } from "$lib/components/icons/info"
 	import { Select } from "$lib/components/icons/select"
 	import { Button } from "$lib/components/ui/button"
 	import * as Command from "$lib/components/ui/command"
 	import * as Popover from "$lib/components/ui/popover"
 	import { Skeleton } from "$lib/components/ui/skeleton"
-	import { tick } from "svelte"
 
 	let search = $state("")
 

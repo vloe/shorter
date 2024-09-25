@@ -11,14 +11,13 @@
 	import { page } from "$app/stores"
 	import { Grid } from "$lib/components/icons/grid"
 	import { List } from "$lib/components/icons/list"
+	import { AsciiArt } from "$lib/components/ui/ascii-art"
 	import { DomainCard } from "$lib/components/ui/domain-card"
 	import { SearchBar } from "$lib/components/ui/search-bar"
 	import { dnsLookup } from "$lib/queries/dnsLookup"
 	import { search } from "$lib/queries/search"
 	import { createQuery } from "@tanstack/svelte-query"
 
-	let layout = $state((browser && localStorage.getItem("layout")) || "grid")
-	let isGrid = $derived(layout === "grid")
 	let searchParams = $state<SearchParams>({
 		q: (browser && $page.url.searchParams.get("q")) || "",
 	})
@@ -45,6 +44,9 @@
 		goto($page.url, { keepFocus: true, noScroll: true, replaceState: true })
 	}
 
+	let layout = $state((browser && localStorage.getItem("layout")) || "list")
+	let isGrid = $derived(layout === "grid")
+
 	function toggleLayout() {
 		if (!browser) return
 		layout = isGrid ? "list" : "grid"
@@ -61,15 +63,19 @@
 
 <main class="pb-[76px] pt-3 lg:pb-[88px] lg:pt-4">
 	<div class="container mx-auto px-3">
-		<div
-			class={`grid grid-cols-1 gap-3 sm:gap-4 ${isGrid && "sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4"}`}
-		>
-			{#if searchQuery.isSuccess}
+		{#if searchQuery.isSuccess}
+			<div
+				class={`grid grid-cols-1 gap-3 sm:gap-4 ${isGrid && "sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4"}`}
+			>
 				{#each searchQuery.data.domains as domain}
 					<DomainCard {dnsLookupQuery} {domain} />
 				{/each}
-			{/if}
-		</div>
+			</div>
+		{:else if searchParams.q.length < 3}
+			<div class="flex h-[calc(100vh-72px)] w-full items-center justify-center">
+				<AsciiArt class="text-[4px]" />
+			</div>
+		{/if}
 	</div>
 </main>
 

@@ -29,7 +29,7 @@
 		class="flex h-full w-full rounded-md bg-transparent py-3 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
 		maxlength="30"
 		oninput={onSearchInput}
-		placeholder="try any domain..."
+		placeholder="type any domain..."
 	/>
 	{#if children}
 		{@render children()}

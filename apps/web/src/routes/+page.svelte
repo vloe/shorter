@@ -4,7 +4,9 @@
 	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
+	import { AsciiArt } from "$lib/components/ui/ascii-art"
 	import { SearchBar } from "$lib/components/ui/search-bar"
+	import { asciiArtPos } from "$lib/constants/asciiArtPos"
 
 	let searchParams = $state<SearchParams>({
 		q: "",
@@ -27,11 +29,20 @@
 	<meta content={desc} name="description" />
 </svelte:head>
 
-<main class="flex h-full min-h-screen items-center justify-center">
-	<div class="container mx-auto px-6">
+<main class="relative flex h-full min-h-screen items-center justify-center overflow-hidden">
+	{#each asciiArtPos as { rotation, scale, x, y }}
+		<div
+			class="absolute"
+			style="left: {x}%; top: {y}%; transform: rotate({rotation}deg) scale({scale});"
+		>
+			<AsciiArt class="text-[1px]" />
+		</div>
+	{/each}
+
+	<div class="container relative z-10 mx-auto px-6">
 		<div class="flex flex-col items-center gap-6 lg:gap-8">
 			<h1
-				class="text-center text-5xl leading-[1.1] tracking-[-0.8px] sm:text-6xl sm:leading-none lg:text-7xl"
+				class="text-center text-5xl leading-[1.1] tracking-[-0.9px] sm:text-6xl sm:leading-none lg:text-7xl"
 			>
 				search for shorter <br class="hidden min-[400px]:flex" /> domains
 			</h1>
