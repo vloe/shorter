@@ -72,7 +72,9 @@
 				{/each}
 			</div>
 		{:else if searchParams.q.length < 3}
-			<div class="flex h-[calc(100vh-72px)] w-full items-center justify-center">
+			<div
+				class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform pb-[64px] pt-3 lg:pb-[72px]"
+			>
 				<AsciiArt class="text-[4px]" />
 			</div>
 		{/if}

@@ -37,10 +37,19 @@
 			label: "godaddy",
 		},
 	]
+
+	let shadow = $derived.by(() => {
+		if (!dnsLookupQuery.isSuccess) return ""
+		if (dnsLookupQuery.data.lookup[domain.name]) {
+			return "shadow-red-600/50"
+		} else {
+			return "shadow-green-600"
+		}
+	})
 </script>
 
 <div
-	class="flex h-24 select-none items-center justify-between gap-x-1 rounded-lg border p-6 shadow-sm"
+	class={`flex h-24 select-none items-center justify-between gap-x-1 rounded-lg border p-6 shadow-sm ${shadow}`}
 >
 	<h3 class="flex min-w-0 items-center">
 		<span class="flex min-w-0 items-center">
@@ -68,7 +77,7 @@
 			<Popover.Trigger asChild let:builder>
 				<Button
 					builders={[builder]}
-					class="h-7 flex-shrink-0 gap-x-0.5 rounded-full"
+					class="h-7 flex-shrink-0 gap-x-0.5 rounded-full px-3.5"
 					disabled={dnsLookupQuery.data.lookup[domain.name]}
 				>
 					buy
