@@ -39,13 +39,19 @@
 		</Popover.Root>
 	</h3>
 	{#if dnsLookupQuery.isSuccess}
-		<Button
-			class="h-7 flex-shrink-0 rounded-full"
-			disabled={dnsLookupQuery.data.lookup[domain.name]}
-		>
-			buy
-		</Button>
+		{#if dnsLookupQuery.data.lookup[domain.name]}
+			<Button class="h-7 flex-shrink-0 rounded-full" disabled>buy</Button>
+		{:else}
+			<Button
+				class="h-7 flex-shrink-0 rounded-full"
+				href={`https://porkbun.com/checkout/search?q=${domain.name}`}
+				rel="noreferrer noopener"
+				target="_blank"
+			>
+				buy
+			</Button>
+		{/if}
 	{:else}
-		<Skeleton class="h-7 w-[56px] rounded-full" />
+		<Skeleton class="h-7 w-16 rounded-full" />
 	{/if}
 </div>
