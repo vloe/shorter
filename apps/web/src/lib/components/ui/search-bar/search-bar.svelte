@@ -1,18 +1,15 @@
 <script lang="ts">
-	import type { SearchParams } from "$lib/utils/bindings"
 	import type { Snippet } from "svelte"
+	import type { HTMLInputAttributes } from "svelte/elements"
 
 	import { Search } from "$lib/components/icons/search"
 	import { cx } from "$lib/utils/cva.config"
 
 	type $Props = {
 		children?: Snippet
-		class?: string
-		onSearchInput: () => void
-		searchParams: SearchParams
-	}
+	} & HTMLInputAttributes
 
-	let { children, class: className, onSearchInput, searchParams = $bindable() }: $Props = $props()
+	let { children, class: className, value = $bindable(), ...props }: $Props = $props()
 </script>
 
 <div
@@ -25,11 +22,11 @@
 	<input
 		autocomplete="off"
 		autofocus
-		bind:value={searchParams.q}
 		class="flex h-full w-full rounded-md bg-transparent py-3 outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
 		maxlength="30"
-		oninput={onSearchInput}
 		placeholder="type any domain..."
+		{...props}
+		bind:value
 	/>
 	{#if children}
 		{@render children()}

@@ -8,7 +8,7 @@
 	let { class: className }: $Props = $props()
 </script>
 
-<pre class={cx("text-white/5", className)}>
+<pre class={cx("text-primary/25", className)}>
                                        00000000000                                                  
                                  00000000000000000                                                  
                              000000000000000000000                                                  

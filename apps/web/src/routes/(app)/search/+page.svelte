@@ -38,13 +38,13 @@
 		queryKey: ["dns-lookup", dnsLookupParams],
 	}))
 
-	function onSearchInput() {
+	function handleOnInput() {
 		if (!browser) return
 		$page.url.searchParams.set("q", searchParams.q)
 		goto($page.url, { keepFocus: true, noScroll: true, replaceState: true })
 	}
 
-	let layout = $state((browser && localStorage.getItem("layout")) || "list")
+	let layout = $state((browser && localStorage.getItem("layout")) || "grid")
 	let isGrid = $derived(layout === "grid")
 
 	function toggleLayout() {
@@ -61,9 +61,9 @@
 	<meta content={title} name="title" />
 </svelte:head>
 
-<main class="pb-[76px] pt-3 lg:pb-[88px] lg:pt-4">
-	<div class="container mx-auto px-3">
-		{#if searchQuery.isSuccess}
+{#if searchQuery.isSuccess}
+	<main class="pb-[76px] pt-3 lg:pb-[88px] lg:pt-4">
+		<div class="container mx-auto px-3">
 			<div
 				class={`grid grid-cols-1 gap-3 sm:gap-4 ${isGrid && "sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4"}`}
 			>
@@ -71,20 +71,18 @@
 					<DomainCard {dnsLookupQuery} {domain} />
 				{/each}
 			</div>
-		{:else if searchParams.q.length < 3}
-			<div
-				class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform pb-[64px] pt-3 lg:pb-[72px]"
-			>
-				<AsciiArt class="text-[4px]" />
-			</div>
-		{/if}
-	</div>
-</main>
+		</div>
+	</main>
+{:else if !searchQuery.isLoading && !searchQuery.isFetching}
+	<AsciiArt
+		class="absolute left-1/2 top-1/2 -z-50 -translate-x-1/2 -translate-y-1/2 transform pb-[64px] pt-3 text-[4px] lg:pb-[72px]"
+	/>
+{/if}
 
 <div class="fixed bottom-0 z-50 w-full pb-6 lg:pb-8">
 	<div class="container mx-auto px-3">
-		<SearchBar bind:searchParams {onSearchInput}>
-			<button class="hidden hover:text-white sm:flex" onclick={() => toggleLayout()}>
+		<SearchBar bind:value={searchParams.q} oninput={handleOnInput}>
+			<button class="hidden sm:flex" onclick={toggleLayout}>
 				{#if isGrid}
 					<List />
 				{:else}
