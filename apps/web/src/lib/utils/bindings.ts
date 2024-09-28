@@ -3,39 +3,38 @@
 */
 
 export interface TldInfo {
-	category: string;
-	manager: string;
+	category: string
+	manager: string
 }
 
 export interface Domain {
-	name: string;
-	sld: string;
-	tld: string;
-	tldWithDot: string;
-	tldInfo: TldInfo;
+	name: string
+	sld: string
+	tld: string
+	tldInfo: TldInfo
+	tldWithDot: string
 }
 
 export interface DnsLookupParams {
-	q: string[];
+	q: string[]
 }
 
 export interface DnsLookupRes {
-	lookup: Record<string, boolean>;
+	lookup: Record<string, boolean>
 }
 
 export interface FeedbackPayload {
-	msg: string;
+	msg: string
 }
 
 export interface FeedbackRes {
-	ok: boolean;
+	ok: boolean
 }
 
 export interface SearchParams {
-	q: string;
+	q: string
 }
 
 export interface SearchRes {
-	domains: Domain[];
+	domains: Domain[]
 }
-
