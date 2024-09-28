@@ -5,8 +5,10 @@
 
 	import { Info } from "$lib/components/icons/info"
 	import { Button } from "$lib/components/ui/button"
+	import * as DropdownMenu from "$lib/components/ui/dropdown-menu"
 	import * as Popover from "$lib/components/ui/popover"
 	import { Skeleton } from "$lib/components/ui/skeleton"
+	import { registrars } from "$lib/constants/registrars"
 
 	type $Props = {
 		dnsLookupQuery: CreateQueryResult<DnsLookupRes, Error>
@@ -39,18 +41,30 @@
 		</Popover.Root>
 	</h3>
 	{#if dnsLookupQuery.isSuccess}
-		{#if dnsLookupQuery.data.lookup[domain.name]}
-			<Button class="h-7 flex-shrink-0 rounded-full" disabled>buy</Button>
-		{:else}
-			<Button
-				class="h-7 flex-shrink-0 rounded-full"
-				href={`https://porkbun.com/checkout/search?q=${domain.name}`}
-				rel="noreferrer noopener"
-				target="_blank"
-			>
-				buy
-			</Button>
-		{/if}
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger asChild let:builder>
+				<Button
+					builders={[builder]}
+					class="h-7 flex-shrink-0 rounded-full"
+					disabled={dnsLookupQuery.data.lookup[domain.name]}
+				>
+					buy
+				</Button>
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Content class="w-52 rounded-lg">
+				{#each registrars as { buyLink, icon, name, site }}
+					<DropdownMenu.Item
+						class="items-center gap-x-3 rounded-md"
+						href={buyLink ? buyLink + domain.name : site}
+						rel="noopener noreferrer"
+						target="_blank"
+					>
+						<svelte:component this={icon} />
+						{name}
+					</DropdownMenu.Item>
+				{/each}
+			</DropdownMenu.Content>
+		</DropdownMenu.Root>
 	{:else}
 		<Skeleton class="h-7 w-16 rounded-full" />
 	{/if}
