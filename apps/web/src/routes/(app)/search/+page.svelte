@@ -73,7 +73,7 @@
 			</div>
 		</div>
 	</main>
-{:else if !searchQuery.isLoading && !searchQuery.isFetching}
+{:else if !searchQuery.isLoading}
 	<AsciiArt
 		class="absolute left-1/2 top-1/2 -z-50 -translate-x-1/2 -translate-y-1/2 transform pb-[64px] pt-3 text-[4px] lg:pb-[72px]"
 	/>
