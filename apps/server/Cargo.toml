@@ -22,6 +22,8 @@ thiserror = "1.0.63"
 futures = "0.3.30"
 hickory-resolver = "0.24.1"
 axum-extra = { version = "0.9.3", features = ["query"] }
+reqwest = "0.12.7"
+dotenv = "0.15.0"
 
 [features]
 lambda = ["dep:lambda_http"]

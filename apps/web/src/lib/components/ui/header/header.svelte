@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { FeedbackPayload, FeedbackRes } from "$lib/utils/bindings"
+
 	import { Feedback } from "$lib/components/icons/feedback"
 	import { Lockup } from "$lib/components/icons/lockup"
 	import { Logomark } from "$lib/components/icons/logomark"
@@ -9,8 +11,24 @@
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu"
 	import * as Popover from "$lib/components/ui/popover"
 	import { Textarea } from "$lib/components/ui/textarea"
+	import { feedback } from "$lib/queries/feedback"
+	import { createMutation } from "@tanstack/svelte-query"
 
 	let popoverOpen = $state(false)
+
+	let feedbackPayload = $state<FeedbackPayload>({
+		msg: "",
+	})
+
+	let feedbackQuery = createMutation<FeedbackRes, Error>(() => ({
+		enabled: false,
+		mutationFn: () => feedback(feedbackPayload),
+		mutationKey: ["feedback", feedbackPayload],
+		onSuccess: () => {
+			popoverOpen = false
+		},
+		retry: false,
+	}))
 </script>
 
 <header class="flex h-16 items-center justify-between lg:h-[72px]">
@@ -26,13 +44,16 @@
 				</Button>
 			</Popover.Trigger>
 			<Popover.Content class="rounded-lg p-0">
-				<Card.Root class="border-none">
+				<Card.Root class="border-none p-0">
 					<Card.Header>
 						<Card.Title>feedback</Card.Title>
 						<Card.Description>drop your email if you want a response</Card.Description>
 					</Card.Header>
 					<Card.Content class="py-4">
-						<Textarea class="focus-visible:ring-0" />
+						<Textarea bind:value={feedbackPayload.msg} class="focus-visible:ring-0" />
+						{#if feedbackQuery.isError}
+							<p class="text-sm text-red-500">{feedbackQuery.error.message}</p>
+						{/if}
 					</Card.Content>
 					<Card.Footer class="flex justify-between">
 						<Button
@@ -42,7 +63,9 @@
 						>
 							cancel
 						</Button>
-						<Button class="h-7 rounded-lg">send</Button>
+						<Button class="h-7 rounded-lg" onclick={() => feedbackQuery.mutate()}>
+							send
+						</Button>
 					</Card.Footer>
 				</Card.Root>
 			</Popover.Content>

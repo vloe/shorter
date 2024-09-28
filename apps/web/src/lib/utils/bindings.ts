@@ -23,6 +23,14 @@ export interface DnsLookupRes {
 	lookup: Record<string, boolean>;
 }
 
+export interface FeedbackPayload {
+	msg: string;
+}
+
+export interface FeedbackRes {
+	ok: boolean;
+}
+
 export interface SearchParams {
 	q: string;
 }

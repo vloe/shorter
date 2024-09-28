@@ -1,5 +1,10 @@
-use axum::{http::HeaderValue, routing::get, Router};
+use axum::{
+    http::HeaderValue,
+    routing::{get, post},
+    Router,
+};
 use hickory_resolver::TokioAsyncResolver;
+use reqwest::Client;
 use std::{error::Error, time::Duration};
 use tower_http::cors::{Any, CorsLayer};
 
@@ -14,10 +19,13 @@ const ADDR: &str = "127.0.0.1:9000";
 #[derive(Clone)]
 struct Ctx {
     resolver: TokioAsyncResolver,
+    client: Client,
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    dotenv::dotenv().ok();
+
     let cors = CorsLayer::new()
         .allow_origin([
             "http://localhost:5173".parse::<HeaderValue>().unwrap(),
@@ -31,14 +39,15 @@ async fn main() -> Result<(), Box<dyn Error>> {
         let (cfg, opts) = hickory_resolver::system_conf::read_system_conf()?;
         TokioAsyncResolver::tokio(cfg, opts)
     };
-
-    let ctx = Ctx { resolver };
+    let client = Client::new();
+    let ctx = Ctx { resolver, client };
 
     let app = Router::new()
         .route("/", get(|| async { "sh-server(:" }))
         .route("/health", get(|| async { "ok" }))
         .route("/search", get(routes::search::mount))
         .route("/dns-lookup", get(routes::dns_lookup::mount))
+        .route("/feedback", post(routes::feedback::mount))
         .layer(cors)
         .with_state(ctx);
 
