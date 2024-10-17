@@ -1,20 +1,21 @@
 <script lang="ts">
+	import type { Snippet } from "svelte"
+
 	import { cx } from "$lib/utils/cva.config"
 	import { flyAndScale } from "$lib/utils/flyAndScale"
 	import { Popover as PopoverPrimitive } from "bits-ui"
-	import type { Snippet } from "svelte"
 
-	type $Props = PopoverPrimitive.ContentProps & {
+	type $Props = {
 		children: Snippet
-	}
+	} & PopoverPrimitive.ContentProps
 
 	let {
+		align = "center",
 		children,
 		class: className,
+		sideOffset = 8,
 		transition = flyAndScale,
 		transitionConfig,
-		align = "center",
-		sideOffset = 8,
 		...props
 	}: $Props = $props()
 </script>

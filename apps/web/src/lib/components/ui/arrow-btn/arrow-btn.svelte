@@ -2,21 +2,21 @@
 	import { Arrow } from "$lib/components/icons/arrow"
 	import { cx } from "$lib/utils/cva.config"
 
-	import { type BtnProps, btnVariants, Btn } from "../btn"
+	import { Btn, type BtnProps, btnVariants } from "../btn"
 
 	let {
-		children,
 		builders,
+		children,
 		class: className,
-		size = "default",
 		intent = "default",
+		size = "default",
 		...props
 	}: BtnProps = $props()
 </script>
 
 <Btn
 	{builders}
-	class={cx(btnVariants({ className, size, intent }), "group gap-x-1.5 transition-all")}
+	class={cx(btnVariants({ className, intent, size }), "group gap-x-1.5 transition-all")}
 	{...props}
 	on:click
 	on:keydown

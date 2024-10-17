@@ -1,18 +1,19 @@
 <script lang="ts">
+	import type { Snippet } from "svelte"
+
 	import { cx } from "$lib/utils/cva.config"
 	import { flyAndScale } from "$lib/utils/flyAndScale"
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui"
-	import type { Snippet } from "svelte"
 
-	type $Props = DropdownMenuPrimitive.ContentProps & {
+	type $Props = {
 		children: Snippet
-	}
+	} & DropdownMenuPrimitive.ContentProps
 
 	let {
 		children,
+		class: className,
 		sideOffset = 8,
 		transition = flyAndScale,
-		class: className,
 		transitionConfig,
 		...props
 	}: $Props = $props()

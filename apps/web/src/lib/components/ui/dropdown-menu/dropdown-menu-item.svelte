@@ -1,13 +1,14 @@
 <script lang="ts">
+	import type { Snippet } from "svelte"
+
 	import { cx } from "$lib/utils/cva.config"
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui"
-	import type { Snippet } from "svelte"
 
 	type $Props = {
 		children: Snippet
 	} & DropdownMenuPrimitive.ItemProps
 
-	let { class: className, children, ...props }: $Props = $props()
+	let { children, class: className, ...props }: $Props = $props()
 </script>
 
 <DropdownMenuPrimitive.Item

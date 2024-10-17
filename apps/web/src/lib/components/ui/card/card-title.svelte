@@ -1,10 +1,9 @@
 <script lang="ts">
-	import type { HTMLAttributes } from "svelte/elements"
+	import type { Snippet } from "svelte"	import type { HTMLAttributes } from "svelte/elements"
 
 	import { cx } from "$lib/utils/cva.config"
 
 	import type { HeadingLevel } from "./index.js"
-	import type { Snippet } from "svelte"
 
 	type $Props = {
 		children: Snippet
@@ -15,8 +14,8 @@
 </script>
 
 <svelte:element
-	this={tag}
 	class={cx("font-semibold leading-none tracking-tight", className)}
+	this={tag}
 	{...props}
 >
 	{@render children()}

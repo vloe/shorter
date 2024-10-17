@@ -2,21 +2,21 @@
 	import { cx } from "$lib/utils/cva.config"
 	import { Button as ButtonPrimitive } from "bits-ui"
 
-	import { btnVariants, type BtnProps } from "./index.js"
+	import { type BtnProps, btnVariants } from "./index.js"
 
 	let {
-		class: className,
-		children,
-		size = "default",
-		intent = "default",
 		builders,
+		children,
+		class: className,
+		intent = "default",
+		size = "default",
 		...props
 	}: BtnProps = $props()
 </script>
 
 <ButtonPrimitive.Root
 	{builders}
-	class={cx(btnVariants({ className, size, intent }))}
+	class={cx(btnVariants({ className, intent, size }))}
 	{...props}
 	on:click
 	on:keydown

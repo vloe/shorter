@@ -9,18 +9,18 @@
 	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
-	import { SearchBar } from "$lib/components/ui/search-bar"
-	import { search } from "$lib/queries/search"
-	import { dnsLookup } from "$lib/queries/dnsLookup"
-	import { createQuery } from "@tanstack/svelte-query"
-	import { Btn } from "$lib/components/ui/btn"
-	import { Skeleton } from "$lib/components/ui/skeleton"
-	import { Info } from "$lib/components/icons/info"
-	import { Copy } from "$lib/components/icons/copy"
 	import { Check } from "$lib/components/icons/check"
-	import * as Popover from "$lib/components/ui/popover"
+	import { Copy } from "$lib/components/icons/copy"
+	import { Info } from "$lib/components/icons/info"
+	import { Btn } from "$lib/components/ui/btn"
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu"
+	import * as Popover from "$lib/components/ui/popover"
+	import { SearchBar } from "$lib/components/ui/search-bar"
+	import { Skeleton } from "$lib/components/ui/skeleton"
 	import { registrars } from "$lib/constants/registrars"
+	import { dnsLookup } from "$lib/queries/dnsLookup"
+	import { search } from "$lib/queries/search"
+	import { createQuery } from "@tanstack/svelte-query"
 
 	let copiedDomain = $state()
 
@@ -80,7 +80,7 @@
 								<Popover.Trigger>
 									<Info class="text-white/60" />
 								</Popover.Trigger>
-								<Popover.Content side="top" class="space-y-1 text-sm">
+								<Popover.Content class="space-y-1 text-sm" side="top">
 									<p>
 										<span class="font-semibold">type:</span>
 										{domain.tldInfo.category}
@@ -109,7 +109,7 @@
 										buy
 									</Btn>
 								</DropdownMenu.Trigger>
-								<DropdownMenu.Content side="top" class="w-52">
+								<DropdownMenu.Content class="w-52" side="top">
 									{#each registrars as { buyLink, icon, name, site }}
 										<DropdownMenu.Item
 											href={buyLink ? buyLink + domain.name : site}
@@ -133,5 +133,5 @@
 </div>
 
 <div class="fixed bottom-0 left-0 right-0 flex justify-center px-6 pb-8">
-	<SearchBar bind:value={searchParams.q} oninput={handleOnInput} class="max-w-[976px]" />
+	<SearchBar bind:value={searchParams.q} class="max-w-[976px]" oninput={handleOnInput} />
 </div>

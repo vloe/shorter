@@ -4,8 +4,8 @@
 	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
-	import { SearchBar } from "$lib/components/ui/search-bar"
 	import { Header } from "$lib/components/ui/header"
+	import { SearchBar } from "$lib/components/ui/search-bar"
 
 	let params = $state<SearchParams>({
 		q: "",

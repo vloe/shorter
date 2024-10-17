@@ -1,15 +1,14 @@
 <script lang="ts">
-	import { Logomark } from "$lib/components/icons/logomark"
-	import { Menu } from "$lib/components/icons/menu"
-	import { ArrowBtn } from "$lib/components/ui/arrow-btn"
-	import * as DropdownMenu from "$lib/components/ui/dropdown-menu"
-	import * as Popover from "$lib/components/ui/popover"
-	import { Search } from "$lib/components/icons/search"
-	import { Github } from "$lib/components/icons/github"
 	import type { FeedbackPayload, FeedbackRes } from "$lib/types/bindings"
 
-	import * as Card from "$lib/components/ui/card"
+	import { Github } from "$lib/components/icons/github"
+	import { Logomark } from "$lib/components/icons/logomark"
+	import { Menu } from "$lib/components/icons/menu"
+	import { Search } from "$lib/components/icons/search"
+	import { ArrowBtn } from "$lib/components/ui/arrow-btn"
 	import { Btn } from "$lib/components/ui/btn"
+	import * as Card from "$lib/components/ui/card"	import * as DropdownMenu from "$lib/components/ui/dropdown-menu"
+	import * as Popover from "$lib/components/ui/popover"
 	import { Textarea } from "$lib/components/ui/textarea"
 	import { feedback } from "$lib/queries/feedback"
 	import { createMutation } from "@tanstack/svelte-query"
@@ -38,9 +37,9 @@
 	<nav class="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 md:flex">
 		<a
 			class="text-white/70 hover:text-white"
-			target="_blank"
-			rel="noopener noreferrer"
 			href="https://github.com/vloe/shorter"
+			rel="noopener noreferrer"
+			target="_blank"
 		>
 			repo
 		</a>
@@ -61,7 +60,7 @@
 						{/if}
 					</Card.Content>
 					<Card.Footer class="flex justify-between">
-						<Btn onclick={() => (popoverOpen = false)} size="sm" intent="outline">
+						<Btn intent="outline" onclick={() => (popoverOpen = false)} size="sm">
 							cancel
 						</Btn>
 						<Btn onclick={() => mutation.mutate()} size="sm">send</Btn>
@@ -82,9 +81,9 @@
 					start now
 				</DropdownMenu.Item>
 				<DropdownMenu.Item
-					target="_blank"
-					rel="noopener noreferrer"
 					href="https://github.com/vloe/shorter"
+					rel="noopener noreferrer"
+					target="_blank"
 				>
 					<Github class="mr-2.5" />
 					repo
