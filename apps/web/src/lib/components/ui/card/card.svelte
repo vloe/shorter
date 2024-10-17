@@ -2,22 +2,23 @@
 	import type { HTMLAttributes } from "svelte/elements"
 
 	import { cx } from "$lib/utils/cva.config"
+	import type { Snippet } from "svelte"
 
-	type $$Props = HTMLAttributes<HTMLDivElement>
+	type $Props = HTMLAttributes<HTMLDivElement> & {
+		children: Snippet
+	}
 
-	let className: $$Props["class"] = undefined
-	export { className as class }
+	let { children, class: className, ...props }: $Props = $props()
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	class={cx("rounded-xl border bg-card text-card-foreground shadow", className)}
-	{...$$restProps}
+	class={cx("rounded-lg border bg-black shadow", className)}
+	{...props}
 	on:click
 	on:focusin
 	on:focusout
 	on:mouseenter
 	on:mouseleave
 >
-	<slot />
+	{@render children()}
 </div>

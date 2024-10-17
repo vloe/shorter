@@ -2,13 +2,15 @@
 	import type { HTMLAttributes } from "svelte/elements"
 
 	import { cx } from "$lib/utils/cva.config"
+	import type { Snippet } from "svelte"
 
-	type $$Props = HTMLAttributes<HTMLParagraphElement>
+	type $Props = HTMLAttributes<HTMLParagraphElement> & {
+		children: Snippet
+	}
 
-	let className: $$Props["class"] = undefined
-	export { className as class }
+	let { children, class: className, ...props }: $Props = $props()
 </script>
 
-<p class={cx("text-sm text-muted-foreground", className)} {...$$restProps}>
-	<slot />
+<p class={cx("text-sm text-white/75", className)} {...props}>
+	{@render children()}
 </p>

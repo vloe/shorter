@@ -22,5 +22,7 @@
 </script>
 
 <QueryClientProvider client={queryClient}>
-	{@render children()}
+	<div class="container mx-auto max-w-5xl scroll-smooth px-6">
+		{@render children()}
+	</div>
 </QueryClientProvider>

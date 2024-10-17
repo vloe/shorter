@@ -1,4 +1,4 @@
-import type { SearchParams, SearchRes } from "$lib/utils/bindings"
+import type { SearchParams, SearchRes } from "$lib/types/bindings"
 
 import { apiUrl } from "$lib/utils/urls"
 

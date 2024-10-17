@@ -1,4 +1,4 @@
-import type { FeedbackPayload, FeedbackRes } from "$lib/utils/bindings"
+import type { FeedbackPayload, FeedbackRes } from "$lib/types/bindings"
 
 import { apiUrl } from "$lib/utils/urls"
 

@@ -2,26 +2,32 @@
 	import { cx } from "$lib/utils/cva.config"
 	import { flyAndScale } from "$lib/utils/flyAndScale"
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui"
+	import type { Snippet } from "svelte"
 
-	type $$Props = DropdownMenuPrimitive.ContentProps
+	type $Props = DropdownMenuPrimitive.ContentProps & {
+		children: Snippet
+	}
 
-	let className: $$Props["class"] = undefined
-	export let sideOffset: $$Props["sideOffset"] = 4
-	export let transition: $$Props["transition"] = flyAndScale
-	export let transitionConfig: $$Props["transitionConfig"] = undefined
-	export { className as class }
+	let {
+		children,
+		sideOffset = 8,
+		transition = flyAndScale,
+		class: className,
+		transitionConfig,
+		...props
+	}: $Props = $props()
 </script>
 
 <DropdownMenuPrimitive.Content
 	class={cx(
-		"z-50 min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md focus:outline-none",
+		"z-50 min-w-[8rem] rounded-lg border bg-black p-1 shadow-md focus:outline-none",
 		className,
 	)}
 	{sideOffset}
 	{transition}
 	{transitionConfig}
-	{...$$restProps}
+	{...props}
 	on:keydown
 >
-	<slot />
+	{@render children()}
 </DropdownMenuPrimitive.Content>

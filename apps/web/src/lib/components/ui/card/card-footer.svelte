@@ -2,13 +2,15 @@
 	import type { HTMLAttributes } from "svelte/elements"
 
 	import { cx } from "$lib/utils/cva.config"
+	import type { Snippet } from "svelte"
 
-	type $$Props = HTMLAttributes<HTMLDivElement>
+	type $Props = HTMLAttributes<HTMLDivElement> & {
+		children: Snippet
+	}
 
-	let className: $$Props["class"] = undefined
-	export { className as class }
+	let { children, class: className, ...props }: $Props = $props()
 </script>
 
-<div class={cx("flex items-center p-6 pt-0", className)} {...$$restProps}>
-	<slot />
+<div class={cx("flex items-center p-6 pt-0", className)} {...props}>
+	{@render children()}
 </div>

@@ -1,21 +1,18 @@
 <script lang="ts">
 	import { cx } from "$lib/utils/cva.config"
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui"
+	import type { Snippet } from "svelte"
 
-	type $$Props = {
-		inset?: boolean
+	type $Props = {
+		children: Snippet
 	} & DropdownMenuPrimitive.ItemProps
-	type $$Events = DropdownMenuPrimitive.ItemEvents
 
-	let className: $$Props["class"] = undefined
-	export let inset: $$Props["inset"] = undefined
-	export { className as class }
+	let { class: className, children, ...props }: $Props = $props()
 </script>
 
 <DropdownMenuPrimitive.Item
 	class={cx(
-		"relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[disabled]:opacity-50",
-		inset && "pl-8",
+		"relative flex cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[highlighted]:bg-white/10 data-[disabled]:opacity-50",
 		className,
 	)}
 	on:click
@@ -25,7 +22,7 @@
 	on:pointerdown
 	on:pointerleave
 	on:pointermove
-	{...$$restProps}
+	{...props}
 >
-	<slot />
+	{@render children()}
 </DropdownMenuPrimitive.Item>

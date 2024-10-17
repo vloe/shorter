@@ -1,26 +1,26 @@
 <script lang="ts">
 	import { Arrow } from "$lib/components/icons/arrow"
 	import { cx } from "$lib/utils/cva.config"
-	import { Button as ButtonPrimitive } from "bits-ui"
 
-	import { type ButtonProps, buttonVariants } from "../button"
+	import { type BtnProps, btnVariants, Btn } from "../btn"
 
 	let {
+		children,
 		builders,
 		class: className,
 		size = "default",
-		variant = "default",
+		intent = "default",
 		...props
-	}: ButtonProps = $props()
+	}: BtnProps = $props()
 </script>
 
-<ButtonPrimitive.Root
+<Btn
 	{builders}
-	class={cx(buttonVariants({ className, size, variant }), "group gap-x-[5px] transition-all")}
+	class={cx(btnVariants({ className, size, intent }), "group gap-x-1.5 transition-all")}
 	{...props}
 	on:click
 	on:keydown
 >
-	<slot />
-	<Arrow class={cx("size-[10px] stroke-[1.5px]", className)} />
-</ButtonPrimitive.Root>
+	{@render children()}
+	<Arrow class={cx("size-2.5 stroke-[1.5px]", className)} />
+</Btn>

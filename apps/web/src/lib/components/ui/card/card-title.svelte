@@ -4,20 +4,20 @@
 	import { cx } from "$lib/utils/cva.config"
 
 	import type { HeadingLevel } from "./index.js"
+	import type { Snippet } from "svelte"
 
-	type $$Props = {
+	type $Props = {
+		children: Snippet
 		tag?: HeadingLevel
 	} & HTMLAttributes<HTMLHeadingElement>
 
-	let className: $$Props["class"] = undefined
-	export let tag: $$Props["tag"] = "h3"
-	export { className as class }
+	let { children, class: className, tag = "h3", ...props }: $Props = $props()
 </script>
 
 <svelte:element
-	class={cx("font-semibold leading-none tracking-tight", className)}
 	this={tag}
-	{...$$restProps}
+	class={cx("font-semibold leading-none tracking-tight", className)}
+	{...props}
 >
-	<slot />
+	{@render children()}
 </svelte:element>

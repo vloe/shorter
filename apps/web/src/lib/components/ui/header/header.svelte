@@ -1,29 +1,29 @@
 <script lang="ts">
-	import type { FeedbackPayload, FeedbackRes } from "$lib/utils/bindings"
-
-	import { Feedback } from "$lib/components/icons/feedback"
-	import { Lockup } from "$lib/components/icons/lockup"
 	import { Logomark } from "$lib/components/icons/logomark"
 	import { Menu } from "$lib/components/icons/menu"
 	import { ArrowBtn } from "$lib/components/ui/arrow-btn"
-	import { Button } from "$lib/components/ui/button"
-	import * as Card from "$lib/components/ui/card"
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu"
 	import * as Popover from "$lib/components/ui/popover"
+	import { Search } from "$lib/components/icons/search"
+	import { Github } from "$lib/components/icons/github"
+	import type { FeedbackPayload, FeedbackRes } from "$lib/types/bindings"
+
+	import * as Card from "$lib/components/ui/card"
+	import { Btn } from "$lib/components/ui/btn"
 	import { Textarea } from "$lib/components/ui/textarea"
 	import { feedback } from "$lib/queries/feedback"
 	import { createMutation } from "@tanstack/svelte-query"
 
 	let popoverOpen = $state(false)
 
-	let feedbackPayload = $state<FeedbackPayload>({
+	let payload = $state<FeedbackPayload>({
 		msg: "",
 	})
 
-	let feedbackQuery = createMutation<FeedbackRes, Error>(() => ({
+	let mutation = createMutation<FeedbackRes, Error>(() => ({
 		enabled: false,
-		mutationFn: () => feedback(feedbackPayload),
-		mutationKey: ["feedback", feedbackPayload],
+		mutationFn: () => feedback(payload),
+		mutationKey: ["feedback", payload],
 		onSuccess: () => {
 			popoverOpen = false
 		},
@@ -31,55 +31,64 @@
 	}))
 </script>
 
-<header class="flex h-16 items-center justify-between lg:h-[72px]">
+<header class="flex h-20 items-center justify-between">
 	<a href="/">
-		<Lockup class="hidden lg:flex" />
-		<Logomark class="flex lg:hidden" />
+		<Logomark />
 	</a>
-	<nav class="hidden items-center gap-x-3 lg:flex">
+	<nav class="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 md:flex">
+		<a
+			class="text-white/70 hover:text-white"
+			target="_blank"
+			rel="noopener noreferrer"
+			href="https://github.com/vloe/shorter"
+		>
+			repo
+		</a>
 		<Popover.Root bind:open={popoverOpen}>
-			<Popover.Trigger asChild let:builder>
-				<Button builders={[builder]} class="h-8 rounded-lg" size="icon" variant="outline">
-					<Feedback />
-				</Button>
-			</Popover.Trigger>
-			<Popover.Content class="rounded-lg p-0">
-				<Card.Root class="border-none p-0">
+			<Popover.Trigger class="text-white/60 hover:text-white">feedback</Popover.Trigger>
+			<Popover.Content class="border-0 p-0">
+				<Card.Root>
 					<Card.Header>
 						<Card.Title>feedback</Card.Title>
-						<Card.Description>drop your email if you want a response</Card.Description>
+						<Card.Description>
+							include your email if you want a response
+						</Card.Description>
 					</Card.Header>
-					<Card.Content class="py-4">
-						<Textarea bind:value={feedbackPayload.msg} class="focus-visible:ring-0" />
-						{#if feedbackQuery.isError}
-							<p class="text-sm text-red-500">{feedbackQuery.error.message}</p>
+					<Card.Content>
+						<Textarea bind:value={payload.msg} placeholder="write a message..." />
+						{#if mutation.isError}
+							<p class="text-sm text-red-500">{mutation.error.message}</p>
 						{/if}
 					</Card.Content>
 					<Card.Footer class="flex justify-between">
-						<Button
-							class="h-7 rounded-lg"
-							onclick={() => (popoverOpen = false)}
-							variant="outline"
-						>
+						<Btn onclick={() => (popoverOpen = false)} size="sm" intent="outline">
 							cancel
-						</Button>
-						<Button class="h-7 rounded-lg" onclick={() => feedbackQuery.mutate()}>
-							send
-						</Button>
+						</Btn>
+						<Btn onclick={() => mutation.mutate()} size="sm">send</Btn>
 					</Card.Footer>
 				</Card.Root>
 			</Popover.Content>
 		</Popover.Root>
-
-		<ArrowBtn class="h-8 rounded-lg duration-200 ease-in-out" href="/search">
-			start now
-		</ArrowBtn>
 	</nav>
-	<div class="flex lg:hidden">
-		<DropdownMenu.Root>
+	<ArrowBtn class="hidden rounded-full duration-200 ease-in-out md:flex" href="/search">
+		start now
+	</ArrowBtn>
+	<div class="flex md:hidden">
+		<DropdownMenu.Root closeOnItemClick={false}>
 			<DropdownMenu.Trigger><Menu /></DropdownMenu.Trigger>
-			<DropdownMenu.Content class="w-52 rounded-lg">
-				<DropdownMenu.Item class="rounded-md" href="/search">start now</DropdownMenu.Item>
+			<DropdownMenu.Content class="w-52">
+				<DropdownMenu.Item href="/search">
+					<Search class="mr-2.5" />
+					start now
+				</DropdownMenu.Item>
+				<DropdownMenu.Item
+					target="_blank"
+					rel="noopener noreferrer"
+					href="https://github.com/vloe/shorter"
+				>
+					<Github class="mr-2.5" />
+					repo
+				</DropdownMenu.Item>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	</div>

@@ -9,12 +9,12 @@
 </script>
 
 <svg
-	class={cx("size-7", className)}
+	class={cx("size-4", className)}
+	viewBox="0 0 20 20"
 	fill="currentColor"
-	viewBox="0 0 16 10"
 	xmlns="http://www.w3.org/2000/svg"
 >
-	<rect height="2" rx="1" width="16" y="8"></rect>
-	<rect height="2" rx="1" width="16" y="4"></rect>
-	<rect height="2" rx="1" width="16"></rect>
+	<path
+		d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+	/>
 </svg>
