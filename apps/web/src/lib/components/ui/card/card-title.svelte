@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { Snippet } from "svelte"	import type { HTMLAttributes } from "svelte/elements"
+	import type { Snippet } from "svelte"
+	import type { HTMLAttributes } from "svelte/elements"
 
 	import { cx } from "$lib/utils/cva.config"
 
@@ -14,8 +15,8 @@
 </script>
 
 <svelte:element
-	class={cx("font-semibold leading-none tracking-tight", className)}
 	this={tag}
+	class={cx("font-semibold leading-none tracking-tight", className)}
 	{...props}
 >
 	{@render children()}
