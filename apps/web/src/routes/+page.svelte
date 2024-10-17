@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { SearchParams } from "$lib/types/bindings"
 
-	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
 	import { Header } from "$lib/components/ui/header"
@@ -12,7 +11,6 @@
 	})
 
 	function handleOnInput() {
-		if (!browser) return
 		const url = new URL(`${$page.url.origin}/search`)
 		url.searchParams.append("q", params.q)
 		goto(url.toString())
