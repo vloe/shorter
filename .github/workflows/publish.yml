@@ -2,42 +2,29 @@ name: publish
 on: [push]
 
 jobs:
-    publish:
+    build:
         runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            deployments: write
-        name: publish
         steps:
-            - name: checkout
-              uses: actions/checkout@v3
+            - name: install rust toolchain
+              uses: dtolnay/rust-toolchain@stable
 
-            - name: configure aws credentials
-              uses: aws-actions/configure-aws-credentials@v1
+            - name: install zig toolchain
+              uses: korandoru/setup-zig@v1
               with:
-                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  aws-region: ${{ secrets.AWS_REGION }}
+                  zig-version: 0.13.0
 
-            - name: login to amazon ecr
-              id: login-ecr
-              uses: aws-actions/amazon-ecr-login@v1
+            - name: install cargo lambda
+              uses: jaxxstorm/action-install-gh-release@v1.9.0
+              with:
+                  repo: cargo-lambda/cargo-lambda
+                  platform: linux
+                  arch: x86_64
 
-            - name: build, tag, and push image to amazon ecr
-              env:
-                  ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-                  ECR_REPOSITORY: sh-server
-                  IMAGE_TAG: ${{ github.sha }}
+            - name: publish lambda
               run: |
-                  docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./apps/server
-                  docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-            - name: update lambda function
+                  cargo lambda build --release
+                  cargo lambda deploy --enable-function-url sh-server
               env:
-                  ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-                  ECR_REPOSITORY: sh-server
-                  IMAGE_TAG: ${{ github.sha }}
-              run: |
-                  aws lambda update-function-code \
-                    --function-name sh-server \
-                    --image-uri "${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
+                  AWS_DEFAULT_REGION: eu-west-2
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
