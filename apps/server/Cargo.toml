@@ -2,28 +2,10 @@
 name = "sh-server"
 version = "0.1.0"
 edition = "2021"
-license = "MIT"
-repository = "https://github.com/vloe/shorter"
 
 [dependencies]
-axum = "0.7.5"
-tokio = { version = "1.39.2", features = [
-  "macros",
-  "rt-multi-thread",
-  "signal",
-] }
-lambda_http = { version = "0.13.0", optional = true }
-tower-http = { version = "0.5.2", features = ["cors"] }
-serde = { version = "1.0.209", features = ["derive"] }
-typeshare = "1.0.3"
-phf = { version = "0.11.2", features = ["macros"] }
-cfg-if = "1.0.0"
-thiserror = "1.0.63"
-futures = "0.3.30"
-hickory-resolver = "0.24.1"
-axum-extra = { version = "0.9.3", features = ["query"] }
-reqwest = { version = "0.12.7", features = ["native-tls-vendored"] }
-dotenv = "0.15.0"
+axum = "0.7.7"
+lambda_http = "0.13.0"
 
-[features]
-lambda = ["dep:lambda_http"]
+tokio = { version = "1", features = ["macros"] }
+
