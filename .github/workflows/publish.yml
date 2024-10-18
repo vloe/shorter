@@ -5,10 +5,12 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
+            - uses: actions/checkout@v2
             - name: install rust toolchain
-              uses: dtolnay/rust-toolchain@stable
 
+              uses: dtolnay/rust-toolchain@stable
             - name: install zig toolchain
+
               uses: korandoru/setup-zig@v1
               with:
                   zig-version: 0.13.0
@@ -22,6 +24,7 @@ jobs:
 
             - name: publish lambda
               run: |
+                  cd apps/server
                   cargo lambda build --release
                   cargo lambda deploy --enable-function-url sh-server
               env:
