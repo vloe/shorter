@@ -25,7 +25,7 @@ jobs:
             - name: publish lambda
               run: |
                   cd apps/server
-                  cargo lambda build --release
+                  cargo lambda build --release --features lambda
                   cargo lambda deploy --enable-function-url sh-server
               env:
                   AWS_DEFAULT_REGION: eu-west-2
