@@ -1,0 +1,8 @@
+{
+	"name": "@sh/server",
+	"private": true,
+	"scripts": {
+		"dev": "cargo watch -x 'run -p sh-server'",
+		"dev:lambda": "cargo lambda watch"
+	}
+}

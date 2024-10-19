@@ -1,21 +1,18 @@
-use lambda_http::{run, tracing, Error};
-use tower_http::cors::CorsLayer;
-
 use axum::{
     http::{HeaderValue, Method},
-    routing::{get, post},
+    routing::get,
     Router,
 };
+use std::{error::Error, time::Duration};
+use tower_http::cors::CorsLayer;
 
-use std::time::Duration;
+mod utils;
 
 const MAX_AGE: u64 = 300; // 5 min
 const ADDR: &str = "127.0.0.1:9000";
 
 #[tokio::main]
-async fn main() -> Result<(), Error> {
-    tracing::init_default_subscriber();
-
+async fn main() -> Result<(), Box<dyn Error>> {
     let cors = CorsLayer::new()
         .allow_origin([
             "http://localhost:5173".parse::<HeaderValue>().unwrap(),
@@ -29,5 +26,21 @@ async fn main() -> Result<(), Error> {
         .route("/health", get(|| async { "ok" }))
         .layer(cors);
 
-    run(app).await
+    println!("\nlistening on http://{}\n", ADDR);
+
+    #[cfg(feature = "lambda")]
+    {
+        lambda_http::tracing::init_default_subscriber();
+        lambda_http::run(app).await?;
+    }
+
+    #[cfg(not(feature = "lambda"))]
+    {
+        let listener = tokio::net::TcpListener::bind(&ADDR).await?;
+        axum::serve(listener, app)
+            .with_graceful_shutdown(utils::axum_shutdown_signal())
+            .await?;
+    }
+
+    Ok(())
 }
