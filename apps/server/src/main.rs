@@ -31,7 +31,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     #[cfg(feature = "lambda")]
     {
         lambda_http::tracing::init_default_subscriber();
-        lambda_http::run(app).await?;
+        lambda_http::run(app).await;
     }
 
     #[cfg(not(feature = "lambda"))]
