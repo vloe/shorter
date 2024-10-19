@@ -7,8 +7,7 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"lint:fix": "prettier --check . && eslint . --fix",
-		"gen:bindings": "typeshare ./apps/server --lang=typescript --output-file=apps/web/src/lib/types/bindings.ts",
-		"gen:tld-info": "cd scripts && cargo run --bin gen_tld_info"
+		"gen:bindings": "typeshare ./apps/server --lang=typescript --output-file=apps/web/src/lib/types/bindings.ts"
 	},
 	"devDependencies": {
 		"@types/eslint": "^9.6.0",

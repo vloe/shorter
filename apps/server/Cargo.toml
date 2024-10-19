@@ -8,6 +8,11 @@ axum = "0.7.7"
 lambda_http = { version = "0.13.0", optional = true }
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "signal"] }
 tower-http = { version = "0.6.1", features = ["cors"] }
+reqwest = { version = "0.12.8", features = ["native-tls-vendored"] }
+typeshare = "1.0.3"
+serde = "1.0.210"
+thiserror = "1.0.64"
+dotenv = "0.15.0"
 
 [features]
 lambda = ["dep:lambda_http"]
