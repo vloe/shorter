@@ -19,30 +19,30 @@ pub struct FeedbackRes {
 }
 
 impl FeedbackPayload {
-    pub fn validate(&mut self) -> Result<&mut Self, AppError> {
-        self.msg = self.msg.trim().to_string();
-        if self.msg.len() < MSG_MIN {
+    pub fn validate(&self) -> Result<(), AppError> {
+        let trimmed = self.msg.trim();
+        if trimmed.len() < MSG_MIN {
             return Err(AppError::TooShort("message", MSG_MIN));
         }
-        if self.msg.len() > MSG_MAX {
+        if trimmed.len() > MSG_MAX {
             return Err(AppError::TooLong("message", MSG_MAX));
         }
-        Ok(self)
+        Ok(())
     }
 }
 
 pub async fn mount(
     State(ctx): State<Ctx>,
-    Json(mut payload): Json<FeedbackPayload>,
+    Json(payload): Json<FeedbackPayload>,
 ) -> Result<Json<FeedbackRes>, AppError> {
     payload.validate()?;
 
+    let msg = payload.msg.trim().to_lowercase();
     let bot_token = get_env("TELEGRAM_BOT_TOKEN")?;
     let chat_id = get_env("TELEGRAM_CHAT_ID")?;
 
     let url = format!("https://api.telegram.org/bot{}/sendMessage", bot_token);
-    let params = [("chat_id", chat_id), ("text", payload.msg)];
-
+    let params = [("chat_id", chat_id), ("text", msg)];
     ctx.reqwest
         .post(&url)
         .form(&params)

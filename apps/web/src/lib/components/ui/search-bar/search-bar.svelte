@@ -15,7 +15,7 @@
 		autocomplete="off"
 		autofocus
 		class="ml-2 h-full w-full bg-transparent outline-none placeholder:text-white/50"
-		maxlength="30"
+		maxlength="20"
 		placeholder="type a domain..."
 		{...props}
 		bind:value

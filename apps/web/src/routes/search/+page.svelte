@@ -83,11 +83,11 @@
 								<Popover.Content class="space-y-1 text-sm" side="top">
 									<p>
 										<span class="font-semibold">type:</span>
-										{domain.tldInfo.category}
+										{domain.tld.category}
 									</p>
 									<p>
 										<span class="font-semibold">tld manager:</span>
-										{domain.tldInfo.manager}
+										{domain.tld.manager}
 									</p>
 								</Popover.Content>
 							</Popover.Root>

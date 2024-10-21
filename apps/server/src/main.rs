@@ -11,6 +11,7 @@ use reqwest::Client;
 use std::{error::Error, time::Duration};
 use tower_http::cors::CorsLayer;
 
+mod constants;
 mod error;
 mod routes;
 mod utils;
@@ -19,7 +20,7 @@ const MAX_AGE: u64 = 300; // 5 min
 const ADDR: &str = "127.0.0.1:9000";
 
 #[derive(Clone)]
-struct Ctx {
+pub struct Ctx {
     reqwest: Client,
 }
 
@@ -43,6 +44,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .route("/", get(|| async { "sh-server(:" }))
         .route("/health", get(|| async { "ok" }))
         .route("/feedback", post(routes::feedback::mount))
+        .route("/search", get(routes::search::mount))
         .layer(cors)
         .with_state(ctx);
 
