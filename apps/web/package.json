@@ -10,7 +10,7 @@
 		"@sveltejs/adapter-static": "^3.0.4",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0-next.6",
-		"@tanstack/svelte-query": "https://pkg.pr.new/@tanstack/svelte-query@59098d7133ae6892b937acf139052f39b5e2db72",
+		"@tanstack/svelte-query": "https://pkg.pr.new/@tanstack/svelte-query@ccce0b8f144bb3890f6e77924d1bb1f76dad7b51",
 		"autoprefixer": "^10.4.20",
 		"bits-ui": "^0.21.13",
 		"cmdk-sv": "^0.0.18",

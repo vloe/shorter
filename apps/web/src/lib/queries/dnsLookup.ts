@@ -4,10 +4,7 @@ import { apiUrl } from "$lib/utils/urls"
 
 export async function dnsLookup(params: DnsLookupParams): Promise<DnsLookupRes> {
 	const url = new URL(`${apiUrl().origin}/dns-lookup`)
-
-	for (let i = 0; i < params.q.length; i++) {
-		url.searchParams.append("q", params.q[i])
-	}
+	url.searchParams.append("q", params.q)
 
 	const res = await fetch(url.toString(), {
 		headers: {

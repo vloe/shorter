@@ -5,7 +5,6 @@
 		SearchParams,
 		SearchRes,
 	} from "$lib/types/bindings"
-
 	import { browser } from "$app/environment"
 	import { goto } from "$app/navigation"
 	import { page } from "$app/stores"
@@ -20,44 +19,43 @@
 	import { registrars } from "$lib/constants/registrars"
 	import { dnsLookup } from "$lib/queries/dnsLookup"
 	import { search } from "$lib/queries/search"
-	import { createQuery } from "@tanstack/svelte-query"
-
-	let copiedDomain = $state()
+	import { createQuery, createQueries } from "@tanstack/svelte-query"
 
 	let searchParams = $state<SearchParams>({
 		q: (browser && $page.url.searchParams.get("q")) || "",
 	})
-
 	let searchQuery = createQuery<SearchRes, Error>(() => ({
 		queryFn: () => search(searchParams),
 		queryKey: ["search", searchParams],
 		retry: false,
 	}))
 
-	let dnsLookupParams = $derived<DnsLookupParams>({
-		q: searchQuery.data?.domains.map((d) => d.name) || [],
+	let dnsLookupParams = $derived<DnsLookupParams[]>(
+		searchQuery.data?.domains.map((domain) => ({ q: domain.name })) || [],
+	)
+	const dnsLookupQueries = createQueries({
+		queries: () =>
+			dnsLookupParams.map((params) => ({
+				queryKey: ["dns-lookup", params],
+				queryFn: () => dnsLookup(params),
+			})),
 	})
 
-	let dnsLookupQuery = createQuery<DnsLookupRes, Error>(() => ({
-		enabled: searchQuery.isSuccess,
-		queryFn: () => dnsLookup(dnsLookupParams),
-		queryKey: ["dns-lookup", dnsLookupParams],
-	}))
+	let copied = $state("")
+	function handleOnCopy(domain: string) {
+		navigator.clipboard.writeText(domain)
+		copied = domain
+		setTimeout(() => {
+			if (copied === domain) {
+				copied = ""
+			}
+		}, 3000)
+	}
 
 	function handleOnInput() {
 		if (!browser) return
 		$page.url.searchParams.set("q", searchParams.q)
 		goto($page.url, { keepFocus: true, noScroll: true, replaceState: true })
-	}
-
-	function handleOnCopy(domain: string) {
-		navigator.clipboard.writeText(domain)
-		copiedDomain = domain
-		setTimeout(() => {
-			if (copiedDomain === domain) {
-				copiedDomain = ""
-			}
-		}, 3000)
 	}
 
 	const title = "search | shorter"
@@ -71,7 +69,7 @@
 <div class="pb-[88px] pt-3">
 	<main class="flex flex-col gap-3">
 		{#if searchQuery.isSuccess}
-			{#each searchQuery.data.domains as domain}
+			{#each searchQuery.data.domains as domain, i}
 				<div class="h-20 w-full rounded-lg border">
 					<div class="flex h-full items-center justify-between px-6">
 						<div class="flex items-center gap-x-2">
@@ -92,19 +90,19 @@
 								</Popover.Content>
 							</Popover.Root>
 							<button onclick={() => handleOnCopy(domain.name)}>
-								{#if copiedDomain === domain.name}
+								{#if copied === domain.name}
 									<Check class="text-white/60" />
 								{:else}
 									<Copy class="text-white/60" />
 								{/if}
 							</button>
 						</div>
-						{#if dnsLookupQuery.isSuccess}
+						{#if dnsLookupQueries[i]?.isSuccess}
 							<DropdownMenu.Root>
 								<DropdownMenu.Trigger asChild let:builder>
 									<Btn
 										builders={[builder]}
-										disabled={dnsLookupQuery.data.lookup[domain.name]}
+										disabled={!dnsLookupQueries[i].data.available}
 									>
 										buy
 									</Btn>

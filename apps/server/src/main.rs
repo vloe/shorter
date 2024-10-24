@@ -7,6 +7,7 @@ use axum::{
     Router,
 };
 use dotenv::dotenv;
+use hickory_resolver::TokioAsyncResolver;
 use reqwest::Client;
 use std::{error::Error, time::Duration};
 use tower_http::cors::CorsLayer;
@@ -22,6 +23,7 @@ const ADDR: &str = "127.0.0.1:9000";
 #[derive(Clone)]
 pub struct Ctx {
     reqwest: Client,
+    resolver: TokioAsyncResolver,
 }
 
 #[tokio::main]
@@ -38,13 +40,18 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .max_age(Duration::from_secs(MAX_AGE));
 
     let reqwest = Client::new();
-    let ctx = Ctx { reqwest };
+    let resolver = {
+        let (cfg, opts) = hickory_resolver::system_conf::read_system_conf()?;
+        TokioAsyncResolver::tokio(cfg, opts)
+    };
+    let ctx = Ctx { reqwest, resolver };
 
     let app = Router::new()
         .route("/", get(|| async { "sh-server(:" }))
         .route("/health", get(|| async { "ok" }))
         .route("/feedback", post(routes::feedback::mount))
         .route("/search", get(routes::search::mount))
+        .route("/dns-lookup", get(routes::dns_lookup::mount))
         .layer(cors)
         .with_state(ctx);
 

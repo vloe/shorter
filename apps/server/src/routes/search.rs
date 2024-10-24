@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use typeshare::typeshare;
 
-const MAX_DOMAIN: usize = 20;
+pub const MAX_DOMAIN: usize = 20;
 const DEFAULT_TLD: &str = "com";
 
 #[typeshare]
