@@ -2,6 +2,7 @@ import puppeteer from "puppeteer"
 import { writeFile } from "fs/promises"
 
 const IANA_TLDS_URL = "https://www.iana.org/domains/root/db"
+const TLD_LIST_URL = "https://tld-list.com/tld/"
 const TLDS_FILE = "../apps/server/src/constants/tlds.rs"
 
 ;(async () => {
@@ -10,8 +11,15 @@ const TLDS_FILE = "../apps/server/src/constants/tlds.rs"
 	await page.setViewport({ width: 1080, height: 1024 })
 
 	const tlds = await getIanaTlds(page)
-	writeTlds(tlds)
-	console.log("done")
+
+	for (const tld of tlds) {
+		tld.buyable = await checkTldBuyable(page, tld)
+		console.log(tld.name, tld.buyable)
+		await new Promise((r) => setTimeout(r, 2000))
+	}
+
+	await writeTlds(tlds)
+	await browser.close()
 })()
 
 async function getIanaTlds(page) {
@@ -48,6 +56,37 @@ async function getIanaTlds(page) {
 		throw new Error("failed to get iana tlds, mby the site is down or changed?")
 	}
 	return tlds
+}
+
+async function checkTldBuyable(page, tld) {
+	try {
+		const gotoPromise = page.goto(TLD_LIST_URL + tld.name, {
+			waitUntil: "domcontentloaded",
+			timeout: 10000,
+		})
+
+		await Promise.race([gotoPromise, new Promise((r) => setTimeout(r, 10000))])
+
+		const evaluatePromise = page.evaluate(() => {
+			try {
+				const element = document.querySelector('h2#registrars span[itemprop="offerCount"]')
+				return element ? parseInt(element.textContent) : 0
+			} catch {
+				return 0
+			}
+		})
+
+		const count = await Promise.race([
+			evaluatePromise,
+			new Promise((r) => {
+				setTimeout(() => r(0), 5000)
+			}),
+		])
+
+		return count > 0
+	} catch {
+		return false
+	}
 }
 
 async function writeTlds(tlds) {

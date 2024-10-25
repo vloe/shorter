@@ -102,7 +102,7 @@
 								<DropdownMenu.Trigger asChild let:builder>
 									<Btn
 										builders={[builder]}
-										disabled={!dnsLookupQueries[i].data.available}
+										disabled={!dnsLookupQueries[i].data.buyable}
 									>
 										buy
 									</Btn>

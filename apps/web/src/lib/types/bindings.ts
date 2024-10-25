@@ -3,36 +3,38 @@
 */
 
 export interface DnsLookupParams {
-	q: string
+	q: string;
 }
 
 export interface DnsLookupRes {
-	available: boolean
+	buyable: boolean;
 }
 
 export interface Tld {
-	name: string
-	category: string
-	manager: string
+	name: string;
+	category: string;
+	manager: string;
+	buyable: boolean;
 }
 
 export interface Domain {
-	name: string
-	tld: Tld
+	name: string;
+	tld: Tld;
 }
 
 export interface FeedbackPayload {
-	msg: string
+	msg: string;
 }
 
 export interface FeedbackRes {
-	ok: boolean
+	ok: boolean;
 }
 
 export interface SearchParams {
-	q: string
+	q: string;
 }
 
 export interface SearchRes {
-	domains: Domain[]
+	domains: Domain[];
 }
+
