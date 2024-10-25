@@ -8,7 +8,7 @@
 		"lint": "prettier --check . && eslint .",
 		"lint:fix": "prettier --check . && eslint . --fix",
 		"gen:bindings": "typeshare ./apps/server --lang=typescript --output-file=apps/web/src/lib/types/bindings.ts",
-		"gen:tlds": "cd scripts && cargo run --bin gen_tlds"
+		"gen:tlds": "pnpm --filter @sh/scripts -- tlds"
 	},
 	"devDependencies": {
 		"@types/eslint": "^9.6.0",

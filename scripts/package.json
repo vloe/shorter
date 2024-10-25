@@ -1,0 +1,11 @@
+{
+	"name": "@sh/scripts",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"tlds": "node tlds.js"
+	},
+	"dependencies": {
+		"puppeteer": "^23.6.0"
+	}
+}
