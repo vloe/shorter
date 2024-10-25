@@ -40,9 +40,15 @@ pub async fn mount(
 
     let domain = params.q.trim().to_lowercase();
 
-    // first check if tld is buyable
     let parts: Vec<&str> = domain.split('.').collect();
-    if let Some(tld) = TLDS.get(parts[1]) {
+    let sld = parts[0];
+    let tld = parts[1];
+
+    if sld.len() <= 1 {
+        let res = DnsLookupRes { buyable: false };
+        return Ok(Json(res));
+    }
+    if let Some(tld) = TLDS.get(tld) {
         if !tld.buyable {
             let res = DnsLookupRes { buyable: false };
             return Ok(Json(res));
