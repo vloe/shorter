@@ -10,9 +10,10 @@ tokio = { version = "1", features = ["macros", "rt-multi-thread", "signal"] }
 tower-http = { version = "0.6.1", features = ["cors"] }
 typeshare = "1.0.3"
 serde = "1.0.210"
-thiserror = "1.0.64"
 phf = { version = "0.11.2", features = ["macros"] }
 hickory-resolver = "0.24.1"
+cfg-if = "1.0.0"
+thiserror = "2.0.3"
 
 [features]
 lambda = ["dep:lambda_http"]

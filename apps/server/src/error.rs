@@ -6,24 +6,23 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum AppError {
+    #[error("internal error: {0}")]
+    Internal(String),
+
     #[error("please provide a {0}")]
     IsEmpty(&'static str),
 
-    #[error("{0} must be at least {1} characters")]
-    TooShort(&'static str, usize),
-
     #[error("{0} must be at most {1} characters")]
     TooLong(&'static str, usize),
-
-    #[error("{0} must be set")]
-    EnvNotSet(&'static str),
-
-    #[error("something went wrong, please try again later")]
-    FuckUp(),
 }
 
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
-        (StatusCode::BAD_REQUEST, self.to_string()).into_response()
+        let status = match self {
+            Self::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            Self::IsEmpty(_) => StatusCode::BAD_REQUEST,
+            Self::TooLong(_, _) => StatusCode::BAD_REQUEST,
+        };
+        (status, self.to_string()).into_response()
     }
 }
