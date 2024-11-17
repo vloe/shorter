@@ -1,25 +1,31 @@
 <script lang="ts">
 	import { cx } from "$lib/utils/cva.config"
-	import { Button as ButtonPrimitive } from "bits-ui"
 
-	import { type BtnProps, btnVariants } from "./index.js"
+	import { type BtnProps, btnVariants } from "./index"
 
 	let {
-		builders,
 		children,
 		class: className,
-		intent = "default",
+		href = undefined,
+		ref = $bindable(null),
 		size = "default",
-		...props
+		type = "button",
+		variant = "default",
+		...restProps
 	}: BtnProps = $props()
 </script>
 
-<ButtonPrimitive.Root
-	{builders}
-	class={cx(btnVariants({ className, intent, size }))}
-	{...props}
-	on:click
-	on:keydown
->
-	{@render children()}
-</ButtonPrimitive.Root>
+{#if href}
+	<a bind:this={ref} class={cx(btnVariants({ className, size, variant }))} {href} {...restProps}>
+		{@render children?.()}
+	</a>
+{:else}
+	<button
+		bind:this={ref}
+		class={cx(btnVariants({ className, size, variant }))}
+		{type}
+		{...restProps}
+	>
+		{@render children?.()}
+	</button>
+{/if}

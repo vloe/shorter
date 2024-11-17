@@ -1,14 +1,16 @@
-import { fontFamily } from "tailwindcss/defaultTheme"
+import defaultTheme from "tailwindcss/defaultTheme"
+import tailwindcssAnimate from "tailwindcss-animate"
 
-const config = {
+/** @type {import('tailwindcss').Config} */
+export default {
 	content: ["./src/**/*.{html,js,svelte,ts}"],
+	plugins: [tailwindcssAnimate],
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ["Manrope", ...fontFamily.sans],
+				neue: ["Neue Montreal", ...defaultTheme.fontFamily.sans],
+				sans: ["Inter", ...defaultTheme.fontFamily.sans],
 			},
 		},
 	},
 }
-
-export default config

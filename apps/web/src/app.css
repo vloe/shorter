@@ -10,8 +10,17 @@
 		@apply bg-black text-white;
 	}
 	@font-face {
-		font-family: "Manrope";
-		src: url("/fonts/Manrope-VariableFont_wght.ttf");
+		font-family: "Inter";
+		font-style: normal;
+		font-weight: 100 900;
 		font-display: swap;
+		src: url(/fonts/Inter.ttf) format("truetype");
+	}
+	@font-face {
+		font-family: "Neue Montreal";
+		font-style: normal;
+		font-weight: 530;
+		font-display: swap;
+		src: url(/fonts/PPNeueMontreal.otf) format("opentype");
 	}
 }

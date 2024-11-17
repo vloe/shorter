@@ -1,11 +1,18 @@
 <script lang="ts">
+	import type { WithElementRef, WithoutChildren } from "bits-ui"
 	import type { HTMLAttributes } from "svelte/elements"
 
 	import { cx } from "$lib/utils/cva.config"
 
-	type $Props = HTMLAttributes<HTMLDivElement>
-
-	let { class: className, ...props }: $Props = $props()
+	let {
+		class: className,
+		ref = $bindable(null),
+		...restProps
+	}: WithoutChildren<WithElementRef<HTMLAttributes<HTMLDivElement>>> = $props()
 </script>
 
-<div class={cx("animate-pulse bg-white/10", className)} {...props}></div>
+<div
+	bind:this={ref}
+	class={cx("animate-pulse rounded-lg bg-white/10", className)}
+	{...restProps}
+></div>

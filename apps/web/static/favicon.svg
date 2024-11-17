@@ -1,5 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <path d="M63.96,111.5c17.47,0,31.63-14.16,31.63-31.63s-14.16-31.63-31.63-31.63v63.27h0Z"/>
-  <path d="M64.04,79.77c-17.47,0-31.63-14.16-31.63-31.63s14.16-31.63,31.63-31.63v63.27Z"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32mm"
+   height="32mm"
+   viewBox="0 0 32 32"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1">
+    <path
+       id="rect1"
+       style="stroke-width:1377.88;paint-order:stroke fill markers"
+       d="M 7.4083331,0 H 24.591667 A 7.4083331,7.4083331 45 0 1 32,7.4083331 V 24.591667 A 7.4083331,7.4083331 135 0 1 24.591667,32 H 7.4083331 A 7.4083331,7.4083331 45 0 1 0,24.591667 V 7.4083331 A 7.4083331,7.4083331 135 0 1 7.4083331,0 Z" />
+    <g
+       id="g2"
+       transform="matrix(0.23157895,0,0,0.23157895,1.1789472,1.1766314)"
+       style="fill:#ffffff">
+      <path
+         d="m 63.96,111.5 c 17.47,0 31.63,-14.16 31.63,-31.63 0,-17.47 -14.16,-31.63 -31.63,-31.63 v 63.27 0 z"
+         id="path1"
+         style="fill:#ffffff" />
+      <path
+         d="M 64.04,79.77 C 46.57,79.77 32.41,65.61 32.41,48.14 32.41,30.67 46.57,16.51 64.04,16.51 V 79.78 Z"
+         id="path2"
+         style="fill:#ffffff" />
+    </g>
+  </g>
 </svg>

@@ -1,33 +1,35 @@
-import type { Button as ButtonPrimitive } from "bits-ui"
+import type { WithElementRef } from "bits-ui"
 import type { VariantProps } from "cva"
-import type { Snippet } from "svelte"
+import type { HTMLAnchorAttributes, HTMLButtonAttributes } from "svelte/elements"
 
 import { cva } from "$lib/utils/cva.config"
 
 import Btn from "./btn.svelte"
 
 const btnVariants = cva({
-	base: "focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50",
+	base: "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+	defaultVariants: {
+		size: "default",
+		variant: "default",
+	},
 	variants: {
-		intent: {
-			default: "bg-white text-black shadow hover:bg-white/85",
-			outline: "border bg-black hover:bg-white/15",
-		},
 		size: {
-			default: "h-8 px-4",
-			sm: "h-7 px-3.5",
+			default: "h-8 px-4 py-2",
+		},
+		variant: {
+			default: "bg-white text-black hover:bg-white/85",
+			minimal: "hover:text-white/85",
 		},
 	},
 })
 
-type Variant = VariantProps<typeof btnVariants>
-type Intent = Variant["intent"]
-type Size = Variant["size"]
+type BtnVariant = VariantProps<typeof btnVariants>["variant"]
+type BtnSize = VariantProps<typeof btnVariants>["size"]
 
 type BtnProps = {
-	children: Snippet
-	intent?: Intent
-	size?: Size
-} & ButtonPrimitive.Props
+	size?: BtnSize
+	variant?: BtnVariant
+} & WithElementRef<HTMLAnchorAttributes> &
+	WithElementRef<HTMLButtonAttributes>
 
 export { Btn, type BtnProps, btnVariants }

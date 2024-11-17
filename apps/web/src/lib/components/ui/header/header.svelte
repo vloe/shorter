@@ -1,44 +1,55 @@
 <script lang="ts">
 	import { Github } from "$lib/components/icons/github"
+	import { Lockup } from "$lib/components/icons/lockup"
 	import { Logomark } from "$lib/components/icons/logomark"
 	import { Menu } from "$lib/components/icons/menu"
 	import { Search } from "$lib/components/icons/search"
 	import { ArrowBtn } from "$lib/components/ui/arrow-btn"
+	import { Btn } from "$lib/components/ui/btn"
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu"
 </script>
 
-<header class="flex h-20 items-center justify-between">
+<header class="flex h-[72px] items-center justify-between">
 	<a href="/">
-		<Logomark />
+		<Lockup class="hidden lg:flex" />
+		<Logomark class="flex lg:hidden" />
 	</a>
-	<nav class="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 md:flex">
-		<a
-			class="text-white/70 hover:text-white"
+	<div class="hidden items-center gap-2 lg:flex">
+		<ArrowBtn class="duration-300 ease-in-out" href="/search">Start now</ArrowBtn>
+		<Btn
+			class="duration-300 ease-in-out"
 			href="https://github.com/vloe/shorter"
 			rel="noopener noreferrer"
 			target="_blank"
+			variant="minimal"
 		>
-			repo
-		</a>
-	</nav>
-	<ArrowBtn class="hidden rounded-full duration-200 ease-in-out md:flex" href="/search">
-		start now
-	</ArrowBtn>
-	<div class="flex md:hidden">
-		<DropdownMenu.Root closeOnItemClick={false}>
+			Repo
+		</Btn>
+	</div>
+	<div class="flex lg:hidden">
+		<DropdownMenu.Root>
 			<DropdownMenu.Trigger><Menu /></DropdownMenu.Trigger>
 			<DropdownMenu.Content class="w-52">
-				<DropdownMenu.Item href="/search">
-					<Search class="mr-2.5" />
-					start now
+				<DropdownMenu.Item>
+					{#snippet child({ props })}
+						<a href="/search" {...props}>
+							<Search />
+							Start now
+						</a>
+					{/snippet}
 				</DropdownMenu.Item>
-				<DropdownMenu.Item
-					href="https://github.com/vloe/shorter"
-					rel="noopener noreferrer"
-					target="_blank"
-				>
-					<Github class="mr-2.5" />
-					repo
+				<DropdownMenu.Item>
+					{#snippet child({ props })}
+						<a
+							href="https://github.com/vloe/shorter"
+							rel="noopener noreferrer"
+							target="_blank"
+							{...props}
+						>
+							<Github />
+							Repo
+						</a>
+					{/snippet}
 				</DropdownMenu.Item>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>

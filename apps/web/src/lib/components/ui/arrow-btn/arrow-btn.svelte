@@ -2,25 +2,12 @@
 	import { Arrow } from "$lib/components/icons/arrow"
 	import { cx } from "$lib/utils/cva.config"
 
-	import { Btn, type BtnProps, btnVariants } from "../btn"
+	import { Btn, type BtnProps } from "../btn/index"
 
-	let {
-		builders,
-		children,
-		class: className,
-		intent = "default",
-		size = "default",
-		...props
-	}: BtnProps = $props()
+	let { children, class: className, ...restProps }: BtnProps = $props()
 </script>
 
-<Btn
-	{builders}
-	class={cx(btnVariants({ className, intent, size }), "group gap-x-1.5 transition-all")}
-	{...props}
-	on:click
-	on:keydown
->
-	{@render children()}
-	<Arrow class={cx("size-2.5 stroke-[1.5px]", className)} />
+<Btn class={cx("group gap-x-1.5", className)} {...restProps}>
+	{@render children?.()}
+	<Arrow />
 </Btn>
