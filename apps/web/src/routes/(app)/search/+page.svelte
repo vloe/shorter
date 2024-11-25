@@ -71,7 +71,7 @@
 				<div class="h-20 w-full rounded-lg border">
 					<div class="flex h-full items-center justify-between px-6">
 						<div class="flex items-center gap-x-2">
-							<h3 class="font-medium">{domain.name}</h3>
+							<h3>{domain.name}</h3>
 							<Popover.Root>
 								<Popover.Trigger>
 									<Info class="text-white/60" />
