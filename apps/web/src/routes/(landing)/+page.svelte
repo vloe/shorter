@@ -16,13 +16,11 @@
 	}
 
 	const title = "Shorter"
-	const desc = "A domain shortener tool."
 </script>
 
 <svelte:head>
 	<title>{title}</title>
 	<meta content={title} name="title" />
-	<meta content={desc} name="description" />
 </svelte:head>
 
 <div class="pt-24 lg:pt-44">
@@ -33,7 +31,7 @@
 			Search for shorter <br class="hidden min-[450px]:flex" /> domains
 		</h1>
 		<h2 class="max-w-sm text-center text-white/75 lg:text-lg">
-			Discover shorter versions of your domain like linktree.com -> linktr.ee.
+			Discover shorter versions of your domain like linktree.com -> linktr.ee
 		</h2>
 		<Input bind:value={params.q} class="max-w-xs" oninput={handleOnInput} />
 	</section>

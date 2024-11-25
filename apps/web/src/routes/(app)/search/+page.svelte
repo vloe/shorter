@@ -55,13 +55,11 @@
 	}
 
 	const title = "Search | Shorter"
-	const desc = "Search for a shorter domain."
 </script>
 
 <svelte:head>
 	<title>{title}</title>
 	<meta content={title} name="title" />
-	<meta content={desc} name="description" />
 </svelte:head>
 
 <div class="pb-[88px] pt-3">
