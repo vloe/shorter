@@ -19,8 +19,8 @@
 	@font-face {
 		font-family: "Neue Montreal";
 		font-style: normal;
-		font-weight: 530;
+		font-weight: 800;
 		font-display: swap;
-		src: url(/fonts/PPNeueMontreal.otf) format("opentype");
+		src: url(/fonts/NeueMontreal.otf);
 	}
 }

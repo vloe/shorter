@@ -28,9 +28,9 @@
 <div class="pt-24 lg:pt-44">
 	<section class="flex flex-col items-center gap-6 lg:gap-8">
 		<h1
-			class="text-center font-neue text-5xl leading-[1.1] tracking-[-1px] sm:text-6xl sm:leading-none lg:text-7xl xl:text-[86px]"
+			class="text-center font-neue text-5xl leading-[1.1] sm:text-6xl sm:leading-none lg:text-7xl"
 		>
-			Search for shorter <br /> domains
+			Search for shorter <br class="hidden min-[450px]:flex" /> domains
 		</h1>
 		<h2 class="max-w-sm text-center text-white/75 lg:text-lg">
 			Discover shorter versions of your domain like linktree.com -> linktr.ee.
