@@ -16,11 +16,13 @@
 	}
 
 	const title = "Shorter"
+	const desc = "A domain shortener tool"
 </script>
 
 <svelte:head>
 	<title>{title}</title>
 	<meta content={title} name="title" />
+	<meta content={desc} name="description" />
 </svelte:head>
 
 <div class="pt-24 lg:pt-44">
